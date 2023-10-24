@@ -1,6 +1,7 @@
 package main
 
 import (
+	"git.jetbrains.space/the/ablegram/apiserver"
 	"git.jetbrains.space/the/ablegram/parser"
 )
 
@@ -10,4 +11,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	apiserver.Serve(":10000")
 }

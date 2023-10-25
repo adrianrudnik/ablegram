@@ -1,4 +1,4 @@
-package apiserver
+package webservice
 
 import (
 	"embed"
@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
+	"net/http"
 	"os"
 )
 import "github.com/gorilla/websocket"
@@ -18,9 +19,23 @@ var frontendFs embed.FS
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
-func Serve(bind string) error {
+func Serve(pushChannel *PushChannel, bindAddr string) error {
+	// Wrap route logging into correct format
+	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
+	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
+		Logger.Info().
+			Str("method", httpMethod).
+			Str("path", absolutePath).
+			Str("handler", handlerName).
+			Int("number-handlers", nuHandlers).
+			Msg("Registering route")
+	}
+
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(logger.SetLogger())
@@ -50,16 +65,12 @@ func Serve(bind string) error {
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
 
 	r.GET("/ws", func(c *gin.Context) {
-		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-		if err != nil {
-			return
-		}
-		defer conn.Close()
+		connectClientWebsocket(c, pushChannel)
 	})
 
 	// Register the fallback route to the frontend UI bootstrap
 
-	err = r.Run(bind)
+	err = r.Run(bindAddr)
 	if err != nil {
 		return err
 	}

@@ -2,8 +2,12 @@ package parser
 
 import (
 	"encoding/xml"
-	"git.jetbrains.space/the/ablegram/parser/ablv5schema"
+	"github.com/adrianrudnik/ablegram/parser/ablv5schema"
+	"github.com/rs/zerolog"
+	"os"
 )
+
+var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
 func parseAlsV5(path string) (*Result, error) {
 	rawContent, err := extractGzip(path)
@@ -22,5 +26,10 @@ func parseAlsV5(path string) (*Result, error) {
 }
 
 func ParseAls(path string) (*Result, error) {
-	return parseAlsV5(path)
+	r, err := parseAlsV5(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return r, nil
 }

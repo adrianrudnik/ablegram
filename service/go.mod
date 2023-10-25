@@ -9,8 +9,8 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/websocket v1.5.0
+	github.com/icza/gox v0.0.0-20230924165045-adcb03233bb5
 	github.com/rs/zerolog v1.31.0
-	golang.org/x/time v0.3.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

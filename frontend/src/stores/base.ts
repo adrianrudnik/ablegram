@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export interface StoreResource {
   id: string
@@ -31,6 +31,8 @@ export function setupStore<T extends StoreResource>() {
       return entries.value.find((entry) => entry.id === id)
     }
 
-    return { entries, update, remove, get }
+    const count = computed(() => entries.value.length)
+
+    return { entries, update, remove, get, count }
   }
 }

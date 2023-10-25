@@ -17,8 +17,8 @@
             height: 0;
           "
         ></div>
-        <div class="text-xl font-medium text-white mb-1">{{ v }}</div>
-        <span class="text-white white-space-nowrap">{{ t('stat.' + k, v) }}</span>
+        <div class="text-xl font-medium text-white mb-1">{{ v.value }}</div>
+        <span class="text-white white-space-nowrap">{{ t('stat.' + k, v.value) }}</span>
         <div
           v-if="idx > 0"
           class="absolute top-0"
@@ -44,13 +44,15 @@ import { useFilesStore } from '@/stores/files'
 
 const { t } = useI18n()
 
-const fileCount = computed(() => useFilesStore().entries.length)
+const filesCount = computed(() => useFilesStore().count)
+const midiTracks = computed(() => useStatStore().midiTracks)
+const audioTracks = computed(() => useStatStore().audioTracks)
 
 const stats = computed(() => {
   return [
-    { k: 'files', v: fileCount.value },
-    { k: 'midi-tracks', v: useStatStore().midiTracks },
-    { k: 'audio-tracks', v: useStatStore().audioTracks }
+    { k: 'files', v: filesCount },
+    { k: 'midi-tracks', v: midiTracks },
+    { k: 'audio-tracks', v: audioTracks }
   ]
 })
 </script>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="logo.inkscape.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#000000"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     width="100mm"
+     inkscape:zoom="0.77771465"
+     inkscape:cx="234.019"
+     inkscape:cy="292.52374"
+     inkscape:window-width="1576"
+     inkscape:window-height="1230"
+     inkscape:window-x="1140"
+     inkscape:window-y="60"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Background"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:0.555737"
+       id="rect1927"
+       width="100"
+       height="100"
+       x="0"
+       y="0" />
+    <g
+       id="g1689"
+       transform="translate(-76.216497,-8.1854875)"
+       style="display:inline">
+      <path
+         d="M 154.93043,83.061669 139.4262,67.557443 c 3.35539,-4.107462 5.20664,-9.279394 5.20664,-14.925709 0,-13.294294 -10.77543,-24.066259 -24.06626,-24.066259 -13.29082,0 -23.962147,10.775436 -23.962147,24.066259 0,13.290824 10.774307,24.066262 23.962147,24.066262 5.64516,0 10.82403,-1.956544 14.92571,-5.211273 l 15.50422,15.504225 c 0.64794,0.548431 1.3653,0.814552 2.07109,0.814552 0.70579,0 1.42084,-0.271211 1.96349,-0.813511 1.07951,-1.084022 1.07951,-2.842712 -0.10066,-3.93032 z M 102.15821,52.631734 c 0,-10.207333 8.30517,-18.512507 18.51251,-18.512507 10.20733,0 18.5125,8.305174 18.5125,18.512507 0,10.207334 -8.30517,18.512508 -18.5125,18.512508 -10.20734,0 -18.51251,-8.307488 -18.51251,-18.512508 z"
+         id="path9"
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.115703" />
+    </g>
+  </g>
+</svg>

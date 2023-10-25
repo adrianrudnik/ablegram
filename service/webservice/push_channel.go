@@ -2,13 +2,11 @@ package webservice
 
 import (
 	"sync"
-	"sync/atomic"
 )
 
-var historyIdGen atomic.Uint64
-
 type PushChannel struct {
-	clients      map[string]map[*PushClient]bool
+	clients      map[*PushClient]bool
+	clientsLock  sync.RWMutex
 	addClient    chan *PushClient
 	removeClient chan *PushClient
 	broadcast    chan interface{}
@@ -18,7 +16,7 @@ type PushChannel struct {
 
 func NewPushChannel(broadcastChan chan interface{}) *PushChannel {
 	return &PushChannel{
-		clients:      make(map[string]map[*PushClient]bool),
+		clients:      make(map[*PushClient]bool),
 		addClient:    make(chan *PushClient),
 		removeClient: make(chan *PushClient),
 		broadcast:    broadcastChan,
@@ -40,14 +38,19 @@ func (c *PushChannel) Run() {
 }
 
 func (c *PushChannel) AddClient(client *PushClient) {
-	reg := c.clients[client.ID]
-
-	if reg == nil {
-		reg = make(map[*PushClient]bool)
-		c.clients[client.ID] = reg
+	// Ensure the client is not already registered
+	c.clientsLock.RLock()
+	if _, ok := c.clients[client]; ok {
+		Logger.Warn().Str("client", client.ID).Msg("Websocket client already registered")
+		c.clientsLock.RUnlock()
+		return
 	}
+	c.clientsLock.RUnlock()
 
-	c.clients[client.ID][client] = true
+	// Register the new client
+	c.clientsLock.Lock()
+	c.clients[client] = true
+	c.clientsLock.Unlock()
 
 	Logger.Info().Str("client", client.ID).Msg("Websocket client registered")
 
@@ -62,16 +65,30 @@ func (c *PushChannel) AddClient(client *PushClient) {
 }
 
 func (c *PushChannel) RemoveClient(client *PushClient) {
-	if _, ok := c.clients[client.ID]; ok {
-		delete(c.clients[client.ID], client)
+	c.clientsLock.Lock()
+	if _, ok := c.clients[client]; ok {
+		delete(c.clients, client)
 		close(client.tx)
 
 		Logger.Info().Str("id", client.ID).Msg("Websocket client unregistered")
 	}
+	c.clientsLock.Unlock()
 }
 
 func (c *PushChannel) Broadcast(message interface{}) {
 	c.historyLock.Lock()
 	c.history = append(c.history, message)
 	c.historyLock.Unlock()
+
+	// Distribute message to all connected clients
+	c.clientsLock.RLock()
+	clients := c.clients
+	for client := range clients {
+		select {
+		case client.tx <- message:
+		default:
+			close(client.tx)
+		}
+	}
+	c.clientsLock.RUnlock()
 }

@@ -36,7 +36,7 @@ func (p *WorkerPool) doWork() {
 			Logger.Warn().Err(err).Str("path", msg.AbsPath).Msg("Failed to parse file")
 
 			// Notify the UI about the failure
-			p.outputBroadcastChan <- pusher.NewFileStatusPush(msg.AbsPath, "failed", "")
+			p.outputBroadcastChan <- pusher.NewFileStatusPush(msg.AbsPath, "failed", err.Error())
 
 			continue
 		}

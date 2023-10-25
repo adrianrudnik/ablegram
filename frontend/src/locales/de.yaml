@@ -1,0 +1,62 @@
+# See https://vue-i18n.intlify.dev/guide/essentials/pluralization for pluralization
+
+language: Deutsch
+
+app:
+  title: Ablegram
+
+menu:
+  search:
+    label: Suche
+  about:
+    label: Info
+  status:
+    label: Status
+  quit:
+    label: Beenden
+
+stat:
+  files: Dateien | Datei | Dateien
+  midi-tracks: MIDI-Spuren | MIDI-Spur | MIDI-Spuren
+  audio-tracks: Audio-Spuren | Audio-Spur | Audio-Spuren
+
+error:
+  404:
+    title: 404 Nicht gefunden
+    back-to-search: Zur Suche zurückkehren
+
+app-status:
+  title: Status der App
+  description: Zeigt alle aktuellen Informationen zur App-Laufzeit an.
+  version:
+    label: Version
+    content: v{version} basierend auf dem Commit ({hash})
+  websocket:
+    label: Websocket
+    status:
+      OPEN: Verbindung aufgebaut mit {url}.
+      CONNECTING: Verbindung wird aufgebaut mit {url}.
+      CLOSED: Verbindung zu {url} wurde geschlossen.
+
+file-table:
+  title: Gefundene Dateien
+  description: >-
+    Enthält eine Übersicht über alle Dateien die von der App gefunden und für
+    die Verarbeitung vorgesehen wurden. Ebenfalls läßt sich der Verarbeitungsstatus
+    einsehen.
+  global-search:
+    placeholder: Dateien durchsuchen
+  columns:
+    status:
+      label: Status
+      state:
+        pending: Läuft
+        processed: Verarbeitet
+        failed: Fehler
+    filename:
+      label: Dateiname
+    folder:
+      label: Ordner
+  errors:
+    no-files-found: Keine Dateien gefunden.
+    no-files-found-for-filter: Keine Dateien für den Filter "{filter}" gefunden.

@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 
 import PrimeVue from 'primevue/config'
 import BadgeDirective from 'primevue/badgedirective'
+import Tooltip from 'primevue/tooltip'
 
 import App from './App.vue'
 import router from './router'
@@ -18,4 +19,5 @@ app
   .use(router)
   .use(PrimeVue)
   .directive('badge', BadgeDirective)
+  .directive('tooltip', Tooltip)
   .mount('#app')

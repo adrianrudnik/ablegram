@@ -1,6 +1,13 @@
 <template>
   <div class="AppLayout">
-    <h1 class="text-3xl">Ablegram</h1>
+    <h1 class="text-3xl flex gap-2">
+      <img
+        src="@/assets/media/logo.svg"
+        class="border-round-md border-1 border-transparent h-2rem"
+        alt="Ablegram logo"
+      />
+      Ablegram
+    </h1>
 
     <MenuBar class="mb-3" />
 

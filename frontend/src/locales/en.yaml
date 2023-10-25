@@ -34,13 +34,15 @@ app-status:
   websocket:
     label: Websocket
     status:
-      OPEN: Established connection to {url}
-      CONNECTING: Connecting to {url}
-      CLOSED: Connection to {url} is closed
+      OPEN: Established connection to {url}.
+      CONNECTING: Connecting to {url}.
+      CLOSED: Connection to {url} is closed.
 
 file-table:
   title: Found files
-  description: Contains a list of files that the application has found within the specified folders.
+  description: >-
+    Contains a list of files that the application has found within the specified
+    folders.
   global-search:
     placeholder: Search files
   columns:
@@ -50,8 +52,10 @@ file-table:
         pending: Pending
         processed: Processed
         failed: Failed
-
     filename:
       label: Filename
     folder:
       label: Folder
+  errors:
+    no-files-found: No files found.
+    no-files-found-for-filter: No files found for filter "{filter}".

@@ -1,20 +1,29 @@
 package main
 
 import (
+	"flag"
 	"github.com/adrianrudnik/ablegram/collector"
 	"github.com/adrianrudnik/ablegram/config"
 	"github.com/adrianrudnik/ablegram/parser"
 	"github.com/adrianrudnik/ablegram/pipeline"
 	"github.com/adrianrudnik/ablegram/webservice"
+	"github.com/icza/gox/osx"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"os"
+	"time"
 )
 
 func main() {
+	// Parse flags
+	noBrowserFlag := flag.Bool("no-browser", false, "Skip the automatic browser opening")
+	flag.Parse()
+
+	log.Info().Bool("no-browser", !*noBrowserFlag).Msg("Parsed executable flags")
+
 	// Set up logging
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-	log.Debug().Msg("App starting")
+	log.Info().Msg("App starting")
 
 	// Let's look for a configuration within one of the folders
 	config.Logger = log.With().Str("module", "config").Logger()
@@ -45,6 +54,20 @@ func main() {
 	//if err != nil {
 	//	panic(err)
 	//}
+
+	// Try to open the default browser on the given OS
+	go func() {
+		if *noBrowserFlag {
+			return
+		}
+
+		time.Sleep(50 * time.Millisecond)
+
+		err := osx.OpenDefault("http://localhost:10000")
+		if err != nil {
+			log.Warn().Err(err).Msg("Could not open default browser")
+		}
+	}()
 
 	webservice.Serve(pusher, ":10000")
 }

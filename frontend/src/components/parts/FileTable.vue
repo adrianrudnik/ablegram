@@ -13,6 +13,7 @@
       <template #right>
         <i class="pi pi-search"></i>
         <InputText
+          type="search"
           v-model="filters['global'].value"
           :placeholder="t('file-table.global-search.placeholder')"
         />
@@ -58,12 +59,26 @@
             {{ t('file-table.columns.status.state.processed') }}
           </span>
 
-          <span v-else-if="slotProps.data.status === 'failed'">
+          <span
+            v-else-if="slotProps.data.status === 'failed'"
+            v-tooltip.left="slotProps.data.remark"
+          >
             <i class="pi pi-fw pi-times-circle text-red-500"></i>
             {{ t('file-table.columns.status.state.failed') }}
           </span>
         </template>
       </Column>
+      <template #empty>
+        <span v-if="filters['global'].value == ''">
+          {{ t('file-table.errors.no-files-found') }}
+        </span>
+
+        <span v-else>
+          {{
+            t('file-table.errors.no-files-found-for-filter', { filter: filters['global'].value })
+          }}
+        </span>
+      </template>
     </DataTable>
   </div>
 </template>

@@ -9,7 +9,7 @@
       <i v-else-if="websocketStatus === 'CONNECTING'" class="pi pi-fw pi-spin pi-spinner"></i>
       <i v-else-if="websocketStatus === 'CLOSED'" class="pi pi-fw pi-times-circle text-red-500"></i>
 
-      {{ t('status.websocket.status.' + websocketStatus) }}
+      {{ t('status.websocket.status.' + websocketStatus, { url: websocketUrl}) }}
     </DescriptionListItem>
   </DescriptionList>
 </template>
@@ -26,4 +26,5 @@ const { t } = useI18n()
 const version = useUiStore().version
 const commitHash = useUiStore().versionCommitHash
 const websocketStatus = websocket.status
+const websocketUrl = import.meta.env.VITE_WEBSOCKET_URL
 </script>

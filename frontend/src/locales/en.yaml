@@ -1,4 +1,4 @@
-# See https://vue-i18n.intlify.dev/guide/essentials/pluralization for pluratization
+# See https://vue-i18n.intlify.dev/guide/essentials/pluralization for pluralization
 
 language: English
 
@@ -27,9 +27,9 @@ status:
   websocket:
     label: Websocket
     status:
-      OPEN: Connected and open
-      CONNECTING: Connecting...
-      CLOSED: Connection closed
+      OPEN: Established connection to {url}
+      CONNECTING: Connecting to {url}
+      CLOSED: Connection to {url} is closed
 
 error:
   404:

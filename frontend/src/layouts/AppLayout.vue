@@ -1,8 +1,8 @@
 <template>
   <div class="AppLayout">
-    <h1>Ablegram</h1>
+    <h1 class="text-3xl">Ablegram</h1>
 
-    <MenuBar class="mb-2" />
+    <MenuBar class="mb-3" />
 
     <RouterView />
   </div>

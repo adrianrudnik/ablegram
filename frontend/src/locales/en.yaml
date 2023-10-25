@@ -20,7 +20,14 @@ stat:
   midi-tracks: MIDI tracks | MIDI track | MIDI tracks
   audio-tracks: Audio tracks | Audio track | Audio tracks
 
-status:
+error:
+  404:
+    title: 404 Not found
+    back-to-search: Return to search
+
+app-status:
+  title: App status
+  description: Contains information about the application and its current status.
   version:
     label: Version
     content: v{version} based on commit ({hash})
@@ -31,7 +38,20 @@ status:
       CONNECTING: Connecting to {url}
       CLOSED: Connection to {url} is closed
 
-error:
-  404:
-    title: 404 Not found
-    back-to-search: Return to search
+file-table:
+  title: Found files
+  description: Contains a list of files that the application has found within the specified folders.
+  global-search:
+    placeholder: Search files
+  columns:
+    status:
+      label: Status
+      state:
+        pending: Pending
+        processed: Processed
+        failed: Failed
+
+    filename:
+      label: Filename
+    folder:
+      label: Folder

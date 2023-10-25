@@ -37,7 +37,7 @@ func main() {
 
 	// Parser is responsible for parsing the files into results for the indexer
 	parser.Logger = log.With().Str("module", "parser").Logger()
-	parserWorkers := parser.NewWorkerPool(5, filesPipeline.Channel, resultsPipeline.Channel)
+	parserWorkers := parser.NewWorkerPool(5, filesPipeline.Channel, resultsPipeline.Channel, pusherPipeline.Channel)
 	go parserWorkers.Run()
 
 	//_, err := parser.ParseAls(".samples/sample-001-v11-empty.als")

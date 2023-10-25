@@ -26,6 +26,7 @@ func parseAlsV5(path string) (*Result, error) {
 }
 
 func ParseAls(path string) (*Result, error) {
+	Logger.Info().Str("path", path).Msg("Start processing")
 	r, err := parseAlsV5(path)
 	if err != nil {
 		return nil, err

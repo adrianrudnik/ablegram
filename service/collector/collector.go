@@ -37,10 +37,7 @@ func findFilesByExtension(root string, extensions []string, filesChan chan<- *pi
 				Logger.Info().Str("file", s).Msg("Found possible file")
 
 				// Notify the UI about this file
-				broadcastChan <- pusher.FileStatusPush{
-					Path:   s,
-					Status: "pending",
-				}
+				broadcastChan <- pusher.NewFileStatusPush(s, "pending", "")
 
 				// Move it over to the processing pipeline
 				filesChan <- &pipeline.FilesForProcessorMsg{AbsPath: s}

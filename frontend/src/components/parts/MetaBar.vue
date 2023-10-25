@@ -40,12 +40,15 @@
 import { useStatStore } from '@/stores/stats'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useFilesStore } from '@/stores/files'
 
 const { t } = useI18n()
 
+const fileCount = computed(() => useFilesStore().entries.length)
+
 const stats = computed(() => {
   return [
-    { k: 'files', v: useStatStore().files },
+    { k: 'files', v: fileCount.value },
     { k: 'midi-tracks', v: useStatStore().midiTracks },
     { k: 'audio-tracks', v: useStatStore().audioTracks }
   ]

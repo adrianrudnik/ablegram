@@ -1,0 +1,17 @@
+@import '../../../node_modules/primevue/resources/primevue.min.css';
+@import '../../../node_modules/primeflex/primeflex.css';
+@import '../../../node_modules/primeicons/primeicons.css';
+@import '../../../node_modules/prismjs/themes/prism-coy.css';
+@import '../../../node_modules/primevue/resources/themes/lara-light-teal/theme.css';
+
+.content {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    padding: unset;
+  }
+}

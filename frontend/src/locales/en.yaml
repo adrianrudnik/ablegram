@@ -1,0 +1,37 @@
+# See https://vue-i18n.intlify.dev/guide/essentials/pluralization for pluratization
+
+language: English
+
+app:
+  title: Ablegram
+
+menu:
+  search:
+    label: Search
+  about:
+    label: About
+  status:
+    label: Status
+  quit:
+    label: Quit
+
+stat:
+  files: Files | File | Files
+  midi-tracks: MIDI tracks | MIDI track | MIDI tracks
+  audio-tracks: Audio tracks | Audio track | Audio tracks
+
+status:
+  version:
+    label: Version
+    content: v{version} based on commit ({hash})
+  websocket:
+    label: Websocket
+    status:
+      OPEN: Connected and open
+      CONNECTING: Connecting...
+      CLOSED: Connection closed
+
+error:
+  404:
+    title: 404 Not found
+    back-to-search: Return to search

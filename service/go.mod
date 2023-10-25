@@ -6,6 +6,7 @@ require (
 	github.com/blevesearch/bleve v1.0.14
 	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.9.1
+	github.com/gorilla/websocket v1.5.0
 )
 
 require (

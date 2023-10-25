@@ -2,10 +2,15 @@ package apiserver
 
 import (
 	"embed"
+	"github.com/gin-contrib/logger"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
+	"os"
 )
 import "github.com/gorilla/websocket"
+
+var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
 //go:embed .frontend/*
 var frontendFs embed.FS
@@ -16,7 +21,9 @@ var upgrader = websocket.Upgrader{
 }
 
 func Serve(bind string) error {
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
+	r.Use(logger.SetLogger())
 
 	// No reason to support proxies yet
 	err := r.SetTrustedProxies([]string{})

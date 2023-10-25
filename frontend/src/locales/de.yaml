@@ -17,6 +17,7 @@ menu:
 
 stat:
   files: Dateien | Datei | Dateien
+  docs: Elemente | Element | Elemente
   midi-tracks: MIDI-Spuren | MIDI-Spur | MIDI-Spuren
   audio-tracks: Audio-Spuren | Audio-Spur | Audio-Spuren
 

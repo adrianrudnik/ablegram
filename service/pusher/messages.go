@@ -7,7 +7,6 @@ import (
 )
 
 type FileStatusPush struct {
-	Serial   uint64 `json:"serial"`
 	Type     string `json:"type"`
 	ID       string `json:"id"`
 	AbsPath  string `json:"path"`
@@ -34,4 +33,16 @@ func NewFileStatusPush(path string, status string, remark string) *FileStatusPus
 	}
 
 	return p
+}
+
+type IndexStatusPush struct {
+	Type          string `json:"type"`
+	DocumentCount uint64 `json:"document_count"`
+}
+
+func NewIndexStatusPush(docCount uint64) *IndexStatusPush {
+	return &IndexStatusPush{
+		Type:          "index_status",
+		DocumentCount: docCount,
+	}
 }

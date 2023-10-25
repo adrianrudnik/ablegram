@@ -6,6 +6,7 @@ import (
 	"github.com/adrianrudnik/ablegram/config"
 	"github.com/adrianrudnik/ablegram/parser"
 	"github.com/adrianrudnik/ablegram/pipeline"
+	"github.com/adrianrudnik/ablegram/search"
 	"github.com/adrianrudnik/ablegram/webservice"
 	"github.com/icza/gox/osx"
 	"github.com/rs/zerolog"
@@ -32,7 +33,13 @@ func main() {
 	// Create some channel based pipelines to pass around the different workloads
 	pusherPipeline := pipeline.NewFrontendPush()
 	filesPipeline := pipeline.NewFilesForProcessor()
-	resultsPipeline := pipeline.NewResultsToIndex()
+	resultsPipeline := pipeline.NewDocumentsToIndex()
+
+	// Create the indexer
+	search.Logger = log.With().Str("module", "search").Logger()
+	appSearch := search.NewSearch(&search.SearchOptions{})
+	indexer := search.NewWorker(appSearch, resultsPipeline.Channel, pusherPipeline.Channel)
+	go indexer.Run()
 
 	// Start the frontend push worker
 	webservice.Logger = log.With().Str("module", "webservice").Logger()
@@ -48,12 +55,6 @@ func main() {
 	parser.Logger = log.With().Str("module", "parser").Logger()
 	parserWorkers := parser.NewWorkerPool(5, filesPipeline.Channel, resultsPipeline.Channel, pusherPipeline.Channel)
 	go parserWorkers.Run()
-
-	//_, err := parser.ParseAls(".samples/sample-001-v11-empty.als")
-	////_, err := parser.ParseAls(".samples/800-ios-note-casolare.als")
-	//if err != nil {
-	//	panic(err)
-	//}
 
 	// Try to open the default browser on the given OS
 	go func() {

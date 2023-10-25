@@ -37,10 +37,13 @@ func (p *WorkerPool) Run(paths []string) {
 }
 
 func (p *WorkerPool) doWork() {
-	for path := range p.inputPathsChan {
-		err := Collect(path, p.outputFilesChan, p.outputBroadcastChan)
-		if err != nil {
-			Logger.Warn().Err(err).Str("path", path).Msg("Failed to collect files")
+	for {
+		select {
+		case path := <-p.inputPathsChan:
+			err := Collect(path, p.outputFilesChan, p.outputBroadcastChan)
+			if err != nil {
+				Logger.Warn().Err(err).Str("path", path).Msg("Failed to collect files")
+			}
 		}
 	}
 }

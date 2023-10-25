@@ -34,7 +34,7 @@ func findFilesByExtension(root string, extensions []string, filesChan chan<- *pi
 
 		for _, ext := range extensions {
 			if !d.IsDir() && filepath.Ext(d.Name()) == ext {
-				Logger.Info().Str("file", s).Msg("Found possible file")
+				Logger.Debug().Str("file", s).Msg("Found possible file")
 
 				// Notify the UI about this file
 				broadcastChan <- pusher.NewFileStatusPush(s, "pending", "")

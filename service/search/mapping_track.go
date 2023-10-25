@@ -1,44 +1,34 @@
 package search
 
 import (
-	"github.com/blevesearch/bleve"
-	"github.com/blevesearch/bleve/mapping"
+	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/mapping"
 )
 
-func createAudioTrackMapping(options *SearchOptions) *mapping.DocumentMapping {
-	trackMapping := bleve.NewDocumentMapping()
-
-	trackMapping.AddSubDocumentMapping("name_variants", createNameMapping(options))
-
-	return trackMapping
+type AudioTrackDocument struct {
+	Name     NameVariantDocument `json:"name_variants"`
+	Filename string              `json:"filename"`
 }
 
-func createNameMapping(options *SearchOptions) *mapping.DocumentMapping {
-	name := bleve.NewDocumentMapping()
+func buildAudioTrackMapping(options *SearchOptions) *mapping.DocumentMapping {
+	nameVariantMapping := getBaseNameVariantMapping(options)
 
-	effectiveName := bleve.NewTextFieldMapping()
-	effectiveName.Store = false
-	effectiveName.Analyzer = options.PrimaryLanguage
+	m := bleve.NewDocumentMapping()
+	m.AddSubDocumentMapping("name_variants", nameVariantMapping)
 
-	name.AddFieldMappingsAt("effective_name", effectiveName)
+	return m
+}
 
-	userName := bleve.NewTextFieldMapping()
-	userName.Store = false
-	userName.Analyzer = options.PrimaryLanguage
+type MidiTrackDocument struct {
+	Name     NameVariantDocument `json:"name_variants"`
+	Filename string              `json:"filename"`
+}
 
-	name.AddFieldMappingsAt("user_name", userName)
+func buildMidiTrackMapping(options *SearchOptions) *mapping.DocumentMapping {
+	nameVariantMapping := getBaseNameVariantMapping(options)
 
-	annotation := bleve.NewTextFieldMapping()
-	annotation.Store = false
-	annotation.Analyzer = options.PrimaryLanguage
+	m := bleve.NewDocumentMapping()
+	m.AddSubDocumentMapping("name_variants", nameVariantMapping)
 
-	name.AddFieldMappingsAt("annotation", annotation)
-
-	memorizedFirstClipName := bleve.NewTextFieldMapping()
-	memorizedFirstClipName.Store = false
-	memorizedFirstClipName.Analyzer = options.PrimaryLanguage
-
-	name.AddFieldMappingsAt("memorized_first_clip_name", memorizedFirstClipName)
-
-	return name
+	return m
 }

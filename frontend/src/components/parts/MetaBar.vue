@@ -45,12 +45,14 @@ import { useFilesStore } from '@/stores/files'
 const { t } = useI18n()
 
 const filesCount = computed(() => useFilesStore().count)
+const docs = computed(() => useStatStore().documents)
 const midiTracks = computed(() => useStatStore().midiTracks)
 const audioTracks = computed(() => useStatStore().audioTracks)
 
 const stats = computed(() => {
   return [
     { k: 'files', v: filesCount },
+    { k: 'docs', v: docs },
     { k: 'midi-tracks', v: midiTracks },
     { k: 'audio-tracks', v: audioTracks }
   ]

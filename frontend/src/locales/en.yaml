@@ -17,6 +17,7 @@ menu:
 
 stat:
   files: Files | File | Files
+  docs: Elements | Element | Elements
   midi-tracks: MIDI tracks | MIDI track | MIDI tracks
   audio-tracks: Audio tracks | Audio track | Audio tracks
 

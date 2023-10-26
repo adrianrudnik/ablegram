@@ -1,4 +1,4 @@
-package search
+package indexer
 
 type SearchOptions struct {
 	PrimaryLanguage string

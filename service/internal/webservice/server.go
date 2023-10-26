@@ -2,14 +2,16 @@ package webservice
 
 import (
 	"embed"
+	"github.com/adrianrudnik/ablegram/internal/indexer"
+	bleveHttp "github.com/blevesearch/bleve/v2/http"
 	"github.com/gin-contrib/logger"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
 	"net/http"
 	"os"
 )
-import "github.com/gorilla/websocket"
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
@@ -24,7 +26,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func Serve(pushChannel *PushChannel, bindAddr string) error {
+func Serve(indexer *indexer.Search, pushChannel *PushChannel, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -60,6 +62,9 @@ func Serve(pushChannel *PushChannel, bindAddr string) error {
 	api := r.Group("/api")
 	registerApiRoutes(api)
 
+	search := r.Group("/search")
+	registerBleveRoutes(search, indexer)
+
 	// Start a websocket server for UI related channels
 	// @see https://medium.com/@abhishekranjandev/building-a-production-grade-websocket-for-notifications-with-golang-and-gin-a-detailed-guide-5b676dcfbd5a
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
@@ -82,4 +87,13 @@ func registerApiRoutes(rg *gin.RouterGroup) {
 	rg.GET("/status", func(c *gin.Context) {
 		c.String(200, "pong")
 	})
+}
+
+func registerBleveRoutes(rg *gin.RouterGroup, indexer *indexer.Search) {
+	// @see https://github.com/blevesearch/beer-search/blob/master/main.go
+	// @see https://github.com/blevesearch/beer-search/blob/master/http_util.go
+
+	bleveHttp.RegisterIndexName("overview", indexer.Index)
+	searchHandler := bleveHttp.NewSearchHandler("overview")
+	rg.Any("/query", gin.WrapH(searchHandler))
 }

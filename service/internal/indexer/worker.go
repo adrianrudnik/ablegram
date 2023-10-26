@@ -1,4 +1,4 @@
-package search
+package indexer
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/pipeline"

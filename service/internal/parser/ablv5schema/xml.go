@@ -5,7 +5,7 @@ import "encoding/xml"
 type Ableton struct {
 	XMLName xml.Name `xml:"Ableton"`
 
-	MajorVersion      int64  `xml:"MajorVersion,attr"`
+	MajorVersion      string `xml:"MajorVersion,attr"`
 	MinorVersion      string `xml:"MinorVersion,attr"`
 	SchemaChangeCount int64  `xml:"SchemaChangeCount,attr"`
 	Creator           string `xml:"Creator,attr"`

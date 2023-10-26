@@ -8,6 +8,7 @@ import (
 type Metrics struct {
 	validFiles     atomic.Uint64
 	invalidFiles   atomic.Uint64
+	liveSets       atomic.Uint64
 	indexDocuments atomic.Uint64
 	midiTracks     atomic.Uint64
 	audioTracks    atomic.Uint64
@@ -28,6 +29,11 @@ func (s *Metrics) AddValidFile() {
 func (s *Metrics) AddInvalidFile() {
 	v := s.invalidFiles.Add(1)
 	s.broadcastChan <- pusher.NewMetricUpdatePush("files_invalid", v)
+}
+
+func (s *Metrics) AddLiveSet() {
+	v := s.liveSets.Add(1)
+	s.broadcastChan <- pusher.NewMetricUpdatePush("live_sets", v)
 }
 
 func (s *Metrics) SetIndexDocuments(count uint64) {

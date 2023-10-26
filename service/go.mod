@@ -3,7 +3,6 @@ module github.com/adrianrudnik/ablegram
 go 1.21
 
 require (
-	github.com/blevesearch/bleve v1.0.14
 	github.com/blevesearch/bleve/v2 v2.3.10
 	github.com/gin-contrib/logger v0.2.6
 	github.com/gin-contrib/static v0.0.1
@@ -12,6 +11,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/icza/gox v0.0.0-20230924165045-adcb03233bb5
 	github.com/rs/zerolog v1.31.0
+	github.com/samber/lo v1.38.1
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -59,6 +59,7 @@ require (
 	go.etcd.io/bbolt v1.3.7 // indirect
 	golang.org/x/arch v0.4.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/net v0.12.0 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.11.0 // indirect

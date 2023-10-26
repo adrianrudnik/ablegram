@@ -2,10 +2,9 @@ package parser
 
 import (
 	"encoding/xml"
-	"fmt"
+	"github.com/adrianrudnik/ablegram/internal/parser/ablv5parser"
 	"github.com/adrianrudnik/ablegram/internal/parser/ablv5schema"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
-	search2 "github.com/adrianrudnik/ablegram/internal/search"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/rs/zerolog"
 	"os"
@@ -26,45 +25,31 @@ func parseAlsV5(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, 
 		return nil, err
 	}
 
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
+	// Create a slice to hold all documents that we out of the XML information
+	docs := make([]*pipeline.DocumentToIndexMsg, 0, 50)
 
-	for _, midiTrack := range data.LiveSet.Tracks.MidiTracks {
-		id := fmt.Sprintf("%s_%s", path, midiTrack.Name.EffectiveName.Value)
-		payload := search2.MidiTrackDocument{
-			Name: search2.NameVariantDocument{
-				DisplayName:            "bla",
-				EffectiveName:          midiTrack.Name.EffectiveName.Value,
-				UserName:               midiTrack.Name.UserName.Value,
-				Annotation:             midiTrack.Name.Annotation.Value,
-				MemorizedFirstClipName: midiTrack.Name.MemorizedFirstClipName.Value,
-			},
-			Filename: path,
-		}
+	docs = append(docs, ablv5parser.ParseLiveSet(m, path, &data))
+	docs = append(docs, ablv5parser.ParseMidiTracks(m, path, &data)...)
 
-		doc := pipeline.NewDocumentToIndexMsg(id, payload)
-		docs = append(docs, doc)
-
-		m.AddMidiTrack()
-	}
-
-	for _, audioTrack := range data.LiveSet.Tracks.AudioTracks {
-		id := fmt.Sprintf("%s_%s", path, audioTrack.Name.EffectiveName.Value)
-		payload := search2.AudioTrackDocument{
-			Name: search2.NameVariantDocument{
-				DisplayName:            "bla",
-				EffectiveName:          audioTrack.Name.EffectiveName.Value,
-				UserName:               audioTrack.Name.UserName.Value,
-				Annotation:             audioTrack.Name.Annotation.Value,
-				MemorizedFirstClipName: audioTrack.Name.MemorizedFirstClipName.Value,
-			},
-			Filename: path,
-		}
-
-		doc := pipeline.NewDocumentToIndexMsg(id, payload)
-		docs = append(docs, doc)
-
-		m.AddAudioTrack()
-	}
+	//
+	//for _, audioTrack := range data.LiveSet.Tracks.AudioTracks {
+	//	id := fmt.Sprintf("%s_%s", path, audioTrack.Name.EffectiveName.Value)
+	//	payload := indexer.AudioTrackDocument{
+	//		Name: indexer.NameVariantDocument{
+	//			DisplayName:            "bla",
+	//			EffectiveName:          audioTrack.Name.EffectiveName.Value,
+	//			UserName:               audioTrack.Name.UserName.Value,
+	//			Annotation:             audioTrack.Name.Annotation.Value,
+	//			MemorizedFirstClipName: audioTrack.Name.MemorizedFirstClipName.Value,
+	//		},
+	//		Filename: path,
+	//	}
+	//
+	//	doc := pipeline.NewDocumentToIndexMsg(id, payload)
+	//	docs = append(docs, doc)
+	//
+	//	m.AddAudioTrack()
+	//}
 
 	return docs, nil
 }

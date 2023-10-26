@@ -31,9 +31,9 @@ const invalidFiles = computed(() => useStatStore().invalidFiles)
 
 const stats = computed(() => {
   return [
-    { k: 'index_docs', v: useStatStore().indexDocuments },
     { k: 'midi_tracks', v: useStatStore().midiTracks },
-    { k: 'audio_tracks', v: useStatStore().audioTracks }
+    { k: 'audio_tracks', v: useStatStore().audioTracks },
+    { k: 'index_docs', v: useStatStore().indexDocuments }
   ]
 })
 </script>

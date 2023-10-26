@@ -30,8 +30,8 @@ func parseAlsV5(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, 
 
 	docs = append(docs, ablv5parser.ParseLiveSet(m, path, &data))
 	docs = append(docs, ablv5parser.ParseMidiTracks(m, path, &data)...)
+	docs = append(docs, ablv5parser.ParseAudioTrack(m, path, &data)...)
 
-	//
 	//for _, audioTrack := range data.LiveSet.Tracks.AudioTracks {
 	//	id := fmt.Sprintf("%s_%s", path, audioTrack.Name.EffectiveName.Value)
 	//	payload := indexer.AudioTrackDocument{

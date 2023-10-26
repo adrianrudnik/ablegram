@@ -10,12 +10,12 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/util"
 )
 
-func ParseMidiTracks(m *stats.Metrics, path string, data *ablv5schema.Ableton) []*pipeline.DocumentToIndexMsg {
+func ParseAudioTrack(m *stats.Metrics, path string, data *ablv5schema.Ableton) []*pipeline.DocumentToIndexMsg {
 	tags := tagger.NewTagger()
 
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
-	for _, midiTrack := range data.LiveSet.Tracks.MidiTracks {
+	for _, midiTrack := range data.LiveSet.Tracks.AudioTracks {
 		id := tagger.IdHash(fmt.Sprintf("%s_%s", path, midiTrack.Name.EffectiveName.Value))
 
 		displayName := []string{
@@ -34,7 +34,7 @@ func ParseMidiTracks(m *stats.Metrics, path string, data *ablv5schema.Ableton) [
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(id, track))
 
-		m.AddMidiTrack()
+		m.AddAudioTrack()
 	}
 
 	return docs

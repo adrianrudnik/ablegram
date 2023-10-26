@@ -4,6 +4,7 @@ import { ref } from 'vue'
 export const useStatStore = defineStore('stats', () => {
   const validFiles = ref(0)
   const invalidFiles = ref(0)
+  const liveSets = ref(0)
   const indexDocuments = ref(0)
   const midiTracks = ref(0)
   const audioTracks = ref(0)
@@ -15,6 +16,9 @@ export const useStatStore = defineStore('stats', () => {
         break
       case 'files_invalid':
         invalidFiles.value = v
+        break
+      case 'live_sets':
+        liveSets.value = v
         break
       case 'index_docs':
         indexDocuments.value = v
@@ -32,6 +36,7 @@ export const useStatStore = defineStore('stats', () => {
     update,
     validFiles,
     invalidFiles,
+    liveSets,
     indexDocuments,
     midiTracks,
     audioTracks

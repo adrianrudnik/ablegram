@@ -18,14 +18,24 @@ menu:
 metric:
   valid_files: Dateien | Datei | Dateien
   invalid_files: Ungültige Dateien | Ungültige Datei | Ungültige Dateien
-  index_docs: Elemente | Element | Elemente
-  midi_tracks: MIDI-Spuren | MIDI-Spur | MIDI-Spuren
-  audio_tracks: Audio-Spuren | Audio-Spur | Audio-Spuren
+  live_sets: Live Sets | Live Set | Live Sets
+  index_docs: Datenpunkte | Datenpunkt | Datenpunkte
+  midi_tracks: MIDI
+  audio_tracks: Audio
 
 error:
   404:
     title: 404 Nicht gefunden
     back-to-search: Zur Suche zurückkehren
+
+tags:
+  system: System
+  user: Benutzer
+  live-set: Live Set
+  has-audio-track: Hat Audiospur
+  no-audio-track: Keine Audiospur
+  has-midi-track: Hat MIDI-Spur
+  no-midi-track: Keine MIDI-Spur
 
 app-status:
   title: Status der App

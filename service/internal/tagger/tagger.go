@@ -1,6 +1,7 @@
 package tagger
 
 import (
+	"fmt"
 	"github.com/samber/lo"
 	"slices"
 	"strings"
@@ -22,7 +23,7 @@ func (t *Tagger) AddSystemTag(tag string) {
 		return
 	}
 
-	t.tags = append(t.tags, tag)
+	t.tags = append(t.tags, fmt.Sprintf("system:%s", tag))
 }
 
 func (t *Tagger) GetAll() []string {

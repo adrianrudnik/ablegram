@@ -18,7 +18,8 @@ menu:
 metric:
   valid_files: Files | File | Files
   invalid_files: Invalid files | Invalid file | Invalid files
-  index_docs: Elements | Element | Elements
+  live_sets: Live Sets | Live Set | Live Sets
+  index_docs: Data points | Data point | Data points
   midi_tracks: MIDI tracks | MIDI track | MIDI tracks
   audio_tracks: Audio tracks | Audio track | Audio tracks
 
@@ -26,6 +27,15 @@ error:
   404:
     title: 404 Not found
     back-to-search: Return to search
+
+tags:
+  system: System
+  user: User
+  live-set: Live Set
+  has-audio-track: Has audio track
+  no-audio-track: No audio track
+  has-midi-track: Has MIDI track
+  no-midi-track: No MIDI track
 
 app-status:
   title: App status

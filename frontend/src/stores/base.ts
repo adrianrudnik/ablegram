@@ -33,6 +33,10 @@ export function setupStore<T extends StoreResource>() {
 
     const count = computed(() => entries.value.length)
 
-    return { entries, update, remove, get, count }
+    function clear(): void {
+      entries.value = []
+    }
+
+    return { entries, update, remove, get, count, clear }
   }
 }

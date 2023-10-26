@@ -14,14 +14,18 @@ import (
 func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pipeline.DocumentToIndexMsg {
 	tags := tagger.NewTagger()
 
-	// Analyse the live set
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 {
 		tags.AddSystemTag("live-set:has-audio-track")
 	} else {
 		tags.AddSystemTag("live-set:no-audio-track")
 	}
 
-	// Creator="Ableton Live 11.3.12"
+	if len(data.LiveSet.Tracks.MidiTracks) > 0 {
+		tags.AddSystemTag("live-set:has-midi-track")
+	} else {
+		tags.AddSystemTag("live-set:no-midi-track")
+	}
+
 	if strings.HasPrefix(data.Creator, "Ableton Live 11 ") {
 		tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", strings.TrimPrefix(data.Creator, "Ableton Live ")))
 	}
@@ -37,5 +41,5 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 
 	m.AddLiveSet()
 
-	return pipeline.NewDocumentToIndexMsg(path, liveSet)
+	return pipeline.NewDocumentToIndexMsg(tagger.IdHash(path), liveSet)
 }

@@ -4,6 +4,7 @@ import (
 	"embed"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/logger"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -41,6 +42,17 @@ func Serve(indexer *indexer.Search, pushChannel *PushChannel, bindAddr string) e
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(logger.SetLogger())
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:10000", "http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Accept-Encoding"},
+		ExposeHeaders:    []string{"Content-Length", "Content-Type", "Content-Encoding"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		},
+	}))
 
 	// No reason to support proxies yet
 	err := r.SetTrustedProxies([]string{})

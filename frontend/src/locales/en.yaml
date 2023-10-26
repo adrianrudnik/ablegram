@@ -15,11 +15,12 @@ menu:
   quit:
     label: Quit
 
-stat:
-  files: Files | File | Files
-  docs: Elements | Element | Elements
-  midi-tracks: MIDI tracks | MIDI track | MIDI tracks
-  audio-tracks: Audio tracks | Audio track | Audio tracks
+metric:
+  valid_files: Files | File | Files
+  invalid_files: Invalid files | Invalid file | Invalid files
+  index_docs: Elements | Element | Elements
+  midi_tracks: MIDI tracks | MIDI track | MIDI tracks
+  audio_tracks: Audio tracks | Audio track | Audio tracks
 
 error:
   404:

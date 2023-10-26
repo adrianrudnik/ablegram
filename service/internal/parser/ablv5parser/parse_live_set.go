@@ -7,6 +7,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/util"
 	"path/filepath"
 	"strings"
 )
@@ -14,6 +15,27 @@ import (
 func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pipeline.DocumentToIndexMsg {
 	tags := tagger.NewTagger()
 
+	if util.PathContainsFolder(path, "Live Recordings") {
+		tags.AddSystemTag("location:live-recording")
+	}
+
+	if util.PathContainsFolder(path, "User Library") {
+		tags.AddSystemTag("location:user-library")
+	}
+
+	if util.PathContainsFolder(path, "Factory Packs") {
+		tags.AddSystemTag("location:factory-pack")
+	}
+
+	if util.PathContainsFolder(path, "Cloud Manager") {
+		tags.AddSystemTag("location:cloud-manager")
+	}
+
+	if util.PathContainsFolder(path, "Trash") || util.PathContainsFolder(path, "$Recycle.Bin") {
+		tags.AddSystemTag("location:trash")
+	}
+
+	// @todo Factory Preset, User Preset, User Library, Factory Library
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 {
 		tags.AddSystemTag("live-set:has-audio-track")
 	} else {
@@ -26,8 +48,12 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 		tags.AddSystemTag("live-set:no-midi-track")
 	}
 
-	if strings.HasPrefix(data.Creator, "Ableton Live 11 ") {
+	if strings.HasPrefix(data.Creator, "Ableton Live ") {
 		tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", strings.TrimPrefix(data.Creator, "Ableton Live ")))
+	}
+
+	if data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value > 0 {
+		tags.AddSystemTag(fmt.Sprintf("tempo:%d", data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
 	}
 
 	liveSet := indexer.NewLiveSetDocument()
@@ -38,6 +64,11 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	liveSet.MinorVersion = data.MinorVersion
 	liveSet.Creator = data.Creator
 	liveSet.Revision = data.Revision
+	liveSet.ScaleRoot = data.LiveSet.ScaleInformation.HumanizeRootNote()
+	liveSet.ScaleName = data.LiveSet.ScaleInformation.Name.Value
+	liveSet.Scale = fmt.Sprintf("%s %s", liveSet.ScaleRoot, liveSet.ScaleName)
+	liveSet.InKey = data.LiveSet.InKey.Value
+	liveSet.Tempo = data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value
 
 	m.AddLiveSet()
 

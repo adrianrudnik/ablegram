@@ -31,11 +31,24 @@ error:
 tags:
   system: System
   user: User
+  ableton: Ableton
+  version: Version
   live-set: Live Set
   has-audio-track: Has audio track
   no-audio-track: No audio track
   has-midi-track: Has MIDI track
   no-midi-track: No MIDI track
+  location: Location
+  live-recording: Live Recording
+  user-library: User Library
+  factory-pack: Factory Pack
+  cloud-manager: Cloud Manager
+  trash: Trash
+  tempo: Tempo
+
+scales:
+  c-major: C major
+  unknown: Unknown
 
 app-status:
   title: App status

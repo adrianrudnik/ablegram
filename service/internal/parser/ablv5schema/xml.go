@@ -1,6 +1,8 @@
 package ablv5schema
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 type Ableton struct {
 	XMLName xml.Name `xml:"Ableton"`
@@ -15,8 +17,11 @@ type Ableton struct {
 }
 
 type LiveSet struct {
-	XMLName xml.Name `xml:"LiveSet"`
-	Tracks  Tracks   `xml:"Tracks"`
+	XMLName          xml.Name         `xml:"LiveSet"`
+	Tracks           Tracks           `xml:"Tracks"`
+	ScaleInformation ScaleInformation `xml:"ScaleInformation"`
+	InKey            BooleanValue     `xml:"InKey"`
+	MasterTrack      MasterTrack      `xml:"MasterTrack"`
 }
 
 type Tracks struct {
@@ -44,6 +49,36 @@ type TrackNames struct {
 	MemorizedFirstClipName StringValue
 }
 
+type ScaleInformation struct {
+	RootNote IntValue    `xml:"RootNote"`
+	Name     StringValue `xml:"Name"`
+}
+
+func (s *ScaleInformation) HumanizeRootNote() string {
+	switch s.RootNote.Value {
+	case 0:
+		return "c"
+	}
+
+	return "unknown"
+}
+
+type MasterTrack struct {
+	DeviceChain DeviceChain `xml:"DeviceChain"`
+}
+
+type DeviceChain struct {
+	Mixer Mixer `xml:"Mixer"`
+}
+
+type Mixer struct {
+	Tempo Tempo `xml:"Tempo"`
+}
+
+type Tempo struct {
+	Manual IntValue `xml:"Manual"`
+}
+
 type StringValue struct {
 	Value string `xml:"Value,attr"`
 }
@@ -57,5 +92,9 @@ type BooleanValue struct {
 }
 
 type ColorValue struct {
+	Value int64 `xml:"Value,attr"`
+}
+
+type RootNoteValue struct {
 	Value int64 `xml:"Value,attr"`
 }

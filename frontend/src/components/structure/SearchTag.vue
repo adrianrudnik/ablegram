@@ -2,15 +2,18 @@
   <div class="SearchTag mb-1 mr-1 inline-block">
     <div class="flex align-items-center gap-0">
       <div v-if="showRealm" class="p-1 px-2 bg-white border-900">
-        {{ t('tags.' + parts.realm) }}
+        {{ parts.realm }}
       </div>
       <div class="p-1 px-2 text-base bg-black-alpha-10 border-900">
-        {{ t('tags.' + parts.topic) }}
+        {{ parts.topic }}
       </div>
-      <div class="p-1 px-2 bg-black-alpha-90 text-white border-900">
-        {{ t('tags.' + parts.detail) }}
+      <div v-if="parts.detail" class="p-1 px-2 bg-black-alpha-90 text-white border-900">
+        {{ parts.detail }}
       </div>
-      <div class="p-1 px-2 bg-black-alpha-50 text-white border-900">
+      <div v-if="parts.extra" class="p-1 px-2 bg-black-alpha-50 text-white border-900">
+        {{ parts.extra }}
+      </div>
+      <div v-if="showCount" class="p-1 px-2 bg-black-alpha-30 border-900">
         {{ props.tag.count }}
       </div>
     </div>
@@ -36,12 +39,30 @@ const props = withDefaults(
   }
 )
 
+const translate = (prefix: string, value: string | number | null): string | null => {
+  if (value === null) {
+    return null
+  }
+  if (typeof value === 'number') {
+    return value.toString()
+  }
+
+  if (!Number.isNaN(Number(value))) {
+    return value.toString()
+  }
+
+  console.log(prefix + value)
+
+  return t(prefix + value)
+}
+
 const parts = computed(() => {
   const p = props.tag.id.split(':')
   return {
-    realm: p[0],
-    topic: p[1],
-    detail: p[2] ?? null
+    realm: translate('tags.', p[0] ?? null),
+    topic: translate('tags.', p[1] ?? null),
+    detail: translate('tags.', p[2] ?? null),
+    extra: p[3],
   }
 })
 </script>

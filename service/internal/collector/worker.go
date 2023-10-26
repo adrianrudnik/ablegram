@@ -1,6 +1,8 @@
 package collector
 
-import "github.com/adrianrudnik/ablegram/pipeline"
+import (
+	"github.com/adrianrudnik/ablegram/internal/pipeline"
+)
 
 type WorkerPool struct {
 	workerCount         int

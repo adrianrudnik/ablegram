@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"github.com/adrianrudnik/ablegram/pipeline"
-	"github.com/adrianrudnik/ablegram/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pipeline"
+	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/rs/zerolog"
 	"io/fs"
 	"os"

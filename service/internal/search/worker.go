@@ -1,8 +1,8 @@
 package search
 
 import (
-	"github.com/adrianrudnik/ablegram/pipeline"
-	"github.com/adrianrudnik/ablegram/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pipeline"
+	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/rs/zerolog/log"
 )
 
@@ -20,13 +20,13 @@ func NewWorker(search *Search, docChan <-chan *pipeline.DocumentToIndexMsg, broa
 	}
 }
 
-func (p *Worker) Run() {
+func (p *Worker) Run(m *stats.Metrics) {
 	Logger.Info().Msg("Starting index batch worker")
 
-	go p.doWork()
+	go p.doWork(m)
 }
 
-func (p *Worker) doWork() {
+func (p *Worker) doWork(m *stats.Metrics) {
 	for {
 		select {
 		case msg := <-p.inputDocChan:
@@ -43,7 +43,7 @@ func (p *Worker) doWork() {
 				continue
 			}
 
-			p.outputBroadcastChan <- pusher.NewIndexStatusPush(docCount)
+			m.SetIndexDocuments(docCount)
 
 			continue
 		}

@@ -2,12 +2,13 @@ package main
 
 import (
 	"flag"
-	"github.com/adrianrudnik/ablegram/collector"
-	"github.com/adrianrudnik/ablegram/config"
-	"github.com/adrianrudnik/ablegram/parser"
-	"github.com/adrianrudnik/ablegram/pipeline"
-	"github.com/adrianrudnik/ablegram/search"
-	"github.com/adrianrudnik/ablegram/webservice"
+	collector2 "github.com/adrianrudnik/ablegram/internal/collector"
+	"github.com/adrianrudnik/ablegram/internal/config"
+	parser2 "github.com/adrianrudnik/ablegram/internal/parser"
+	pipeline2 "github.com/adrianrudnik/ablegram/internal/pipeline"
+	search2 "github.com/adrianrudnik/ablegram/internal/search"
+	"github.com/adrianrudnik/ablegram/internal/stats"
+	webservice2 "github.com/adrianrudnik/ablegram/internal/webservice"
 	"github.com/icza/gox/osx"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -31,30 +32,33 @@ func main() {
 	appConfig := config.LoadWithDefaults("")
 
 	// Create some channel based pipelines to pass around the different workloads
-	pusherPipeline := pipeline.NewFrontendPush()
-	filesPipeline := pipeline.NewFilesForProcessor()
-	resultsPipeline := pipeline.NewDocumentsToIndex()
+	pusherPipeline := pipeline2.NewFrontendPush()
+	filesPipeline := pipeline2.NewFilesForProcessor()
+	resultsPipeline := pipeline2.NewDocumentsToIndex()
+
+	// Metrics is responsible in keeping and communicating key metrics for the frontend
+	appMetrics := stats.NewMetrics(pusherPipeline.Channel)
 
 	// Create the indexer
-	search.Logger = log.With().Str("module", "search").Logger()
-	appSearch := search.NewSearch(&search.SearchOptions{})
-	indexer := search.NewWorker(appSearch, resultsPipeline.Channel, pusherPipeline.Channel)
-	go indexer.Run()
+	search2.Logger = log.With().Str("module", "search").Logger()
+	appSearch := search2.NewSearch(&search2.SearchOptions{})
+	indexer := search2.NewWorker(appSearch, resultsPipeline.Channel, pusherPipeline.Channel)
+	go indexer.Run(appMetrics)
 
 	// Start the frontend push worker
-	webservice.Logger = log.With().Str("module", "webservice").Logger()
-	pusher := webservice.NewPushChannel(pusherPipeline.Channel)
+	webservice2.Logger = log.With().Str("module", "webservice").Logger()
+	pusher := webservice2.NewPushChannel(pusherPipeline.Channel)
 	go pusher.Run()
 
 	// Collector is responsible for finding files that could be parsed
-	collector.Logger = log.With().Str("module", "collector").Logger()
-	collectorWorkers := collector.NewWorkerPool(3, filesPipeline.Channel, pusherPipeline.Channel)
+	collector2.Logger = log.With().Str("module", "collector").Logger()
+	collectorWorkers := collector2.NewWorkerPool(3, filesPipeline.Channel, pusherPipeline.Channel)
 	go collectorWorkers.Run(appConfig.SearchablePaths)
 
 	// Parser is responsible for parsing the files into results for the indexer
-	parser.Logger = log.With().Str("module", "parser").Logger()
-	parserWorkers := parser.NewWorkerPool(5, filesPipeline.Channel, resultsPipeline.Channel, pusherPipeline.Channel)
-	go parserWorkers.Run()
+	parser2.Logger = log.With().Str("module", "parser").Logger()
+	parserWorkers := parser2.NewWorkerPool(5, filesPipeline.Channel, resultsPipeline.Channel, pusherPipeline.Channel)
+	go parserWorkers.Run(appMetrics)
 
 	// Try to open the default browser on the given OS
 	go func() {
@@ -70,5 +74,5 @@ func main() {
 		}
 	}()
 
-	webservice.Serve(pusher, ":10000")
+	webservice2.Serve(pusher, ":10000")
 }

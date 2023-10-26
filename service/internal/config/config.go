@@ -18,7 +18,7 @@ type Config struct {
 func newConfig() *Config {
 	return &Config{
 		PrimaryLanguage: "en",
-		SearchablePaths: make([]string, 0),
+		SearchablePaths: make([]string, 0, 100),
 	}
 }
 

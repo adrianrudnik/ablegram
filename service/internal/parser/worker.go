@@ -1,18 +1,19 @@
 package parser
 
 import (
-	"github.com/adrianrudnik/ablegram/pipeline"
-	"github.com/adrianrudnik/ablegram/pusher"
+	pipeline2 "github.com/adrianrudnik/ablegram/internal/pipeline"
+	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/stats"
 )
 
 type WorkerPool struct {
 	workerCount         int
-	inputPathsChan      <-chan *pipeline.FilesForProcessorMsg
-	outputResultChan    chan<- *pipeline.DocumentToIndexMsg
+	inputPathsChan      <-chan *pipeline2.FilesForProcessorMsg
+	outputResultChan    chan<- *pipeline2.DocumentToIndexMsg
 	outputBroadcastChan chan<- interface{}
 }
 
-func NewWorkerPool(workerCount int, pathChan <-chan *pipeline.FilesForProcessorMsg, resultChan chan<- *pipeline.DocumentToIndexMsg, broadcastChan chan<- interface{}) *WorkerPool {
+func NewWorkerPool(workerCount int, pathChan <-chan *pipeline2.FilesForProcessorMsg, resultChan chan<- *pipeline2.DocumentToIndexMsg, broadcastChan chan<- interface{}) *WorkerPool {
 	return &WorkerPool{
 		workerCount:         workerCount,
 		inputPathsChan:      pathChan,
@@ -21,17 +22,17 @@ func NewWorkerPool(workerCount int, pathChan <-chan *pipeline.FilesForProcessorM
 	}
 }
 
-func (p *WorkerPool) Run() {
+func (p *WorkerPool) Run(m *stats.Metrics) {
 	Logger.Info().Int("count", p.workerCount).Msg("Starting parser workers")
 
 	for i := 0; i < p.workerCount; i++ {
-		go p.doWork()
+		go p.doWork(m)
 	}
 }
 
-func (p *WorkerPool) doWork() {
+func (p *WorkerPool) doWork(m *stats.Metrics) {
 	for msg := range p.inputPathsChan {
-		docs, err := ParseAls(msg.AbsPath)
+		docs, err := ParseAls(msg.AbsPath, m)
 		if err != nil {
 			Logger.Warn().Err(err).Str("path", msg.AbsPath).Msg("Failed to parse file")
 

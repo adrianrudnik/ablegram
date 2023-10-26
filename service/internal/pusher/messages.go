@@ -35,14 +35,16 @@ func NewFileStatusPush(path string, status string, remark string) *FileStatusPus
 	return p
 }
 
-type IndexStatusPush struct {
-	Type          string `json:"type"`
-	DocumentCount uint64 `json:"document_count"`
+type MetricUpdatePush struct {
+	Type  string `json:"type"`
+	Key   string `json:"k"`
+	Value uint64 `json:"v"`
 }
 
-func NewIndexStatusPush(docCount uint64) *IndexStatusPush {
-	return &IndexStatusPush{
-		Type:          "index_status",
-		DocumentCount: docCount,
+func NewMetricUpdatePush(k string, v uint64) *MetricUpdatePush {
+	return &MetricUpdatePush{
+		Type:  "metric_update",
+		Key:   k,
+		Value: v,
 	}
 }

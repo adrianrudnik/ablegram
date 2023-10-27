@@ -48,3 +48,15 @@ func NewMetricUpdatePush(k string, v uint64) *MetricUpdatePush {
 		Value: v,
 	}
 }
+
+type ProcessingStatusPush struct {
+	Type   string `json:"type"`
+	Status bool   `json:"status"`
+}
+
+func NewProcessingStatusPush(status bool) *ProcessingStatusPush {
+	return &ProcessingStatusPush{
+		Type:   "processing_status",
+		Status: status,
+	}
+}

@@ -1,7 +1,8 @@
 import { useWebSocket } from '@vueuse/core'
-import type { File } from '@/stores/files'
 import { useFilesStore } from '@/stores/files'
 import { useStatStore } from '@/stores/stats'
+import type { PushMessage } from '@/websocket/messages/global'
+import { PushMessageType } from '@/websocket/messages/global'
 
 export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
   autoReconnect: true,
@@ -16,23 +17,10 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
       case PushMessageType.MetricUpdate:
         useStatStore().update(payload.k, payload.v)
         break
+
+      case PushMessageType.ProcessingStatus:
+        useStatStore().isProcessing = payload.status
+        break
     }
   }
 })
-
-enum PushMessageType {
-  FileStatus = 'file_status',
-  MetricUpdate = 'metric_update'
-}
-
-interface FileStatusPushMessage extends File {
-  type: PushMessageType.FileStatus
-}
-
-interface MetricUpdatePushMessage {
-  type: PushMessageType.MetricUpdate
-  k: string
-  v: number
-}
-
-type PushMessage = FileStatusPushMessage | MetricUpdatePushMessage

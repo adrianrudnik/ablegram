@@ -26,14 +26,14 @@ import MetaStepItem from '@/components/structure/MetaStepItem.vue'
 
 const { t } = useI18n()
 
-const validFiles = computed(() => useStatStore().validFiles)
-const invalidFiles = computed(() => useStatStore().invalidFiles)
+const validFiles = computed(() => useStatStore().validFileCount)
+const invalidFiles = computed(() => useStatStore().invalidFileCount)
 
 const stats = computed(() => {
   return [
-    { k: 'midi_tracks', v: useStatStore().midiTracks },
-    { k: 'audio_tracks', v: useStatStore().audioTracks },
-    { k: 'index_docs', v: useStatStore().indexDocuments }
+    { k: 'midi_tracks', v: useStatStore().midiTrackCount },
+    { k: 'audio_tracks', v: useStatStore().audioTrackCount },
+    { k: 'index_docs', v: useStatStore().indexDocumentCount }
   ]
 })
 </script>

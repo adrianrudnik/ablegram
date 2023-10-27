@@ -13,7 +13,11 @@
       <div v-if="parts.extra" class="p-1 px-2 bg-black-alpha-50 text-white border-900">
         {{ parts.extra }}
       </div>
-      <div v-if="showCount" class="p-1 px-2 bg-black-alpha-30 border-900">
+      <div
+        v-if="showCount"
+        class="p-1 px-2 bg-black-alpha-30 border-900"
+        v-tooltip.top="t('search-tag-component.count.label', { count: props.tag.count })"
+      >
         {{ props.tag.count }}
       </div>
     </div>

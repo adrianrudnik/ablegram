@@ -4,6 +4,8 @@ language: Deutsch
 
 app:
   title: Ablegram
+  status:
+    processing: Dateien werden verarbeitet
 
 menu:
   search:
@@ -99,3 +101,7 @@ shutdown-confirm-modal:
     Der Dienst wird beendet und alle Systemressourcen werden wieder freigegeben.
   accept: Beenden
   reject: Zurück
+
+search-tag-component:
+  count:
+    label: Wurde nicht gefunden | Kommt einmal vor | {count} Treffer gefunden

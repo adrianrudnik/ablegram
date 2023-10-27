@@ -1,11 +1,23 @@
 <template>
   <div class="AppLayout">
     <h1 class="text-3xl flex gap-2">
-      <img
-        src="@/assets/media/logo.svg"
-        class="border-round-md border-1 border-transparent h-2rem"
-        alt="Ablegram logo"
-      />
+      <span class="inline-flex h-2rem w-2rem" v-if="!processing">
+        <img
+          src="@/assets/media/logo.svg"
+          class="inline-flex border-round-md border-1 border-transparent h-2rem mb-2"
+          alt="Ablegram logo"
+        />
+      </span>
+      <span v-if="processing" class="h-2rem w-2rem inline-flex">
+        <ProgressSpinner
+          class="h-auto"
+          :pt="{ circle: { style: 'stroke: green !important; paint-order: stroke;' } }"
+          fill="black"
+          stroke-width="10"
+          v-tooltip="t('app.status.processing')"
+        />
+      </span>
+
       Ablegram
     </h1>
 
@@ -20,6 +32,15 @@
 <script setup lang="ts">
 import MenuBar from '@/components/parts/MenuBar.vue'
 import ConfirmDialog from 'primevue/confirmdialog'
+import { computed } from 'vue'
+import { useStatStore } from '@/stores/stats'
+import ProgressSpinner from 'primevue/progressspinner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const processing = computed(() => useStatStore().isProcessing)
+// const processing = true
 </script>
 
 <style lang="scss">

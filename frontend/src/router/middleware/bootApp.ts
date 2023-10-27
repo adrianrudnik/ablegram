@@ -1,5 +1,5 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import { websocket } from '@/plugins/websocket'
+import { websocket } from '@/websocket'
 import { useUiStore } from '@/stores/ui'
 
 export async function bootApp(
@@ -8,7 +8,7 @@ export async function bootApp(
   next: NavigationGuardNext
 ) {
   console.debug('Booting app')
-  console.debug('Booting websocket: ' + websocket.status.value)
+  console.debug('Booting index: ' + websocket.status.value)
 
   await useUiStore().preload()
 

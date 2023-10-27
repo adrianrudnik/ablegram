@@ -11,7 +11,7 @@
         {{ t('app-status.version.content', { version: version, hash: commitHash }) }}
       </DescriptionListItem>
 
-      <DescriptionListItem :title="t('app-status.websocket.label')">
+      <DescriptionListItem :title="t('app-status.index.label')">
         <i v-if="websocketStatus === 'OPEN'" class="pi pi-fw pi-check-circle text-green-500"></i>
         <i v-else-if="websocketStatus === 'CONNECTING'" class="pi pi-fw pi-spin pi-spinner"></i>
         <i
@@ -19,7 +19,7 @@
           class="pi pi-fw pi-times-circle text-red-500"
         ></i>
 
-        {{ t('app-status.websocket.status.' + websocketStatus, { url: websocketUrl }) }}
+        {{ t('app-status.index.status.' + websocketStatus, { url: websocketUrl }) }}
       </DescriptionListItem>
     </DescriptionList>
   </div>
@@ -31,7 +31,7 @@ import DescriptionList from '@/components/structure/DescriptionList.vue'
 import DescriptionListItem from '@/components/structure/DescriptionListItem.vue'
 import { useI18n } from 'vue-i18n'
 import { useUiStore } from '@/stores/ui'
-import { websocket } from '@/plugins/websocket'
+import { websocket } from '@/websocket'
 
 const version = useUiStore().version
 const commitHash = useUiStore().versionCommitHash

@@ -4,6 +4,8 @@ language: English
 
 app:
   title: Ablegram
+  status:
+    processing: Processing files
 
 menu:
   search:
@@ -104,3 +106,7 @@ shutdown-confirm-modal:
     The service will be shut down and all locked system resources will be released.
   accept: Shutdown
   reject: Return
+
+search-tag-component:
+  count:
+    label: No hits found | One hit found | {count} hits found

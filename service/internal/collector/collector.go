@@ -7,21 +7,34 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
+
+var wg sync.WaitGroup
 
 type Collection struct {
 	files []string
 }
 
 func Collect(path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+	wg.Add(1)
+	defer wg.Done()
+
+	broadcastChan <- pusher.NewProcessingStatusPush(true)
+
 	allowedExtensions := []string{".als"}
 
 	err := findFilesByExtension(path, allowedExtensions, filesChan, broadcastChan)
 	if err != nil {
 		return err
 	}
+
+	go func() {
+		wg.Wait()
+		broadcastChan <- pusher.NewProcessingStatusPush(false)
+	}()
 
 	return nil
 }

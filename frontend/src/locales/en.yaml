@@ -48,22 +48,22 @@ error:
     back-to-search: Return to search
 
 tags:
-  system: System
-  user: User
-  ableton: Ableton
-  version: Version
-  live-set: Live Set
-  has-audio-track: Has audio track
-  no-audio-track: No audio track
-  has-midi-track: Has MIDI track
-  no-midi-track: No MIDI track
-  location: Location
-  live-recording: Live Recording
-  user-library: User Library
-  factory-pack: Factory Pack
-  cloud-manager: Cloud Manager
-  trash: Trash
-  tempo: Tempo
+  sys: System
+  sys:ableton: Ableton
+  sys:ableton:version: Version
+  sys:live-set: Live Set
+  sys:live-set:tempo: Tempo
+  sys:live-set:has-audio-track: Has audio track
+  sys:live-set:no-audio-track: No audio track
+  sys:live-set:has-midi-track: Has MIDI track
+  sys:live-set:no-midi-track: No MIDI track
+  sys:live-set:has-midi-audio-tracks: Has MIDI and audio tracks
+  sys:location: Location
+  sys:location:live-recording: Live Recording
+  sys:location:user-library: User Library
+  sys:location:factory-pack: Factory Pack
+  sys:location:cloud-manager: Cloud Manager
+  sys:location:trash: Trash
 
 app-status:
   title: App status

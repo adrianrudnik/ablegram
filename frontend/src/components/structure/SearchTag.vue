@@ -28,6 +28,7 @@
 import type { Tag as TagInterface } from '@/stores/tags'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import messages from '@intlify/unplugin-vue-i18n/messages'
 
 const { t } = useI18n()
 
@@ -55,17 +56,17 @@ const translate = (prefix: string, value: string | number | null): string | null
     return value.toString()
   }
 
-  console.log(prefix + value)
-
   return t(prefix + value)
 }
+
+console.log(messages)
 
 const parts = computed(() => {
   const p = props.tag.id.split(':')
   return {
     realm: translate('tags.', p[0] ?? null),
-    topic: translate('tags.', p[1] ?? null),
-    detail: translate('tags.', p[2] ?? null),
+    topic: translate('tags.' + p[0] + ':', p[1] ?? null),
+    detail: translate('tags.' + p[0] + ':' + p[1] + ':', p[2] ?? null),
     extra: p[3]
   }
 })

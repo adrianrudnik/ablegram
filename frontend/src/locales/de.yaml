@@ -48,22 +48,22 @@ error:
     back-to-search: Zur Suche zurückkehren
 
 tags:
-  system: System
-  user: Benutzer
-  ableton: Ableton
-  version: Version
-  live-set: Live Set
-  has-audio-track: Hat Audiospur
-  no-audio-track: Keine Audiospur
-  has-midi-track: Hat MIDI-Spur
-  no-midi-track: Keine MIDI-Spur
-  location: Ort
-  #  live-recording: Live Recording
-  #  user-library: User Library
-  #  factory-pack: Factory Pack
-  #  cloud-manager: Cloud Manager
-  trash: Papierkorb
-  tempo: Tempo
+  sys: System
+  sys:ableton: Ableton
+  sys:ableton:version: Version
+  sys:live-set: Live Set
+  sys:live-set:tempo: Tempo
+  sys:live-set:has-audio-track: Hat Audiospur
+  sys:live-set:no-audio-track: Keine Audiospur
+  sys:live-set:has-midi-track: Hat MIDI-Spur
+  sys:live-set:no-midi-track: Keine MIDI-Spur
+  sys:live-set:has-midi-audio-tracks: Hat MIDI- und Audiospur
+  sys:location: Speicherort
+  sys:location:live-recording: Live Recording
+  sys:location:user-library: User Library
+  sys:location:factory-pack: Factory Pack
+  sys:location:cloud-manager: Cloud Manager
+  sys:location:trash: Papierkorb
 
 app-status:
   title: Status der App

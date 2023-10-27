@@ -23,7 +23,7 @@ func (t *Tagger) AddSystemTag(tag string) {
 		return
 	}
 
-	t.tags = append(t.tags, fmt.Sprintf("system:%s", tag))
+	t.tags = append(t.tags, fmt.Sprintf("sys:%s", tag))
 }
 
 func (t *Tagger) GetAll() []string {

@@ -48,12 +48,16 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 		tags.AddSystemTag("live-set:no-midi-track")
 	}
 
+	if len(data.LiveSet.Tracks.AudioTracks) > 0 && len(data.LiveSet.Tracks.MidiTracks) > 0 {
+		tags.AddSystemTag("live-set:has-midi-audio-tracks")
+	}
+
 	if strings.HasPrefix(data.Creator, "Ableton Live ") {
 		tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", strings.TrimPrefix(data.Creator, "Ableton Live ")))
 	}
 
 	if data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value > 0 {
-		tags.AddSystemTag(fmt.Sprintf("tempo:%d", data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
+		tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
 	}
 
 	liveSet := indexer.NewLiveSetDocument()

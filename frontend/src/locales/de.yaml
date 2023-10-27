@@ -7,6 +7,21 @@ app:
   status:
     processing: Dateien werden verarbeitet
 
+donate:
+  title:
+    short: Spende
+    long: Unterstützte die Entwicklung
+  description: >-
+    Wenn Ihnen dieses Projekt gefällt, erwägen Sie bitte eine Spende zur Unterstützung der Entwicklung.
+  usage: >-
+    Spenden ermöglichen es mir, mehr Zeit in dieses Projekt zu investieren, um es kostenlos und Open Source zu halten.
+    Ein kleiner Prozentsatz wird, wenn möglich, zur Unterstützung der Entwickler der verwendeten Bibliotheken verwendet.
+  processors:
+    patreon:
+      label: Patreon
+      description: Werde Patron
+      link: https://www.patreon.com/ablegram
+
 menu:
   search:
     label: Suche

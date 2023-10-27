@@ -53,7 +53,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/f/',
+      path: '/say/',
       component: FullscreenLayout,
       children: [
         {

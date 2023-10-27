@@ -7,6 +7,21 @@ app:
   status:
     processing: Processing files
 
+donate:
+  title:
+    short: Donate
+    long: Support the development
+  description: >-
+    If you like this project, please consider supporting the development by donating.
+  usage: >-
+    Donations allow me to spend more time on this project, to keep it free and open source.
+    A small percentage will go to support the developers of the libraries used, if possible.
+  processors:
+    patreon:
+      label: Patreon
+      description: Become a patron
+      link: https://www.patreon.com/ablegram
+
 menu:
   search:
     label: Search

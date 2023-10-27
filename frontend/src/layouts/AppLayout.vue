@@ -1,13 +1,13 @@
 <template>
   <div class="AppLayout">
     <h1 class="text-3xl flex gap-2">
-      <span class="inline-flex h-2rem w-2rem" v-if="!processing">
+      <RouterLink :to="{ name: 'search' }" class="inline-flex h-2rem w-2rem" v-if="!processing">
         <img
           src="@/assets/media/logo.svg"
           class="inline-flex border-round-md border-1 border-transparent h-2rem mb-2"
           alt="Ablegram logo"
         />
-      </span>
+      </RouterLink>
       <span v-if="processing" class="h-2rem w-2rem inline-flex">
         <ProgressSpinner
           class="h-auto"

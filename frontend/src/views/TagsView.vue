@@ -1,5 +1,5 @@
 <template>
-  <TagOverview class="pb-3" />
+  <TagOverview />
 </template>
 
 <script setup lang="ts">

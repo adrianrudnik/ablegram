@@ -1,7 +1,9 @@
 <template>
-  <div class="SectionHeadline">
-    <div class="flex md:align-items-center md:justify-content-between flex-column md:flex-row pb-4">
-      <div class="mb-3 lg:mb-0">
+  <div class="mb-4">
+    <div
+      class="SectionHeadline flex md:align-items-center md:justify-content-between flex-column md:flex-row pb-2"
+    >
+      <div>
         <div class="title text-2xl font-medium mb-3" v-if="props.title">{{ props.title }}</div>
         <div class="title text-2xl font-medium mb-3" v-if="!!$slots.title">
           <slot name="title" />
@@ -14,6 +16,8 @@
         <slot name="right" />
       </span>
     </div>
+
+    <slot />
   </div>
 </template>
 

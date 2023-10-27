@@ -15,7 +15,6 @@ donate:
     If you like this project, please consider supporting the development by donating.
   usage: >-
     Donations allow me to spend more time on this project, to keep it free and open source.
-    A small percentage will go to support the developers of the libraries used, if possible.
   processors:
     patreon:
       label: Patreon
@@ -64,6 +63,7 @@ tags:
   sys:location:factory-pack: Factory Pack
   sys:location:cloud-manager: Cloud Manager
   sys:location:trash: Trash
+  sys:location:elsewhere: Elsewhere
 
 app-status:
   title: App status
@@ -105,11 +105,21 @@ file-table:
     no-files-found: No files found.
     no-files-found-for-filter: No files found for filter "{filter}".
 
-tags-view:
-  title: Found tags
-  description: >-
-    Contains a list of tags that the application has established within the
-    processed files.
+tag-overview:
+  software:
+    title: Software related tags
+    description: >-
+      Contains tags that are related to the software that was used to create the
+      file.
+  location:
+    title: Location related tags
+    description: >-
+      Contains tags that are related to the location of the
+      file within the scanned drives and folders.
+  live-set:
+    title: Live Set related tags
+    description: >-
+      Contains tags that are related to Live Sets and their properties.
 
 goodbye-view:
   title: Goodbye

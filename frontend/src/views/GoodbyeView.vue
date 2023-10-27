@@ -5,10 +5,15 @@
     </template>
   </SectionHeadline>
 
-  <SectionHeadline :title="t('donate.title.long')">
+  <SectionHeadline>
+    <template #title>
+      {{ t('donate.title.long') }}
+    </template>
     <template #description>
       <p>{{ t('donate.description') }}</p>
       <p>{{ t('donate.usage') }}</p>
+
+      <i class="pi pi-heart font-bold text-red-500 text-xl"></i>
 
       <ul class="pl-0 list-none">
         <li>

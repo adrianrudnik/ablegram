@@ -15,7 +15,6 @@ donate:
     Wenn Ihnen dieses Projekt gefällt, erwägen Sie bitte eine Spende zur Unterstützung der Entwicklung.
   usage: >-
     Spenden ermöglichen es mir, mehr Zeit in dieses Projekt zu investieren, um es kostenlos und Open Source zu halten.
-    Ein kleiner Prozentsatz wird, wenn möglich, zur Unterstützung der Entwickler der verwendeten Bibliotheken verwendet.
   processors:
     patreon:
       label: Patreon
@@ -64,6 +63,7 @@ tags:
   sys:location:factory-pack: Factory Pack
   sys:location:cloud-manager: Cloud Manager
   sys:location:trash: Papierkorb
+  sys:location:elsewhere: Sonstwo
 
 app-status:
   title: Status der App
@@ -105,6 +105,22 @@ file-table:
   errors:
     no-files-found: Keine Dateien gefunden.
     no-files-found-for-filter: Keine Dateien für den Filter "{filter}" gefunden.
+
+tag-overview:
+  software:
+    title: Software bezogene Tags
+    description: >-
+      Enthält Tags die sich auf die Software beziehen, die zur Erstellung der
+      Datei verwendet wurde.
+  location:
+    title: Speicherort bezogene Tags
+    description: >-
+      Enthält Tags die sich auf den Speicherort der Datei innerhalb der gescannten
+      Laufwerke und Ordner beziehen.
+  live-set:
+    title: Live Set bezogene Tags
+    description: >-
+      Enthält Tags die sich auf Live Sets und deren Eigenschaften beziehen.
 
 goodbye-view:
   title: Auf Wiedersehen

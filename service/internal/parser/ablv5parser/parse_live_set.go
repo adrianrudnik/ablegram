@@ -19,20 +19,16 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 		tags.AddSystemTag("location:live-recording")
 	}
 
-	if util.PathContainsFolder(path, "User Library") {
-		tags.AddSystemTag("location:user-library")
-	}
-
-	if util.PathContainsFolder(path, "Factory Packs") {
-		tags.AddSystemTag("location:factory-pack")
-	}
-
-	if util.PathContainsFolder(path, "Cloud Manager") {
-		tags.AddSystemTag("location:cloud-manager")
-	}
-
 	if util.PathContainsFolder(path, "Trash") || util.PathContainsFolder(path, "$Recycle.Bin") {
 		tags.AddSystemTag("location:trash")
+	} else if util.PathContainsFolder(path, "Factory Packs") {
+		tags.AddSystemTag("location:factory-pack")
+	} else if util.PathContainsFolder(path, "Cloud Manager") {
+		tags.AddSystemTag("location:cloud-manager")
+	} else if util.PathContainsFolder(path, "User Library") {
+		tags.AddSystemTag("location:user-library")
+	} else {
+		tags.AddSystemTag("location:elsewhere")
 	}
 
 	// @todo Factory Preset, User Preset, User Library, Factory Library

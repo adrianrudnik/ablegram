@@ -5,13 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { hydrateTags, useTagStore } from '@/stores/tags'
-import { computed, onMounted } from 'vue'
+import { useTagStore } from '@/stores/tags'
+import { computed } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
 
 const tags = computed(() => useTagStore().entries)
-
-onMounted(async () => {
-  await hydrateTags()
-})
 </script>

@@ -3,10 +3,11 @@ import { useFilesStore } from '@/stores/files'
 import { useStatStore } from '@/stores/stats'
 import type { PushMessage } from '@/websocket/messages/global'
 import { PushMessageType } from '@/websocket/messages/global'
+import { hydrateTags, useTagStore } from '@/stores/tags'
 
 export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
   autoReconnect: true,
-  onMessage(ws, event) {
+  async onMessage(ws, event) {
     const payload = JSON.parse(event.data) as PushMessage
 
     switch (payload.type) {
@@ -19,6 +20,8 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
         break
 
       case PushMessageType.ProcessingStatus:
+        // Hydrate the new tags
+        await hydrateTags()
         useStatStore().isProcessing = payload.status
         break
     }

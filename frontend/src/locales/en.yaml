@@ -8,10 +8,12 @@ app:
 menu:
   search:
     label: Search
-  about:
+  files:
+    label: Files
+  tags:
+    label: Tags
+  info:
     label: About
-  status:
-    label: Status
   quit:
     label: Quit
 
@@ -46,10 +48,6 @@ tags:
   trash: Trash
   tempo: Tempo
 
-scales:
-  c-major: C major
-  unknown: Unknown
-
 app-status:
   title: App status
   description: Contains information about the application and its current status.
@@ -63,13 +61,18 @@ app-status:
       CONNECTING: Connecting to {url}.
       CLOSED: Connection to {url} is closed.
 
-file-table:
+file-view:
   title: Found files
   description: >-
     Contains a list of files that the application has found within the specified
     folders.
-  global-search:
-    placeholder: Search files
+
+file-table:
+  header:
+    search:
+      placeholder: Search files
+    hits:
+      label: No files processed | One file processed | {count} files processed
   columns:
     status:
       label: Status
@@ -84,3 +87,20 @@ file-table:
   errors:
     no-files-found: No files found.
     no-files-found-for-filter: No files found for filter "{filter}".
+
+tags-view:
+  title: Found tags
+  description: >-
+    Contains a list of tags that the application has established within the
+    processed files.
+
+goodbye-view:
+  title: Goodbye
+  description: You can close this window (or tab) now.
+
+shutdown-confirm-modal:
+  title: Confirm shutdown
+  message: >-
+    The service will be shut down and all locked system resources will be released.
+  accept: Shutdown
+  reject: Return

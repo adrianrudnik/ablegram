@@ -15,7 +15,3 @@ onMounted(async () => {
   await hydrateTags()
 })
 </script>
-
-<style scoped lang="scss"></style>
-
-<i18n lang="yaml"></i18n>

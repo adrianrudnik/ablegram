@@ -13,7 +13,7 @@
           <span v-bind="props.label">{{ label }}</span>
         </a>
       </RouterLink>
-      <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+      <a v-else-if="item.command" @click="item.command" v-bind="props.action">
         <span v-bind="props.icon" />
         <span v-bind="props.label">{{ label }}</span>
         <span
@@ -28,11 +28,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Menubar from 'primevue/menubar'
-import type { MenuItem } from 'primevue/menuitem'
+import { useConfirm } from 'primevue/useconfirm'
+import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
+import { fetchApi } from '@/plugins/api'
 
 const { t } = useI18n()
+const confirm = useConfirm()
+const router = useRouter()
 
 const activeRoute = computed(() => useRoute().name)
 
@@ -48,6 +52,32 @@ const pt = {
   }
 }
 
+const shutdownConfirm = (event: MenuItemCommandEvent) => {
+  confirm.require({
+    target: event.currentTarget,
+    header: t('shutdown-confirm-modal.title'),
+    message: t('shutdown-confirm-modal.message'),
+    acceptLabel: t('shutdown-confirm-modal.accept'),
+    rejectLabel: t('shutdown-confirm-modal.reject'),
+    icon: 'pi pi-power-off',
+    accept: () => {
+      shutdown()
+    }
+  })
+}
+
+const shutdown = async () => {
+  try {
+    await fetchApi('/shutdown', {
+      method: 'POST'
+    })
+  } catch (e) {
+    console.warn(e)
+  }
+
+  await router.push({ name: 'goodbye' })
+}
+
 const items: MenuItem[] = [
   {
     label: t('menu.search.label'),
@@ -55,18 +85,24 @@ const items: MenuItem[] = [
     route: { name: 'search' }
   },
   {
-    label: t('menu.status.label'),
-    icon: 'pi pi-fw pi-bolt',
-    route: { name: 'status' }
+    label: t('menu.files.label'),
+    icon: 'pi pi-fw pi-file',
+    route: { name: 'files' }
   },
   {
-    label: t('menu.about.label'),
+    label: t('menu.tags.label'),
+    icon: 'pi pi-fw pi-tag',
+    route: { name: 'tags' }
+  },
+  {
+    label: t('menu.info.label'),
     icon: 'pi pi-fw pi-info-circle',
-    route: { name: 'about' }
+    route: { name: 'info' }
   },
   {
     label: t('menu.quit.label'),
-    icon: 'pi pi-fw pi-power-off'
+    icon: 'pi pi-fw pi-power-off',
+    command: shutdownConfirm
   }
 ]
 </script>

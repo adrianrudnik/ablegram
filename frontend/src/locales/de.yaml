@@ -8,10 +8,12 @@ app:
 menu:
   search:
     label: Suche
-  about:
+  files:
+    label: Dateien
+  tags:
+    label: Tags
+  info:
     label: Info
-  status:
-    label: Status
   quit:
     label: Beenden
 
@@ -39,10 +41,10 @@ tags:
   has-midi-track: Hat MIDI-Spur
   no-midi-track: Keine MIDI-Spur
   location: Ort
-#  live-recording: Live Recording
-#  user-library: User Library
-#  factory-pack: Factory Pack
-#  cloud-manager: Cloud Manager
+  #  live-recording: Live Recording
+  #  user-library: User Library
+  #  factory-pack: Factory Pack
+  #  cloud-manager: Cloud Manager
   trash: Papierkorb
   tempo: Tempo
 
@@ -59,14 +61,19 @@ app-status:
       CONNECTING: Verbindung wird aufgebaut mit {url}.
       CLOSED: Verbindung zu {url} wurde geschlossen.
 
-file-table:
+file-view:
   title: Gefundene Dateien
   description: >-
     Enthält eine Übersicht über alle Dateien die von der App gefunden und für
     die Verarbeitung vorgesehen wurden. Ebenfalls läßt sich der Verarbeitungsstatus
     einsehen.
-  global-search:
-    placeholder: Dateien durchsuchen
+
+file-table:
+  header:
+    search:
+      placeholder: Dateien durchsuchen
+    hits:
+      label: Keine Dateien verarbeitet | Eine Datei verarbeitet | {count} Dateien verarbeitet
   columns:
     status:
       label: Status
@@ -81,3 +88,14 @@ file-table:
   errors:
     no-files-found: Keine Dateien gefunden.
     no-files-found-for-filter: Keine Dateien für den Filter "{filter}" gefunden.
+
+goodbye-view:
+  title: Auf Wiedersehen
+  description: Sie können das Fenster (oder Tab) nun schließen.
+
+shutdown-confirm-modal:
+  title: Beenden bestätigen
+  message: >-
+    Der Dienst wird beendet und alle Systemressourcen werden wieder freigegeben.
+  accept: Beenden
+  reject: Zurück

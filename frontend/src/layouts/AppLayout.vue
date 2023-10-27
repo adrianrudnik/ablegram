@@ -13,10 +13,13 @@
 
     <RouterView />
   </div>
+
+  <ConfirmDialog />
 </template>
 
 <script setup lang="ts">
 import MenuBar from '@/components/parts/MenuBar.vue'
+import ConfirmDialog from 'primevue/confirmdialog'
 </script>
 
 <style lang="scss">

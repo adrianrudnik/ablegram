@@ -62,7 +62,7 @@ const parts = computed(() => {
     realm: translate('tags.', p[0] ?? null),
     topic: translate('tags.', p[1] ?? null),
     detail: translate('tags.', p[2] ?? null),
-    extra: p[3],
+    extra: p[3]
   }
 })
 </script>

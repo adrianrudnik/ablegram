@@ -36,16 +36,14 @@ func NewFileStatusPush(path string, status string, remark string) *FileStatusPus
 }
 
 type MetricUpdatePush struct {
-	Type  string `json:"type"`
-	Key   string `json:"k"`
-	Value uint64 `json:"v"`
+	Type   string            `json:"type"`
+	Values map[string]uint64 `json:"values"`
 }
 
-func NewMetricUpdatePush(k string, v uint64) *MetricUpdatePush {
+func NewMetricUpdatePush(values map[string]uint64) *MetricUpdatePush {
 	return &MetricUpdatePush{
-		Type:  "metric_update",
-		Key:   k,
-		Value: v,
+		Type:   "metric_update",
+		Values: values,
 	}
 }
 

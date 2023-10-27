@@ -2,51 +2,70 @@ package stats
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/samber/lo"
 	"sync/atomic"
+	"time"
 )
 
 type Metrics struct {
-	validFiles     atomic.Uint64
-	invalidFiles   atomic.Uint64
-	liveSets       atomic.Uint64
-	indexDocuments atomic.Uint64
-	midiTracks     atomic.Uint64
-	audioTracks    atomic.Uint64
-	broadcastChan  chan<- interface{}
+	validFiles      atomic.Uint64
+	invalidFiles    atomic.Uint64
+	liveSets        atomic.Uint64
+	indexDocuments  atomic.Uint64
+	midiTracks      atomic.Uint64
+	audioTracks     atomic.Uint64
+	pushHistorySize atomic.Uint64
+
+	triggerUpdate func()
 }
 
 func NewMetrics(broadcastChan chan<- interface{}) *Metrics {
-	return &Metrics{
-		broadcastChan: broadcastChan,
-	}
+	m := &Metrics{}
+
+	m.triggerUpdate, _ = lo.NewDebounce(50*time.Millisecond, func() {
+		broadcastChan <- m.collect()
+	})
+
+	return m
+}
+
+func (s *Metrics) collect() *pusher.MetricUpdatePush {
+	return pusher.NewMetricUpdatePush(map[string]uint64{
+		"files_valid":   s.validFiles.Load(),
+		"files_invalid": s.invalidFiles.Load(),
+		"live_sets":     s.liveSets.Load(),
+		"index_docs":    s.indexDocuments.Load(),
+		"midi_tracks":   s.midiTracks.Load(),
+		"audio_tracks":  s.audioTracks.Load(),
+	})
 }
 
 func (s *Metrics) AddValidFile() {
-	v := s.validFiles.Add(1)
-	s.broadcastChan <- pusher.NewMetricUpdatePush("files_valid", v)
+	s.validFiles.Add(1)
+	s.triggerUpdate()
 }
 
 func (s *Metrics) AddInvalidFile() {
-	v := s.invalidFiles.Add(1)
-	s.broadcastChan <- pusher.NewMetricUpdatePush("files_invalid", v)
+	s.invalidFiles.Add(1)
+	s.triggerUpdate()
 }
 
 func (s *Metrics) AddLiveSet() {
-	v := s.liveSets.Add(1)
-	s.broadcastChan <- pusher.NewMetricUpdatePush("live_sets", v)
+	s.liveSets.Add(1)
+	s.triggerUpdate()
 }
 
 func (s *Metrics) SetIndexDocuments(count uint64) {
 	s.indexDocuments.Store(count)
-	s.broadcastChan <- pusher.NewMetricUpdatePush("index_docs", count)
+	s.triggerUpdate()
 }
 
 func (s *Metrics) AddMidiTrack() {
-	v := s.midiTracks.Add(1)
-	s.broadcastChan <- pusher.NewMetricUpdatePush("midi_tracks", v)
+	s.midiTracks.Add(1)
+	s.triggerUpdate()
 }
 
 func (s *Metrics) AddAudioTrack() {
-	v := s.audioTracks.Add(1)
-	s.broadcastChan <- pusher.NewMetricUpdatePush("audio_tracks", v)
+	s.audioTracks.Add(1)
+	s.triggerUpdate()
 }

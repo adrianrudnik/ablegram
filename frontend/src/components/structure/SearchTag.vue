@@ -59,8 +59,6 @@ const translate = (prefix: string, value: string | number | null): string | null
   return t(prefix + value)
 }
 
-console.log(messages)
-
 const parts = computed(() => {
   const p = props.tag.id.split(':')
   return {

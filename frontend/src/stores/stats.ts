@@ -10,31 +10,35 @@ export const useStatStore = defineStore('stats', () => {
   const midiTrackCount = ref(0)
   const audioTrackCount = ref(0)
 
-  const update = (k: string, v: number) => {
-    switch (k) {
-      case 'files_valid':
-        validFileCount.value = v
-        break
-      case 'files_invalid':
-        invalidFileCount.value = v
-        break
-      case 'live_sets':
-        liveSetCount.value = v
-        break
-      case 'index_docs':
-        indexDocumentCount.value = v
-        break
-      case 'midi_tracks':
-        midiTrackCount.value = v
-        break
-      case 'audio_tracks':
-        audioTrackCount.value = v
-        break
+  const updateMetrics = (values: {[key: string]: number}) => {
+    console.log('Updating metrics');
+
+    for (const [k, v] of Object.entries(values)) {
+      switch (k) {
+        case 'files_valid':
+          validFileCount.value = v
+          break
+        case 'files_invalid':
+          invalidFileCount.value = v
+          break
+        case 'live_sets':
+          liveSetCount.value = v
+          break
+        case 'index_docs':
+          indexDocumentCount.value = v
+          break
+        case 'midi_tracks':
+          midiTrackCount.value = v
+          break
+        case 'audio_tracks':
+          audioTrackCount.value = v
+          break
+      }
     }
   }
 
   return {
-    update,
+    updateMetrics,
     isProcessing,
     validFileCount,
     invalidFileCount,

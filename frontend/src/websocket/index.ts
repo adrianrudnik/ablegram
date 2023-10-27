@@ -16,7 +16,7 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
         break
 
       case PushMessageType.MetricUpdate:
-        useStatStore().update(payload.k, payload.v)
+        useStatStore().updateMetrics(payload.values)
         break
 
       case PushMessageType.ProcessingStatus:

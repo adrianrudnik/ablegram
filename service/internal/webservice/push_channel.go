@@ -1,17 +1,21 @@
 package webservice
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/samber/lo"
 	"sync"
+	"time"
 )
 
 type PushChannel struct {
-	clients      map[*PushClient]bool
-	clientsLock  sync.RWMutex
-	addClient    chan *PushClient
-	removeClient chan *PushClient
-	broadcast    chan interface{}
-	history      []interface{}
-	historyLock  sync.RWMutex
+	clients               map[*PushClient]bool
+	clientsLock           sync.RWMutex
+	addClient             chan *PushClient
+	removeClient          chan *PushClient
+	broadcast             chan interface{}
+	history               []interface{}
+	historyLock           sync.RWMutex
+	triggerHistoryCleanup func()
 }
 
 func NewPushChannel(broadcastChan chan interface{}) *PushChannel {
@@ -20,11 +24,13 @@ func NewPushChannel(broadcastChan chan interface{}) *PushChannel {
 		addClient:    make(chan *PushClient),
 		removeClient: make(chan *PushClient),
 		broadcast:    broadcastChan,
-		history:      make([]interface{}, 0, 10000),
+		history:      make([]interface{}, 0, 500),
 	}
 }
 
 func (c *PushChannel) Run() {
+	c.StartHistoryCompactor()
+
 	for {
 		select {
 		case client := <-c.addClient:
@@ -91,4 +97,56 @@ func (c *PushChannel) Broadcast(message interface{}) {
 		}
 	}
 	c.clientsLock.RUnlock()
+
+	c.triggerHistoryCleanup()
+}
+
+func (c *PushChannel) StartHistoryCompactor() {
+	// Establish a debounced history cleaner
+	c.triggerHistoryCleanup, _ = lo.NewDebounce(250*time.Millisecond, func() {
+		c.historyLock.Lock()
+
+		startCount := len(c.history)
+
+		// Make the latest messages to first ones in the slice
+		lo.Reverse(c.history)
+
+		// Only keep the newest processing update
+		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pusher.ProcessingStatusPush)
+			return ok
+		})
+
+		// Only keep the newest metrics update
+		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pusher.MetricUpdatePush)
+			return ok
+		})
+
+		// Filter all file updates, keep the newest one per file
+		m := lo.Uniq(lo.FilterMap(c.history, func(v interface{}, _ int) (string, bool) {
+			x, ok := v.(*pusher.FileStatusPush)
+			if !ok {
+				return "", false
+			}
+
+			return x.ID, true
+		}))
+
+		for _, hit := range m {
+			c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
+				x, ok := v.(*pusher.FileStatusPush)
+				return ok && x.ID == hit
+			})
+		}
+
+		lo.Reverse(c.history)
+
+		// Increase capacity again
+		c.history = append(make([]any, 0, len(c.history)+500), c.history...)
+
+		Logger.Debug().Int("before", startCount).Int("after", len(c.history)).Msg("Websocket history compacted")
+
+		c.historyLock.Unlock()
+	})
 }

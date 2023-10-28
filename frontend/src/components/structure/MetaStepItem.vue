@@ -21,5 +21,3 @@
     <div class="Separator"></div>
   </li>
 </template>
-
-<style lang="scss"></style>

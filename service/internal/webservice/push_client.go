@@ -48,7 +48,7 @@ func (c *PushClient) Send() {
 			if !ok {
 				err := c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				if err != nil {
-					Logger.Warn().Err(err).Msg("Could not send close message to client")
+					Logger.Info().Err(err).Msg("Could not send close message to client")
 				}
 				return
 			}
@@ -91,7 +91,7 @@ func (c *PushClient) Receive() {
 		// Currently we do not support client messages, so we just keep the connection empty
 		_, _, err := c.Conn.ReadMessage()
 		if err != nil {
-			Logger.Error().Err(err).Msg("Failed to read client message")
+			Logger.Info().Err(err).Msg("Failed to read client message")
 			break
 		}
 	}

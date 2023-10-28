@@ -1,8 +1,9 @@
 @import '../../../node_modules/primevue/resources/primevue.min.css';
 @import '../../../node_modules/primeflex/primeflex.css';
 @import '../../../node_modules/primeicons/primeicons.css';
-@import '../../../node_modules/prismjs/themes/prism-coy.css';
-@import '../../../node_modules/primevue/resources/themes/lara-light-teal/theme.css';
+
+@import '@/assets/primefaces/themes/ablegram/ablegram-light/blackwhite/theme.scss';
+
 
 .content {
   h1,

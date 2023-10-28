@@ -3,13 +3,11 @@ import { setupStore } from '@/stores/base'
 import type { FileStatus } from '@/stores/files'
 import { fetchApi, fetchSearch } from '@/plugins/api'
 
-export type TagType = 'system'
-
 export interface Tag {
-  type: TagType
+  type: 'sys'
   id: string
   value?: number
-  count: number
+  count: number | string // string for example tag
 }
 
 export const useTagStore = defineStore('tags', setupStore<Tag>())
@@ -39,7 +37,7 @@ export const hydrateTags = async () => {
     const t: Tag = {
       id: term.term,
       count: term.count,
-      type: 'system'
+      type: 'sys'
     }
 
     // The value part might be a number that we need to sort by later on,

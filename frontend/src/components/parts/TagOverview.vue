@@ -1,4 +1,12 @@
 <template>
+  <SectionHeadline :title="t('tag-overview.explain.title')">
+    <template #description>
+      <p>{{ t('tag-overview.explain.description') }}</p>
+    </template>
+
+    <SearchTag :tag="exampleTag" show-count :disable-translation="true" />
+  </SectionHeadline>
+
   <SectionHeadline :title="t('tag-overview.software.title')">
     <template #description>
       <p>{{ t('tag-overview.software.description') }}</p>
@@ -70,8 +78,20 @@ import SectionHeadline from '@/components/structure/SectionHeadline.vue'
 import sortBy from 'lodash/sortBy'
 import orderBy from 'lodash/orderBy'
 import { useI18n } from 'vue-i18n'
+import type { Tag } from '@/stores/tags'
 
 const { t } = useI18n()
+
+const exampleTag: Tag = {
+  type: 'sys',
+  id: [
+    'sys',
+    t('tag-overview.explain.parts.category'),
+    t('tag-overview.explain.parts.detail'),
+    t('tag-overview.explain.parts.value')
+  ].join(':'),
+  count: t('tag-overview.explain.parts.count')
+}
 
 const softwareTags = computed(() =>
   orderBy(

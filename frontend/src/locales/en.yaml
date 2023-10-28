@@ -181,6 +181,17 @@ file-table:
     no-files-found-for-filter: No files found for filter "{filter}".
 
 tag-overview:
+  explain:
+    title: What are tags?
+    description: >-
+      Tags are a way to describe files with additional information. They are
+      automatically extracted from the files and can be used to search for
+      specific files. Here is an example tag on what part of the tag is what:
+    parts:
+      category: Category
+      detail: Detail
+      value: Value
+      count: Hits found
   software:
     title: Software related tags
     description: >-

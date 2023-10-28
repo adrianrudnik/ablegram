@@ -182,6 +182,18 @@ file-table:
     no-files-found-for-filter: Keine Dateien für den Filter "{filter}" gefunden.
 
 tag-overview:
+  explain:
+    title: Was sind Tags?
+    description: >-
+      Tags sind eine Möglichkeit, Dateien mit zusätzlichen Informationen zu
+      beschreiben. Sie werden automatisch aus den Dateien extrahiert und können
+      zum Suchen nach bestimmten Dateien verwendet werden. Hier ist ein Beispiel
+      welcher Teil des Tags was ist:
+    parts:
+      category: Kategorie
+      detail: Detail
+      value: Wert
+      count: Anzahl gefunden
   software:
     title: Software bezogene Tags
     description: >-

@@ -69,51 +69,51 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 
 	// Extract some details about the file itself
 
-	finfo, err := times.Stat(path)
+	fstat, err := times.Stat(path)
 	if err == nil {
 		// Handle the basic modification time
-		year, month, _ := finfo.ModTime().Date()
+		year, month, _ := fstat.ModTime().Date()
 
 		// Simple scalars
 		tags.AddSystemTag(fmt.Sprintf("file:mtime-year:%d", year))
-		tags.AddSystemTag(fmt.Sprintf("file:mtime-weekday:%d", finfo.ModTime().Weekday()))
+		tags.AddSystemTag(fmt.Sprintf("file:mtime-weekday:%d", fstat.ModTime().Weekday()))
 
 		// Month based breakdowns
 		tags.AddSystemTag(fmt.Sprintf("file:mtime-month:%d", month))
 		tags.AddSystemTag(fmt.Sprintf("file:mtime-quarter:%d", (month+2)/3))
 
 		// Week number is a bit more complex, a week can span years, but for now we just want the week number.
-		_, wno := finfo.ModTime().ISOWeek()
+		_, wno := fstat.ModTime().ISOWeek()
 		tags.AddSystemTag(fmt.Sprintf("file:mtime-weekno:%d", wno))
 
-		for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(finfo.ModTime()) {
+		for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(fstat.ModTime()) {
 			tags.AddSystemTag(fmt.Sprintf("file:zodiac-western:%s", strings.ToLower(zodiac.String())))
 		}
 
-		tags.AddSystemTag(fmt.Sprintf("file:zodiac-chinese:%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(finfo.ModTime()).String())))
+		tags.AddSystemTag(fmt.Sprintf("file:zodiac-chinese:%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(fstat.ModTime()).String())))
 
 		// Do the same for the creation time, if possible
-		if finfo.HasBirthTime() {
-			year, month, _ := finfo.BirthTime().Date()
+		if fstat.HasBirthTime() {
+			year, month, _ := fstat.BirthTime().Date()
 
 			// Simple scalars
 			tags.AddSystemTag(fmt.Sprintf("file:btime-year:%d", year))
-			tags.AddSystemTag(fmt.Sprintf("file:btime-weekday:%d", finfo.ModTime().Weekday()))
+			tags.AddSystemTag(fmt.Sprintf("file:btime-weekday:%d", fstat.ModTime().Weekday()))
 
 			// Month based breakdowns
 			tags.AddSystemTag(fmt.Sprintf("file:btime-month:%d", month))
 			tags.AddSystemTag(fmt.Sprintf("file:btime-quarter:%d", (month+2)/3))
 
 			// Week number is a bit more complex, a week can span years, but for now we just want the week number.
-			_, wno := finfo.ModTime().ISOWeek()
+			_, wno := fstat.ModTime().ISOWeek()
 			tags.AddSystemTag(fmt.Sprintf("file:btime-weekno:%d", wno))
 
 			// Lets add some zodiac signs
-			for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(finfo.BirthTime()) {
+			for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(fstat.BirthTime()) {
 				tags.AddSystemTag(fmt.Sprintf("file:zodiac-western:%s", strings.ToLower(zodiac.String())))
 			}
 
-			tags.AddSystemTag(fmt.Sprintf("file:zodiac-chinese:%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(finfo.BirthTime()).String())))
+			tags.AddSystemTag(fmt.Sprintf("file:zodiac-chinese:%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(fstat.BirthTime()).String())))
 		}
 	}
 

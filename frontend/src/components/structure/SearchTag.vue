@@ -34,14 +34,18 @@ const props = withDefaults(
     tag: TagInterface
     showRealm?: boolean
     showCount?: boolean
+    disableTranslation?: boolean
   }>(),
   {
     showRealm: false,
-    showCount: false
+    showCount: false,
+    disableTranslation: false
   }
 )
 
 const translate = (prefix: string, value: string | number | null): string | null => {
+  if (props.disableTranslation) return String(value)
+
   if (value === null) {
     return null
   }

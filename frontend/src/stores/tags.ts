@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { setupStore } from '@/stores/base'
 import type { FileStatus } from '@/stores/files'
-import { fetchApi, fetchSearch } from '@/plugins/api'
+import { fetchApi } from '@/plugins/api'
+import { executeQuerySearch } from '@/plugins/search'
 
 export interface Tag {
   type: 'sys'
@@ -16,7 +17,7 @@ export const hydrateTags = async () => {
   const tags = useTagStore()
   tags.clear()
 
-  const r = await fetchSearch({
+  const r = await executeQuerySearch({
     size: 4,
     query: {
       query: '*'

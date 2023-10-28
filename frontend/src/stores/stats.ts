@@ -3,6 +3,7 @@ import { ref } from 'vue'
 
 export const useStatStore = defineStore('stats', () => {
   const isProcessing = ref(false)
+  const isSearching = ref(false)
   const validFileCount = ref(0)
   const invalidFileCount = ref(0)
   const liveSetCount = ref(0)
@@ -38,6 +39,7 @@ export const useStatStore = defineStore('stats', () => {
   return {
     updateMetrics,
     isProcessing,
+    isSearching,
     validFileCount,
     invalidFileCount,
     liveSetCount,

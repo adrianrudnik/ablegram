@@ -222,3 +222,6 @@ shutdown-confirm-modal:
     The service will be shut down and all locked system resources will be released.
   accept: Shutdown
   reject: Return
+
+query-input-component:
+  placeholder: Search your files here

@@ -9,6 +9,10 @@ export function setupStore<T extends StoreResource>() {
   return () => {
     const entries = ref<T[]>([]) as Ref<T[]>
 
+    function overwrite(resource: T[]) {
+      entries.value = resource
+    }
+
     function update(resource: T) {
       const idx = entries.value.findIndex((entry) => resource.id === entry.id)
 
@@ -17,6 +21,10 @@ export function setupStore<T extends StoreResource>() {
       } else {
         entries.value[idx] = resource
       }
+    }
+
+    function updateBatch(resources: T[]) {
+      resources.forEach(update)
     }
 
     function remove(resource: T) {
@@ -37,6 +45,6 @@ export function setupStore<T extends StoreResource>() {
       entries.value = []
     }
 
-    return { entries, update, remove, get, count, clear }
+    return { entries, overwrite, update, updateBatch, remove, get, count, clear }
   }
 }

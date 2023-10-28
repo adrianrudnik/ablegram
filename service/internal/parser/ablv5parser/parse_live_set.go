@@ -86,12 +86,6 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 		_, wno := fstat.ModTime().ISOWeek()
 		tags.AddSystemTag(fmt.Sprintf("file:mtime-weekno:%d", wno))
 
-		for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(fstat.ModTime()) {
-			tags.AddSystemTag(fmt.Sprintf("file:zodiac-western:%s", strings.ToLower(zodiac.String())))
-		}
-
-		tags.AddSystemTag(fmt.Sprintf("file:zodiac-chinese:%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(fstat.ModTime()).String())))
-
 		// Do the same for the creation time, if possible
 		if fstat.HasBirthTime() {
 			year, month, _ := fstat.BirthTime().Date()
@@ -121,13 +115,14 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	liveSet.Tags = tags.GetAllAndClear()
 	liveSet.DisplayName = filepath.Base(path)
 	liveSet.Filename = path
+	liveSet.AbsPath = path
 	liveSet.MajorVersion = data.MajorVersion
 	liveSet.MinorVersion = data.MinorVersion
 	liveSet.Creator = data.Creator
 	liveSet.Revision = data.Revision
-	liveSet.ScaleRoot = data.LiveSet.ScaleInformation.HumanizeRootNote()
+	liveSet.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
 	liveSet.ScaleName = data.LiveSet.ScaleInformation.Name.Value
-	liveSet.Scale = fmt.Sprintf("%s %s", liveSet.ScaleRoot, liveSet.ScaleName)
+	liveSet.Scale = fmt.Sprintf("%s %s", liveSet.ScaleRootNote, liveSet.ScaleName)
 	liveSet.InKey = data.LiveSet.InKey.Value
 	liveSet.Tempo = data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value
 

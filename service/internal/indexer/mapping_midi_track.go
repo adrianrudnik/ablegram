@@ -19,7 +19,7 @@ type MidiTrackDocument struct {
 
 func NewMidiTrackDocument() *MidiTrackDocument {
 	return &MidiTrackDocument{
-		T: "midi_track",
+		T: "MidiTrack",
 	}
 }
 func (d *MidiTrackDocument) Type() string {

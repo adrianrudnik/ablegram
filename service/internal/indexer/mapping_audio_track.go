@@ -19,7 +19,7 @@ type AudioTrackDocument struct {
 
 func NewAudioTrackDocument() *AudioTrackDocument {
 	return &AudioTrackDocument{
-		T: "audio_track",
+		T: "AudioTrack",
 	}
 }
 func (d *AudioTrackDocument) Type() string {

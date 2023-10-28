@@ -10,10 +10,7 @@
       <div v-if="parts.extra" class="p-1 px-2 bg-black-alpha-50 text-white border-900">
         {{ parts.extra }}
       </div>
-      <div
-        v-if="showCount"
-        class="p-1 px-2 bg-black-alpha-30 border-900"
-      >
+      <div v-if="showCount" class="p-1 px-2 bg-black-alpha-30 border-900">
         {{ props.tag.count }}
       </div>
     </div>
@@ -24,7 +21,6 @@
 import type { Tag as TagInterface } from '@/stores/tags'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import messages from '@intlify/unplugin-vue-i18n/messages'
 
 const { t } = useI18n()
 

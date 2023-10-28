@@ -8,23 +8,23 @@ import (
 import "github.com/google/uuid"
 
 type PushClient struct {
-	ID         string
-	Connection *websocket.Conn
-	tx         chan interface{}
-	channel    *PushChannel
+	ID       string
+	Conn     *websocket.Conn
+	tx       chan interface{}
+	pushChan *PushChannel
 }
 
 var writeTimeout = 5 * time.Second
 
-func NewPushClient(connection *websocket.Conn, channel *PushChannel) *PushClient {
+func NewPushClient(connection *websocket.Conn, pushChan *PushChannel) *PushClient {
 	id := uuid.New()
 
 	return &PushClient{
-		ID:         id.String(),
-		Connection: connection,
+		ID:   id.String(),
+		Conn: connection,
 
-		channel: channel,
-		tx:      make(chan interface{}, 128),
+		pushChan: pushChan,
+		tx:       make(chan interface{}, 128),
 	}
 }
 
@@ -34,37 +34,37 @@ func (c *PushClient) Send() {
 
 	defer func() {
 		pingTicker.Stop()
-		c.Connection.Close()
+		c.Conn.Close()
 	}()
 
 	for {
 		select {
 		case msg, ok := <-c.tx:
-			err := c.Connection.SetWriteDeadline(time.Now().Add(writeTimeout))
+			err := c.Conn.SetWriteDeadline(time.Now().Add(writeTimeout))
 			if err != nil {
 				Logger.Warn().Err(err).Msg("Could not set write deadline for client on message")
 			}
 
 			if !ok {
-				err := c.Connection.WriteMessage(websocket.CloseMessage, []byte{})
+				err := c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				if err != nil {
 					Logger.Warn().Err(err).Msg("Could not send close message to client")
 				}
 				return
 			}
 
-			err = c.Connection.WriteJSON(msg)
+			err = c.Conn.WriteJSON(msg)
 			if err != nil {
 				Logger.Error().Err(err).Msg("Could not write JSON message to client")
 			}
 
 		case <-pingTicker.C:
-			err := c.Connection.SetWriteDeadline(time.Now().Add(writeTimeout))
+			err := c.Conn.SetWriteDeadline(time.Now().Add(writeTimeout))
 			if err != nil {
 				Logger.Warn().Err(err).Msg("Could not set write deadline for client on ping")
 			}
 
-			err = c.Connection.WriteMessage(websocket.PingMessage, nil)
+			err = c.Conn.WriteMessage(websocket.PingMessage, nil)
 			if err != nil {
 				Logger.Warn().Err(err).Msg("Could not write ping message to client")
 			}
@@ -75,12 +75,12 @@ func (c *PushClient) Send() {
 func (c *PushClient) Receive() {
 	// Ensure a failing routine cleans up the client
 	defer func() {
-		c.channel.removeClient <- c
-		c.Connection.Close()
+		c.pushChan.removeClient <- c
+		c.Conn.Close()
 	}()
 
-	c.Connection.SetPongHandler(func(string) error {
-		err := c.Connection.SetReadDeadline(time.Now().Add(1 * time.Minute))
+	c.Conn.SetPongHandler(func(string) error {
+		err := c.Conn.SetReadDeadline(time.Now().Add(1 * time.Minute))
 		if err != nil {
 			return err
 		}
@@ -89,7 +89,7 @@ func (c *PushClient) Receive() {
 
 	for {
 		// Currently we do not support client messages, so we just keep the connection empty
-		_, _, err := c.Connection.ReadMessage()
+		_, _, err := c.Conn.ReadMessage()
 		if err != nil {
 			Logger.Error().Err(err).Msg("Failed to read client message")
 			break
@@ -97,16 +97,16 @@ func (c *PushClient) Receive() {
 	}
 }
 
-func connectClientWebsocket(ctx *gin.Context, channel *PushChannel) {
+func connectClientWebsocket(ctx *gin.Context, pushChan *PushChannel) {
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
 		Logger.Error().Err(err).Msg("Failed to upgrade client to websocket")
 		return
 	}
 
-	c := NewPushClient(ws, channel)
+	c := NewPushClient(ws, pushChan)
 
-	channel.addClient <- c
+	pushChan.addClient <- c
 
 	go c.Send()
 	go c.Receive()

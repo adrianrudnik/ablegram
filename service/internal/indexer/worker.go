@@ -7,32 +7,36 @@ import (
 )
 
 type Worker struct {
-	search              *Search
-	inputDocChan        <-chan *pipeline.DocumentToIndexMsg
-	outputBroadcastChan chan<- interface{}
+	search   *Search
+	docChan  <-chan *pipeline.DocumentToIndexMsg
+	pushChan chan<- interface{}
 }
 
 func NewWorker(search *Search, docChan <-chan *pipeline.DocumentToIndexMsg, broadcastChan chan<- interface{}) *Worker {
 	return &Worker{
-		search:              search,
-		inputDocChan:        docChan,
-		outputBroadcastChan: broadcastChan,
+		search:   search,
+		docChan:  docChan,
+		pushChan: broadcastChan,
 	}
 }
 
-func (p *Worker) Run(m *stats.Metrics) {
+func (p *Worker) Run(progress *stats.ProcessProgress, m *stats.Metrics) {
 	Logger.Info().Msg("Starting index batch worker")
 
-	go p.doWork(m)
+	go p.doWork(progress, m)
 }
 
-func (p *Worker) doWork(m *stats.Metrics) {
+func (p *Worker) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
 	for {
 		select {
-		case msg := <-p.inputDocChan:
+		case msg := <-p.docChan:
+			progress.Add()
+
 			err := p.search.Index.Index(msg.Id, msg.Document)
 			if err != nil {
 				log.Error().Err(err).Str("document", msg.Id).Msg("Failed to add document to batch")
+				progress.Done()
+				continue
 			}
 
 			log.Debug().Str("document", msg.Id).Msg("Document indexed")

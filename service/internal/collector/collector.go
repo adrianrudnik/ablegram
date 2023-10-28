@@ -30,11 +30,6 @@ type Collection struct {
 }
 
 func Collect(path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
-	wg.Add(1)
-	defer wg.Done()
-
-	broadcastChan <- pusher.NewProcessingStatusPush(true)
-
 	allowedExtensions := []string{".als"}
 
 	err := findFilesByExtension(path, allowedExtensions, filesChan, broadcastChan)
@@ -44,7 +39,6 @@ func Collect(path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broad
 
 	go func() {
 		wg.Wait()
-		broadcastChan <- pusher.NewProcessingStatusPush(false)
 	}()
 
 	return nil

@@ -1,12 +1,8 @@
 package pusher
 
 import (
-	"github.com/rs/zerolog"
 	"github.com/samber/lo"
-	"os"
 )
-
-var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
 // FilterAllExceptFirst filters a collection by a predicate, but ensures that the first hit is always included at the top
 // of the result. This is useful for messages that always contain the full state about something. By moving it to the top

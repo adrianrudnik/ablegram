@@ -5,19 +5,19 @@ import (
 )
 
 type WorkerPool struct {
-	workerCount         int
-	paths               []string
-	inputPathsChan      chan string
-	outputFilesChan     chan<- *pipeline.FilesForProcessorMsg
-	outputBroadcastChan chan<- interface{}
+	workerCount  int
+	paths        []string
+	inPathChan   chan string
+	outFilesChan chan<- *pipeline.FilesForProcessorMsg
+	pushChan     chan<- interface{}
 }
 
 func NewWorkerPool(workerCount int, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) *WorkerPool {
 	return &WorkerPool{
-		workerCount:         workerCount,
-		inputPathsChan:      make(chan string, 100),
-		outputFilesChan:     filesChan,
-		outputBroadcastChan: broadcastChan,
+		workerCount:  workerCount,
+		inPathChan:   make(chan string, 100),
+		outFilesChan: filesChan,
+		pushChan:     broadcastChan,
 	}
 }
 
@@ -34,15 +34,15 @@ func (p *WorkerPool) Run(paths []string) {
 
 	// Pipe in paths next
 	for _, path := range paths {
-		p.inputPathsChan <- path
+		p.inPathChan <- path
 	}
 }
 
 func (p *WorkerPool) doWork() {
 	for {
 		select {
-		case path := <-p.inputPathsChan:
-			err := Collect(path, p.outputFilesChan, p.outputBroadcastChan)
+		case path := <-p.inPathChan:
+			err := Collect(path, p.outFilesChan, p.pushChan)
 			if err != nil {
 				Logger.Warn().Err(err).Str("path", path).Msg("Failed to collect files")
 			}

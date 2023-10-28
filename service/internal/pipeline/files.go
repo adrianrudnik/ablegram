@@ -1,7 +1,7 @@
 package pipeline
 
 type FilesForProcessor struct {
-	Channel chan *FilesForProcessorMsg
+	Chan chan *FilesForProcessorMsg
 }
 
 type FilesForProcessorMsg struct {
@@ -10,6 +10,6 @@ type FilesForProcessorMsg struct {
 
 func NewFilesForProcessor() *FilesForProcessor {
 	return &FilesForProcessor{
-		Channel: make(chan *FilesForProcessorMsg, 10000),
+		Chan: make(chan *FilesForProcessorMsg, 10000),
 	}
 }

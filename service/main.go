@@ -58,29 +58,33 @@ func main() {
 		filesPipeline := pipeline.NewFilesForProcessor()
 		resultsPipeline := pipeline.NewDocumentsToIndex()
 
-		// Metrics is responsible in keeping and communicating key metrics for the frontend
-		appMetrics := stats.NewMetrics(pusherPipeline.Channel)
+		// ProcessProgress is responsible in holding the current progress and
+		// notifying the frontend about it
+		progress := stats.NewProcessProgress(pusherPipeline.Chan)
 
-		// Create the indexerWorker
-		indexer.Logger = log.With().Str("module", "search").Logger()
-		search := indexer.NewSearch(&indexer.SearchOptions{})
-		indexerWorker := indexer.NewWorker(search, resultsPipeline.Channel, pusherPipeline.Channel)
-		go indexerWorker.Run(appMetrics)
+		// Metrics is responsible in keeping and communicating key metrics for the frontend
+		appMetrics := stats.NewMetrics(pusherPipeline.Chan)
 
 		// Start the frontend push worker
 		webservice.Logger = log.With().Str("module", "webservice").Logger()
-		pusher := webservice.NewPushChannel(pusherPipeline.Channel)
+		pusher := webservice.NewPushChannel(pusherPipeline.Chan)
 		go pusher.Run()
 
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
-		collectorWorkers := collector.NewWorkerPool(3, filesPipeline.Channel, pusherPipeline.Channel)
+		collectorWorkers := collector.NewWorkerPool(3, filesPipeline.Chan, pusherPipeline.Chan)
 		go collectorWorkers.Run(appConfig.SearchablePaths)
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
-		parserWorkers := parser.NewWorkerPool(5, filesPipeline.Channel, resultsPipeline.Channel, pusherPipeline.Channel)
+		parserWorkers := parser.NewWorkerPool(5, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
 		go parserWorkers.Run(appMetrics)
+
+		// Create the indexerWorker
+		indexer.Logger = log.With().Str("module", "indexer").Logger()
+		search := indexer.NewSearch(&indexer.SearchOptions{})
+		indexerWorker := indexer.NewWorker(search, resultsPipeline.Chan, pusherPipeline.Chan)
+		go indexerWorker.Run(progress, appMetrics)
 
 		// Try to open the default browser on the given OS
 		go func() {

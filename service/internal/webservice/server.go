@@ -28,7 +28,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func Serve(indexer *indexer.Search, pushChannel *PushChannel, bindAddr string) error {
+func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -83,7 +83,7 @@ func Serve(indexer *indexer.Search, pushChannel *PushChannel, bindAddr string) e
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
 
 	r.GET("/ws", func(c *gin.Context) {
-		connectClientWebsocket(c, pushChannel)
+		connectClientWebsocket(c, pushChan)
 	})
 
 	r.POST("/shutdown", func(c *gin.Context) {

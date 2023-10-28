@@ -49,10 +49,10 @@ func NewMetricUpdatePush(values map[string]uint64) *MetricUpdatePush {
 
 type ProcessingStatusPush struct {
 	Type   string `json:"type"`
-	Status bool   `json:"status"`
+	Status int64  `json:"routines"`
 }
 
-func NewProcessingStatusPush(status bool) *ProcessingStatusPush {
+func NewProcessingStatusPush(status int64) *ProcessingStatusPush {
 	return &ProcessingStatusPush{
 		Type:   "processing_status",
 		Status: status,

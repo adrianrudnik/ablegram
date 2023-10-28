@@ -1,11 +1,11 @@
 package pipeline
 
 type FrontendPush struct {
-	Channel chan interface{} // Used by other modules for simple
+	Chan chan interface{} // Used by other modules for simple
 }
 
 func NewFrontendPush() *FrontendPush {
 	return &FrontendPush{
-		Channel: make(chan interface{}, 10000),
+		Chan: make(chan interface{}, 10000),
 	}
 }

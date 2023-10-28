@@ -6,7 +6,7 @@ import (
 )
 
 type DocumentsToIndex struct {
-	Channel chan *DocumentToIndexMsg
+	Chan chan *DocumentToIndexMsg
 }
 
 type DocumentToIndexMsg struct {
@@ -23,6 +23,6 @@ func NewDocumentToIndexMsg(id string, doc interface{}) *DocumentToIndexMsg {
 
 func NewDocumentsToIndex() *DocumentsToIndex {
 	return &DocumentsToIndex{
-		Channel: make(chan *DocumentToIndexMsg, 10000),
+		Chan: make(chan *DocumentToIndexMsg, 10000),
 	}
 }

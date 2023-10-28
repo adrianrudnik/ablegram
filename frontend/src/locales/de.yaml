@@ -219,7 +219,3 @@ shutdown-confirm-modal:
     Der Dienst wird beendet und alle Systemressourcen werden wieder freigegeben.
   accept: Beenden
   reject: Zurück
-
-search-tag-component:
-  count:
-    label: Wurde nicht gefunden | Kommt einmal vor | {count} Treffer gefunden

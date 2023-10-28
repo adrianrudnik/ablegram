@@ -1,7 +1,7 @@
 <template>
   <div class="SearchTag mb-1 mr-1 inline-block">
     <div class="flex align-items-center gap-0">
-      <div class="p-1 px-2 text-base bg-black-alpha-10 border-900" v-tooltip="tag.id">
+      <div class="p-1 px-2 text-base bg-black-alpha-10 border-900">
         {{ parts.topic }}
       </div>
       <div v-if="parts.detail" class="p-1 px-2 bg-black-alpha-90 text-white border-900">
@@ -13,7 +13,6 @@
       <div
         v-if="showCount"
         class="p-1 px-2 bg-black-alpha-30 border-900"
-        v-tooltip.top="t('search-tag-component.count.label', { count: props.tag.count })"
       >
         {{ props.tag.count }}
       </div>

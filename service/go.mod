@@ -5,6 +5,8 @@ go 1.21
 require (
 	fyne.io/fyne/v2 v2.4.1
 	github.com/blevesearch/bleve/v2 v2.3.10
+	github.com/djherbis/times v1.6.0
+	github.com/duaneking/gozodiacs v0.0.0-20230703202012-0830be15d5c0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/logger v0.2.6
 	github.com/gin-contrib/static v0.0.1

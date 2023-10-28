@@ -7,6 +7,60 @@ app:
   status:
     processing: Dateien werden verarbeitet
 
+datetime:
+  weekday:
+    0: Sonntag
+    1: Montag
+    2: Dienstag
+    3: Mittwoch
+    4: Donnerstag
+    5: Freitag
+    6: Samstag
+  month:
+    1: Januar
+    2: Februar
+    3: März
+    4: April
+    5: Mai
+    6: Juni
+    7: Juli
+    8: August
+    9: September
+    10: Oktober
+    11: November
+    12: Dezember
+  quarter:
+    1: Q1
+    2: Q2
+    3: Q3
+    4: Q4
+  zodiac-western:
+    aries: Widder
+    taurus: Stier
+    gemini: Zwillinge
+    cancer: Krebs
+    leo: Löwe
+    virgo: Jungfrau
+    libra: Waage
+    scorpio: Skorpion
+    sagittarius: Schütze
+    capricorn: Steinbock
+    aquarius: Wassermann
+    pisces: Fische
+  zodiac-chinese:
+    rat: Ratte
+    ox: Ochse
+    tiger: Tiger
+    rabbit: Hase
+    dragon: Drache
+    snake: Schlange
+    horse: Pferd
+    goat: Ziege
+    monkey: Affe
+    rooster: Hahn
+    dog: Hund
+    pig: Schwein
+
 donate:
   title:
     short: Spende
@@ -48,8 +102,10 @@ error:
 
 tags:
   sys: System
+
   sys:ableton: Ableton
   sys:ableton:version: Version
+
   sys:live-set: Live Set
   sys:live-set:tempo: Tempo
   sys:live-set:has-audio-track: Hat Audiospur
@@ -57,13 +113,32 @@ tags:
   sys:live-set:has-midi-track: Hat MIDI-Spur
   sys:live-set:no-midi-track: Keine MIDI-Spur
   sys:live-set:has-midi-audio-tracks: Hat MIDI- und Audiospur
+
   sys:location: Speicherort
   sys:location:live-recording: Live Recording
   sys:location:user-library: User Library
   sys:location:factory-pack: Factory Pack
   sys:location:cloud-manager: Cloud Manager
   sys:location:trash: Papierkorb
+  sys:location:dropbox: Dropbox
+  sys:location:onedrive: OneDrive
+  sys:location:google-drive: Google Drive
   sys:location:elsewhere: Sonstwo
+
+  sys:file: Datei
+  sys:file:btime-year: Erstelltes Jahr
+  sys:file:btime-month: Erstellter Monat
+  sys:file:btime-quarter: Erstelltes Quartal
+  sys:file:btime-weekday: Erstellter Wochentag
+  sys:file:btime-weekno: Erstellte Woche
+  sys:file:mtime-year: Geändertes Jahr
+  sys:file:mtime-month: Geänderter Monat
+  sys:file:mtime-quarter: Geändertes Quartal
+  sys:file:mtime-weekday: Geänderter Wochentag
+  sys:file:mtime-weekno: Geänderte Woche
+
+  sys:file:zodiac-western: Westliches Sternzeichen
+  sys:file:zodiac-chinese: Chinesisches Sternzeichen
 
 app-status:
   title: Status der App

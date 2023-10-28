@@ -11,8 +11,6 @@ export const useStatStore = defineStore('stats', () => {
   const audioTrackCount = ref(0)
 
   const updateMetrics = (values: { [key: string]: number }) => {
-    console.log('Updating metrics')
-
     for (const [k, v] of Object.entries(values)) {
       switch (k) {
         case 'files_valid':

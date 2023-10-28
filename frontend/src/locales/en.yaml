@@ -7,6 +7,60 @@ app:
   status:
     processing: Processing files
 
+datetime:
+  weekday:
+    0: Sunday
+    1: Monday
+    2: Tuesday
+    3: Wednesday
+    4: Thursday
+    5: Friday
+    6: Saturday
+  month:
+    1: January
+    2: February
+    3: March
+    4: April
+    5: May
+    6: June
+    7: July
+    8: August
+    9: September
+    10: October
+    11: November
+    12: December
+  quarter:
+    1: Q1
+    2: Q2
+    3: Q3
+    4: Q4
+  zodiac-western:
+    aries: Aries
+    taurus: Taurus
+    gemini: Gemini
+    cancer: Cancer
+    leo: Leo
+    virgo: Virgo
+    libra: Libra
+    scorpio: Scorpio
+    sagittarius: Sagittarius
+    capricorn: Capricorn
+    aquarius: Aquarius
+    pisces: Pisces
+  zodiac-chinese:
+    rat: Rat
+    ox: Ox
+    tiger: Tiger
+    rabbit: Rabbit
+    dragon: Dragon
+    snake: Snake
+    horse: Horse
+    goat: Goat
+    monkey: Monkey
+    rooster: Rooster
+    dog: Dog
+    pig: Pig
+
 donate:
   title:
     short: Donate
@@ -48,8 +102,10 @@ error:
 
 tags:
   sys: System
+
   sys:ableton: Ableton
   sys:ableton:version: Version
+
   sys:live-set: Live Set
   sys:live-set:tempo: Tempo
   sys:live-set:has-audio-track: Has audio track
@@ -57,13 +113,32 @@ tags:
   sys:live-set:has-midi-track: Has MIDI track
   sys:live-set:no-midi-track: No MIDI track
   sys:live-set:has-midi-audio-tracks: Has MIDI and audio tracks
+
   sys:location: Location
   sys:location:live-recording: Live Recording
   sys:location:user-library: User Library
   sys:location:factory-pack: Factory Pack
   sys:location:cloud-manager: Cloud Manager
   sys:location:trash: Trash
+  sys:location:dropbox: Dropbox
+  sys:location:onedrive: OneDrive
+  sys:location:google-drive: Google Drive
   sys:location:elsewhere: Elsewhere
+
+  sys:file: File
+  sys:file:btime-year: Creation year
+  sys:file:btime-month: Creation month
+  sys:file:btime-quarter: Creation quarter
+  sys:file:btime-weekday: Creation weekday
+  sys:file:btime-weekno: Creation week number
+  sys:file:mtime-year: Modified year
+  sys:file:mtime-month: Modified month
+  sys:file:mtime-quarter: Modified quarter
+  sys:file:mtime-weekday: Modified weekday
+  sys:file:mtime-weekno: Modified week number
+
+  sys:file:zodiac-western: Western zodiac
+  sys:file:zodiac-chinese: Chinese zodiac
 
 app-status:
   title: App status
@@ -116,6 +191,11 @@ tag-overview:
     description: >-
       Contains tags that are related to the location of the
       file within the scanned drives and folders.
+  file:
+    title: File related tags
+    description: >-
+      Contains tags that are related to the file itself.
+
   live-set:
     title: Live Set related tags
     description: >-

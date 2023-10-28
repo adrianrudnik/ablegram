@@ -1,10 +1,7 @@
 <template>
   <div class="SearchTag mb-1 mr-1 inline-block">
     <div class="flex align-items-center gap-0">
-      <div v-if="showRealm" class="p-1 px-2 bg-white border-900">
-        {{ parts.realm }}
-      </div>
-      <div class="p-1 px-2 text-base bg-black-alpha-10 border-900">
+      <div class="p-1 px-2 text-base bg-black-alpha-10 border-900" v-tooltip="tag.id">
         {{ parts.topic }}
       </div>
       <div v-if="parts.detail" class="p-1 px-2 bg-black-alpha-90 text-white border-900">
@@ -48,6 +45,31 @@ const translate = (prefix: string, value: string | number | null): string | null
   if (value === null) {
     return null
   }
+
+  if (prefix.endsWith('ableton:version:')) {
+    return value.toString()
+  }
+
+  if (prefix.endsWith('time-weekday:')) {
+    return t('datetime.weekday.' + value.toString())
+  }
+
+  if (prefix.endsWith('time-month:')) {
+    return t('datetime.month.' + value.toString())
+  }
+
+  if (prefix.endsWith('time-quarter:')) {
+    return t('datetime.quarter.' + value.toString())
+  }
+
+  if (prefix.endsWith('zodiac-western:')) {
+    return t('datetime.zodiac-western.' + value.toString())
+  }
+
+  if (prefix.endsWith('zodiac-chinese:')) {
+    return t('datetime.zodiac-chinese.' + value.toString())
+  }
+
   if (typeof value === 'number') {
     return value.toString()
   }
@@ -65,7 +87,7 @@ const parts = computed(() => {
     realm: translate('tags.', p[0] ?? null),
     topic: translate('tags.' + p[0] + ':', p[1] ?? null),
     detail: translate('tags.' + p[0] + ':' + p[1] + ':', p[2] ?? null),
-    extra: p[3]
+    extra: translate('tags.' + p[0] + ':' + p[1] + ':' + p[2] + ':', p[3] ?? null)
   }
 })
 </script>

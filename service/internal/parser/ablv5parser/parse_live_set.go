@@ -8,12 +8,17 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/util"
+	"github.com/djherbis/times"
+	"github.com/duaneking/gozodiacs"
 	"path/filepath"
 	"strings"
 )
 
 func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pipeline.DocumentToIndexMsg {
+	// Extract the tags for live sets
 	tags := tagger.NewTagger()
+
+	simplePath := strings.ToLower(filepath.ToSlash(path))
 
 	if util.PathContainsFolder(path, "Live Recordings") {
 		tags.AddSystemTag("location:live-recording")
@@ -27,6 +32,12 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 		tags.AddSystemTag("location:cloud-manager")
 	} else if util.PathContainsFolder(path, "User Library") {
 		tags.AddSystemTag("location:user-library")
+	} else if strings.Contains(simplePath, "/dropbox") {
+		tags.AddSystemTag("location:dropbox")
+	} else if strings.Contains(simplePath, "/onedrive") {
+		tags.AddSystemTag("location:onedrive")
+	} else if strings.Contains(simplePath, "/google drive") {
+		tags.AddSystemTag("location:google-drive")
 	} else {
 		tags.AddSystemTag("location:elsewhere")
 	}
@@ -54,6 +65,56 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 
 	if data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value > 0 {
 		tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
+	}
+
+	// Extract some details about the file itself
+
+	finfo, err := times.Stat(path)
+	if err == nil {
+		// Handle the basic modification time
+		year, month, _ := finfo.ModTime().Date()
+
+		// Simple scalars
+		tags.AddSystemTag(fmt.Sprintf("file:mtime-year:%d", year))
+		tags.AddSystemTag(fmt.Sprintf("file:mtime-weekday:%d", finfo.ModTime().Weekday()))
+
+		// Month based breakdowns
+		tags.AddSystemTag(fmt.Sprintf("file:mtime-month:%d", month))
+		tags.AddSystemTag(fmt.Sprintf("file:mtime-quarter:%d", (month+2)/3))
+
+		// Week number is a bit more complex, a week can span years, but for now we just want the week number.
+		_, wno := finfo.ModTime().ISOWeek()
+		tags.AddSystemTag(fmt.Sprintf("file:mtime-weekno:%d", wno))
+
+		for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(finfo.ModTime()) {
+			tags.AddSystemTag(fmt.Sprintf("file:zodiac-western:%s", strings.ToLower(zodiac.String())))
+		}
+
+		tags.AddSystemTag(fmt.Sprintf("file:zodiac-chinese:%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(finfo.ModTime()).String())))
+
+		// Do the same for the creation time, if possible
+		if finfo.HasBirthTime() {
+			year, month, _ := finfo.BirthTime().Date()
+
+			// Simple scalars
+			tags.AddSystemTag(fmt.Sprintf("file:btime-year:%d", year))
+			tags.AddSystemTag(fmt.Sprintf("file:btime-weekday:%d", finfo.ModTime().Weekday()))
+
+			// Month based breakdowns
+			tags.AddSystemTag(fmt.Sprintf("file:btime-month:%d", month))
+			tags.AddSystemTag(fmt.Sprintf("file:btime-quarter:%d", (month+2)/3))
+
+			// Week number is a bit more complex, a week can span years, but for now we just want the week number.
+			_, wno := finfo.ModTime().ISOWeek()
+			tags.AddSystemTag(fmt.Sprintf("file:btime-weekno:%d", wno))
+
+			// Lets add some zodiac signs
+			for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(finfo.BirthTime()) {
+				tags.AddSystemTag(fmt.Sprintf("file:zodiac-western:%s", strings.ToLower(zodiac.String())))
+			}
+
+			tags.AddSystemTag(fmt.Sprintf("file:zodiac-chinese:%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(finfo.BirthTime()).String())))
+		}
 	}
 
 	liveSet := indexer.NewLiveSetDocument()

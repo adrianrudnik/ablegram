@@ -46,7 +46,6 @@ export const useTagStore = defineStore('tags', setupStore<Tag>())
 
 export const hydrateTags = async () => {
   const tags = useTagStore()
-  tags.clear()
 
   const r = await executeQuerySearch({
     size: 4,

@@ -104,6 +104,12 @@ const props = withDefaults(
   cursor: default;
 
   & > div > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & > div > span {
     border-top-width: 2px !important;
     border-top-style: solid;
     border-bottom-width: 2px !important;

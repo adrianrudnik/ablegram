@@ -1,4 +1,6 @@
 import type { LiveSetResult } from '@/plugins/search/result/result_live_set'
+import type { MidiTrackResult } from '@/plugins/search/result/midi_track'
+import type { AudioTrackResult } from '@/plugins/search/result/audio_track'
 
 export interface SearchResult {
   status: StatusNode
@@ -34,7 +36,13 @@ export interface Hit {
 }
 
 export enum ResultType {
-  LiveSet = 'LiveSet'
+  LiveSet = 'LiveSet',
+  MidiTrack = 'MidiTrack',
+  AudioTrack = 'AudioTrack'
 }
 
-export type HitFieldset = LiveSetResult
+export type HitFieldset =
+  | LiveSetResult
+  | MidiTrackResult
+  | AudioTrackResult
+

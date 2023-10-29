@@ -5,25 +5,33 @@ import (
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
-func NewTypeFieldMapping(options *SearchOptions) *mapping.FieldMapping {
+func NewTypeFieldMapping() *mapping.FieldMapping {
 	return bleve.NewKeywordFieldMapping()
 }
 
-func NewTagFieldMapping(options *SearchOptions) *mapping.FieldMapping {
+func NewTagFieldMapping() *mapping.FieldMapping {
 	return bleve.NewKeywordFieldMapping()
 }
 
-func NewFileFieldMapping(options *SearchOptions) *mapping.FieldMapping {
+func NewFileFieldMapping() *mapping.FieldMapping {
 	return bleve.NewKeywordFieldMapping()
 }
 
-func NewSearchableTextFieldMapping(options *SearchOptions) *mapping.FieldMapping {
+func NewFulltextTextFieldMapping(store bool) *mapping.FieldMapping {
 	fm := bleve.NewTextFieldMapping()
 	fm.Analyzer = "enWithEdgeNgram325"
+	fm.Store = store
 	return fm
 }
 
-func NewInfoTextFieldMapping(options *SearchOptions) *mapping.FieldMapping {
+func NewPayloadFieldMapping() *mapping.FieldMapping {
+	fm := bleve.NewTextFieldMapping()
+	fm.Store = true
+	fm.Index = false
+	return fm
+}
+
+func NewInfoTextFieldMapping() *mapping.FieldMapping {
 	fm := bleve.NewKeywordFieldMapping()
 	fm.Store = true
 	fm.Index = false

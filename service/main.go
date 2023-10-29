@@ -83,7 +83,7 @@ func main() {
 
 		// Create the indexerWorker
 		indexer.Logger = log.With().Str("module", "indexer").Logger()
-		search := indexer.NewSearch(&indexer.SearchOptions{})
+		search := indexer.NewSearch()
 		indexerWorker := indexer.NewWorker(search, resultsPipeline.Chan, pusherPipeline.Chan)
 		go indexerWorker.Run(progress, appMetrics)
 

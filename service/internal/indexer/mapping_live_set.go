@@ -37,18 +37,18 @@ func NewLiveSetDocument() *LiveSetDocument {
 	}
 }
 
-func buildLiveSetMapping(options *SearchOptions) *mapping.DocumentMapping {
+func buildLiveSetMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
-	m.AddFieldMappingsAt("type", NewTypeFieldMapping(options))
-	m.AddFieldMappingsAt("tags", NewTagFieldMapping(options))
+	m.AddFieldMappingsAt("type", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("tags", mapping.NewKeywordFieldMapping())
 
-	m.AddFieldMappingsAt("displayName", NewInfoTextFieldMapping(options))
-	m.AddFieldMappingsAt("filename", NewFileFieldMapping(options))
-	m.AddFieldMappingsAt("path", NewSearchableTextFieldMapping(options))
-	m.AddFieldMappingsAt("majorVersion", NewInfoTextFieldMapping(options))
-	m.AddFieldMappingsAt("minorVersion", NewInfoTextFieldMapping(options))
-	m.AddFieldMappingsAt("creator", NewTagFieldMapping(options))
-	m.AddFieldMappingsAt("revision", NewInfoTextFieldMapping(options))
+	m.AddFieldMappingsAt("displayName", NewPayloadFieldMapping())
+	m.AddFieldMappingsAt("filename", NewFileFieldMapping())
+	m.AddFieldMappingsAt("path", NewFulltextTextFieldMapping(false))
+	m.AddFieldMappingsAt("majorVersion", NewPayloadFieldMapping())
+	m.AddFieldMappingsAt("minorVersion", NewPayloadFieldMapping())
+	m.AddFieldMappingsAt("creator", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("revision", NewPayloadFieldMapping())
 
 	m.AddFieldMappingsAt("scale", mapping.NewKeywordFieldMapping())
 	m.AddFieldMappingsAt("scaleName", mapping.NewKeywordFieldMapping())

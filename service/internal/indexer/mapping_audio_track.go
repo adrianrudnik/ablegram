@@ -27,22 +27,17 @@ func (d *AudioTrackDocument) Type() string {
 }
 
 // @see service/vendor/github.com/blevesearch/bleve/v2/mapping.go
-func buildAudioTrackMapping(options *SearchOptions) *mapping.DocumentMapping {
-	displayNameMapping := NewSearchableTextFieldMapping(options)
-	displayNameMapping.Index = false
-
-	hiddenNameMapping := NewSearchableTextFieldMapping(options)
-	hiddenNameMapping.Store = false
-
+func buildAudioTrackMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
-	m.AddFieldMappingsAt("type", NewTypeFieldMapping(options))
-	m.AddFieldMappingsAt("tags", NewTagFieldMapping(options))
-	m.AddFieldMappingsAt("display_name", displayNameMapping)
-	m.AddFieldMappingsAt("effective_name", hiddenNameMapping)
-	m.AddFieldMappingsAt("user_name", hiddenNameMapping)
-	m.AddFieldMappingsAt("annotation", hiddenNameMapping)
-	m.AddFieldMappingsAt("memorized_first_clip_name", hiddenNameMapping)
-	m.AddFieldMappingsAt("filename", NewFileFieldMapping(options))
+	m.AddFieldMappingsAt("type", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("tags", mapping.NewKeywordFieldMapping())
+
+	m.AddFieldMappingsAt("displayName", NewPayloadFieldMapping())
+	m.AddFieldMappingsAt("effectiveName", NewFulltextTextFieldMapping(false))
+	m.AddFieldMappingsAt("userName", NewFulltextTextFieldMapping(false))
+	m.AddFieldMappingsAt("annotation", NewFulltextTextFieldMapping(false))
+	m.AddFieldMappingsAt("memorizedFirstClipName", NewFulltextTextFieldMapping(false))
+	m.AddFieldMappingsAt("filename", mapping.NewKeywordFieldMapping())
 
 	return m
 }

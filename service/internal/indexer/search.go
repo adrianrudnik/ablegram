@@ -14,12 +14,10 @@ import (
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
 type Search struct {
-	options *SearchOptions
-
 	Index bleve.Index
 }
 
-func NewSearch(options *SearchOptions) *Search {
+func NewSearch() *Search {
 	indexMapping := bleve.NewIndexMapping()
 
 	index, err := bleve.NewMemOnly(indexMapping)
@@ -59,13 +57,12 @@ func NewSearch(options *SearchOptions) *Search {
 
 	//indexMapping.AddDocumentMapping("als_file", buildAlsFileMapping(options))
 	//indexMapping.AddDocumentMapping("AudioTrack", buildAudioTrackMapping(options))
-	indexMapping.AddDocumentMapping("LiveSet", buildLiveSetMapping(options))
-	indexMapping.AddDocumentMapping("MidiTrack", buildMidiTrackMapping(options))
+	indexMapping.AddDocumentMapping("LiveSet", buildLiveSetMapping())
+	indexMapping.AddDocumentMapping("MidiTrack", buildMidiTrackMapping())
 
 	Logger.Info().Msg("Indexes created")
 
 	return &Search{
-		options: options,
-		Index:   index,
+		Index: index,
 	}
 }

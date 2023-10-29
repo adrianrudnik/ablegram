@@ -76,7 +76,7 @@ type Mixer struct {
 }
 
 type Tempo struct {
-	Manual IntValue `xml:"Manual"`
+	Manual FloatValue `xml:"Manual"`
 }
 
 type StringValue struct {
@@ -85,6 +85,10 @@ type StringValue struct {
 
 type IntValue struct {
 	Value int64 `xml:"Value,attr"`
+}
+
+type FloatValue struct {
+	Value float64 `xml:"Value,attr"`
 }
 
 type BooleanValue struct {

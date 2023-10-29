@@ -108,7 +108,7 @@ func main() {
 		// Define a clean theme
 
 		a := app.New()
-		a.Settings().SetTheme(&ablegramTheme{})
+		a.Settings().SetTheme(&ui.AblegramTheme{})
 		a.SetIcon(resourceIconPng)
 		w := a.NewWindow("Ablegram")
 		w.CenterOnScreen()

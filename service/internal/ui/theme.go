@@ -1,4 +1,4 @@
-package main
+package ui
 
 import (
 	"fyne.io/fyne/v2"
@@ -6,9 +6,9 @@ import (
 	"image/color"
 )
 
-type ablegramTheme struct{}
+type AblegramTheme struct{}
 
-func (m ablegramTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
+func (m AblegramTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
 	if name == theme.ColorNameBackground {
 		if variant == theme.VariantLight {
 			return color.White
@@ -19,15 +19,15 @@ func (m ablegramTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant
 	return theme.DefaultTheme().Color(name, variant)
 }
 
-func (m ablegramTheme) Font(name fyne.TextStyle) fyne.Resource {
+func (m AblegramTheme) Font(name fyne.TextStyle) fyne.Resource {
 	return theme.DefaultTheme().Font(name)
 }
 
-func (m ablegramTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
+func (m AblegramTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
 	return theme.DefaultTheme().Icon(name)
 }
 
-func (m ablegramTheme) Size(name fyne.ThemeSizeName) float32 {
+func (m AblegramTheme) Size(name fyne.ThemeSizeName) float32 {
 	if name == theme.SizeNamePadding {
 		return 14
 	}

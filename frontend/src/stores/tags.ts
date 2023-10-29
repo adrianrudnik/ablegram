@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 import { setupStore } from '@/stores/base'
 import { executeQuerySearch } from '@/plugins/search'
+import i18n from '@/plugins/i18n'
+
+const { t } = i18n.global
 
 export const enum TagType {
   StringValue = 'string',
@@ -45,8 +48,6 @@ export interface Tag {
 export const useTagStore = defineStore('tags', setupStore<Tag>())
 
 export const hydrateTags = async () => {
-  const tags = useTagStore()
-
   const r = await executeQuerySearch({
     size: 4,
     query: {
@@ -77,7 +78,7 @@ export function createTagFromString(term: string, count: number | string): Tag |
   // Tags are only valid if they contain at least 3 parts
   if (parts.length < 3) return null
 
-  const t: Tag = {
+  const tag: Tag = {
     id: term,
     type: TagType.StringValue,
     category: TagCategory.Unknown,
@@ -87,40 +88,40 @@ export function createTagFromString(term: string, count: number | string): Tag |
     extra: parts[3] ?? undefined,
     count: count,
     trans: {
-      topic: 'tags.' + parts.slice(0, 2).join(':'),
-      detail: 'tags.' + parts.slice(0, 3).join(':'),
-      extra: parts[3] ? 'tags.' + parts.slice(0, 4).join(':') : undefined
+      topic: t('tags.' + parts.slice(0, 2).join(':')),
+      detail: t('tags.' + parts.slice(0, 3).join(':')),
+      extra: parts[3] ? t('tags.' + parts.slice(0, 4).join(':')) : undefined
     }
   }
 
-  t.category = categorizeTag(t)
+  tag.category = categorizeTag(tag)
 
   // If we have a 4th part, there is a value to be attached
   if (parts.length === 4) {
-    t.extra = parts[3]
-    const type = classifyTag(t)
+    tag.extra = parts[3]
+    const type = classifyTag(tag)
 
     switch (type) {
       case TagType.NumValue:
         if (!Number.isNaN(Number(parts[3]))) {
-          t.value = parseInt(parts[3])
-          t.trans.extra = t.value.toString()
-          t.type = type
+          tag.value = parseInt(parts[3])
+          tag.trans.extra = t(tag.value.toString())
+          tag.type = type
         }
         break
       case TagType.VersionValue:
-        t.value = parseVersionNumber(parts[3]) ?? undefined
-        if (t.value) {
-          t.type = type
-          t.trans.extra = t.extra
+        tag.value = parseVersionNumber(parts[3]) ?? undefined
+        if (tag.value) {
+          tag.type = type
+          tag.trans.extra = t(tag.extra)
         }
         break
     }
   }
 
-  overrideTranslations(t)
+  overrideTranslations(tag)
 
-  return t
+  return tag
 }
 
 function categorizeTag(tag: Tag): TagCategory {
@@ -173,22 +174,22 @@ function overrideTranslations(tag: Tag) {
 
     switch (marker) {
       case 'time-quarter':
-        tag.trans.extra = 'datetime.quarter.' + tag.value
+        tag.trans.extra = t('datetime.quarter.' + tag.value)
         break
       case 'time-weekday':
-        tag.trans.extra = 'datetime.weekday.' + tag.value
+        tag.trans.extra = t('datetime.weekday.' + tag.value)
         break
       case 'time-month':
-        tag.trans.extra = 'datetime.month.' + tag.value
+        tag.trans.extra = t('datetime.month.' + tag.value)
         break
     }
 
     switch (tag.detail) {
       case 'zodiac-western':
-        tag.trans.extra = 'datetime.zodiac-western.' + tag.extra
+        tag.trans.extra = t('datetime.zodiac-western.' + tag.extra)
         break
       case 'zodiac-chinese':
-        tag.trans.extra = 'datetime.zodiac-chinese.' + tag.extra
+        tag.trans.extra = t('datetime.zodiac-chinese.' + tag.extra)
         break
     }
   }

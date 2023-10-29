@@ -2,13 +2,13 @@
   <div class="SearchTag mb-1 mr-1 inline-block">
     <div class="Parts flex align-items-center gap-0">
       <span class="p-1 px-2 bg-black-alpha-90 text-white border-900">
-        {{ t(props.tag.trans.topic) }}
+        {{ props.tag.trans.topic }}
       </span>
       <span class="p-1 px-2 bg-black-alpha-60 text-white border-900">
-        {{ t(props.tag.trans.detail) }}
+        {{ props.tag.trans.detail }}
       </span>
       <span v-if="props.tag.trans.extra" class="p-1 px-2 border-900">
-        {{ t(props.tag.trans.extra) }}
+        {{ props.tag.trans.extra }}
       </span>
       <span v-if="showCount" class="p-1 px-2 bg-gray-200 border-900">
         {{ props.tag.count }}

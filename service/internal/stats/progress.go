@@ -39,3 +39,7 @@ func (p *ProcessProgress) Done() {
 	p.progressCount.Add(-1)
 	p.pushTrigger()
 }
+
+func (p *ProcessProgress) IsInProgress() bool {
+	return p.progressCount.Load() > 0
+}

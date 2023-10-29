@@ -14,6 +14,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/webservice"
 	"github.com/icza/gox/osx"
 	"github.com/rs/zerolog"
@@ -49,6 +50,10 @@ func main() {
 	filesPipeline := pipeline.NewFilesForProcessor()
 	resultsPipeline := pipeline.NewDocumentsToIndex()
 
+	// ProcessProgress is responsible in holding the current progress and
+	// notifying the frontend about it
+	progress := stats.NewProcessProgress(pusherPipeline.Chan)
+
 	// Kick of the webservice
 	go func() {
 		if *noWebserviceFlag {
@@ -58,10 +63,6 @@ func main() {
 		// Let's look for a configuration within one of the folders
 		config.Logger = log.With().Str("module", "config").Logger()
 		appConfig := config.LoadWithDefaults("")
-
-		// ProcessProgress is responsible in holding the current progress and
-		// notifying the frontend about it
-		progress := stats.NewProcessProgress(pusherPipeline.Chan)
 
 		// Metrics is responsible in keeping and communicating key metrics for the frontend
 		appMetrics := stats.NewMetrics(pusherPipeline.Chan)
@@ -109,15 +110,20 @@ func main() {
 		a.Settings().SetTheme(&ablegramTheme{})
 		a.SetIcon(resourceIconPng)
 		w := a.NewWindow("Ablegram")
+		w.SetFixedSize(true)
 		w.CenterOnScreen()
 
 		logo := canvas.NewImageFromResource(resourceLogoPng)
 		logo.FillMode = canvas.ImageFillOriginal
 
-		text := canvas.NewText("The service is running and collecting.", color.White)
+		statusTxt := canvas.NewText("Starting up...", color.White)
 		quitBtn := widget.NewButton("Shut down service", func() { a.Quit() })
 		startBtn := widget.NewButton("Open results in browser", func() { openBrowser() })
-		content := container.New(layout.NewPaddedLayout(), container.New(layout.NewVBoxLayout(), logo, text, startBtn, quitBtn))
+
+		uiUpdater := ui.NewUiUpdater(statusTxt)
+		go uiUpdater.Run(progress)
+
+		content := container.New(layout.NewPaddedLayout(), container.New(layout.NewVBoxLayout(), logo, statusTxt, startBtn, quitBtn))
 
 		w.SetContent(content)
 

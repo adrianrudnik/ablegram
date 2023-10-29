@@ -18,3 +18,10 @@ export async function fetchApi<T>(
 
   return r.json()
 }
+
+export async function openLocalPath(path: string) {
+  return await fetchApi('/api/open', {
+    method: 'POST',
+    body: JSON.stringify({ path })
+  })
+}

@@ -122,18 +122,26 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 
 	liveSet := indexer.NewLiveSetDocument()
 	liveSet.Tags = tags.GetAllAndClear()
+
+	liveSet.PathAbsolute = path
+	liveSet.PathFolder = filepath.Dir(path)
+	liveSet.Filename = filepath.Base(path)
+
 	liveSet.DisplayName = filepath.Base(path)
-	liveSet.Filename = path
-	liveSet.AbsPath = path
 	liveSet.MajorVersion = data.MajorVersion
 	liveSet.MinorVersion = data.MinorVersion
 	liveSet.Creator = data.Creator
 	liveSet.Revision = data.Revision
+
 	liveSet.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
 	liveSet.ScaleName = data.LiveSet.ScaleInformation.Name.Value
 	liveSet.Scale = fmt.Sprintf("%s %s", liveSet.ScaleRootNote, liveSet.ScaleName)
+
 	liveSet.InKey = data.LiveSet.InKey.Value
 	liveSet.Tempo = int64(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
+
+	liveSet.MidiTrackCount = len(data.LiveSet.Tracks.MidiTracks)
+	liveSet.AudioTrackCount = len(data.LiveSet.Tracks.AudioTracks)
 
 	m.AddLiveSet()
 

@@ -1,5 +1,5 @@
 <template>
-  <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+  <li class="PropertyListItem flex align-items-center flex-wrap">
     <div class="w-6 md:w-2 font-medium">
       <i v-if="props.icon" :class="props.icon"></i> {{ props?.title ?? '' }}
     </div>

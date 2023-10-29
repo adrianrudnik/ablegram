@@ -5,9 +5,11 @@ export interface LiveSetResult {
   type: ResultType.LiveSet
   tags?: string[]
 
-  displayName?: string
+  pathAbsolute?: string
+  pathFolder?: string
   filename?: string
-  path?: string
+
+  displayName?: string
   majorVersion?: string
   minorVersion?: string
   creator?: string
@@ -19,4 +21,7 @@ export interface LiveSetResult {
 
   inKey?: boolean
   tempo?: number
+
+  midiTrackCount?: number
+  audioTrackCount?: number
 }

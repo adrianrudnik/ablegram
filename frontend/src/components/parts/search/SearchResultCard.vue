@@ -1,31 +1,51 @@
 <template>
-  <div class="surface-card p-4 shadow-2 border-round">
-    <div class="mb-3 flex flex-column md:flex-row md:align-items-center md:justify-content-between">
-      <div class="mb-3 md:mb-0">
-        <div class="text-3xl font-medium text-900 mb-3" v-if="title">{{ title }}</div>
-        <div class="font-medium text-500 mb-3" v-if="!!$slots.subtitle">
-          <slot name="subtitle" />
-        </div>
-      </div>
-
-      <div
-        class="flex align-items-center justify-content-between mt-3 md:mt-0"
-        v-if="!!$slots.actions"
-      >
-        <slot name="actions" />
-      </div>
+  <div class="surface-card shadow-2 border-round border-top border-1">
+    <div v-if="props.header" class="bg-black-alpha-90 p-2 text-white font-semibold">
+      {{ header }}
     </div>
 
-    <slot />
+    <div class="p-2">
+      <div class="text-xl font-medium text-900 mb-3" v-if="title">{{ title }}</div>
+
+      <div class="mb-2">
+        <slot />
+      </div>
+
+      <div v-if="!!$slots.actions" class="flex gap-2">
+        <slot name="actions" />
+
+        <Button
+          outlined
+          icon="pi pi-tags"
+          @click="showTags = true"
+          v-if="props.tags && !showTags"
+          size="small"
+          label="Show tags"
+        />
+        <Button
+          icon="pi pi-tags"
+          @click="showTags = false"
+          v-if="props.tags && showTags"
+          size="small"
+          label="Hide tags"
+        />
+      </div>
+
+      <TagRow v-if="showTags && props.tags" :tags="props.tags" class="text-sm mt-3" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import TagRow from '@/components/parts/search/TagRow.vue'
+import Button from 'primevue/button'
+
 const props = defineProps<{
+  header?: string
   title?: string
+  tags?: string[]
 }>()
+
+const showTags = ref(false)
 </script>
-
-<style scoped lang="scss"></style>
-
-<i18n lang="yaml"></i18n>

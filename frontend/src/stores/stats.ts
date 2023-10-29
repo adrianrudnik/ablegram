@@ -4,6 +4,11 @@ import { ref } from 'vue'
 export const useStatStore = defineStore('stats', () => {
   const isProcessing = ref(false)
   const isSearching = ref(false)
+
+  // Search related
+  const searchResultCount = ref(0)
+
+  // Meta status bar
   const validFileCount = ref(0)
   const invalidFileCount = ref(0)
   const liveSetCount = ref(0)
@@ -40,6 +45,7 @@ export const useStatStore = defineStore('stats', () => {
     updateMetrics,
     isProcessing,
     isSearching,
+    searchResultCount,
     validFileCount,
     invalidFileCount,
     liveSetCount,

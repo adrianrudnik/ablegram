@@ -6,7 +6,9 @@ export interface SearchResult {
   status: StatusNode
   facets?: FacetsNode
   hits: Hit[]
+  total_hits: number
 }
+
 export interface StatusNode {
   total: number
   failed: number
@@ -41,8 +43,4 @@ export enum ResultType {
   AudioTrack = 'AudioTrack'
 }
 
-export type HitFieldset =
-  | LiveSetResult
-  | MidiTrackResult
-  | AudioTrackResult
-
+export type HitFieldset = LiveSetResult | MidiTrackResult | AudioTrackResult

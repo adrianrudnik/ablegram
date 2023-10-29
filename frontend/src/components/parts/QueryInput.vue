@@ -12,18 +12,20 @@
         :placeholder="t('query-input-component.placeholder')"
       />
     </div>
+
+    <div class="my-2 text-sm" v-if="query !== ''">{{ n(searchResultCount) }} Treffer gefunden</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import InputText from 'primevue/inputtext'
 import { useI18n } from 'vue-i18n'
 import { executeQuerySearch } from '@/plugins/search'
 import { useSearchResultStore } from '@/stores/results'
 import { useStatStore } from '@/stores/stats'
 
-const { t } = useI18n()
+const { t, n } = useI18n()
 
 const search = async (query: string) => {
   useStatStore().isSearching = true
@@ -48,4 +50,6 @@ const search = async (query: string) => {
 }
 
 const query = ref('')
+
+const searchResultCount = computed(() => useStatStore().searchResultCount)
 </script>

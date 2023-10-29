@@ -103,29 +103,37 @@ error:
 tags:
   sys: System
 
+  sys:example: Category
+  sys:example:topic: Detail
+  sys:example:topic:detail: Information
+  sys:example:topic:detail:count: Hits found
+
   sys:ableton: Ableton
   sys:ableton:version: Version
 
   sys:live-set: Live Set
   sys:live-set:tempo: Tempo
-  sys:live-set:has-audio-track: Has audio track
-  sys:live-set:no-audio-track: No audio track
-  sys:live-set:has-midi-track: Has MIDI track
-  sys:live-set:no-midi-track: No MIDI track
-  sys:live-set:has-midi-audio-tracks: Has MIDI and audio tracks
 
-  sys:location: Location
-  sys:location:live-recording: Live Recording
-  sys:location:user-library: User Library
-  sys:location:factory-pack: Factory Pack
-  sys:location:cloud-manager: Cloud Manager
-  sys:location:trash: Trash
-  sys:location:dropbox: Dropbox
-  sys:location:onedrive: OneDrive
-  sys:location:google-drive: Google Drive
-  sys:location:elsewhere: Elsewhere
+  sys:live-set:tracks: Tracks
+  sys:live-set:tracks:has-audio: Has audio track
+  sys:live-set:tracks:no-audio: No audio track
+  sys:live-set:tracks:has-midi: Has MIDI track
+  sys:live-set:tracks:no-midi: No MIDI track
+  sys:live-set:tracks:has-midi-audio: Has MIDI and audio tracks
 
   sys:file: File
+
+  sys:file:location: Location
+  sys:file:location:live-recording: Live Recording
+  sys:file:location:user-library: User Library
+  sys:file:location:factory-pack: Factory Pack
+  sys:file:location:cloud-manager: Cloud Manager
+  sys:file:location:trash: Trash
+  sys:file:location:dropbox: Dropbox
+  sys:file:location:onedrive: OneDrive
+  sys:file:location:google-drive: Google Drive
+  sys:file:location:elsewhere: Elsewhere
+
   sys:file:btime-year: Creation year
   sys:file:btime-month: Creation month
   sys:file:btime-quarter: Creation quarter
@@ -187,11 +195,6 @@ tag-overview:
       Tags are a way to describe files with additional information. They are
       automatically extracted from the files and can be used to search for
       specific files. Here is an example tag on what part of the tag is what:
-    parts:
-      category: Category
-      detail: Detail
-      value: Value
-      count: Hits found
   software:
     title: Software related tags
     description: >-

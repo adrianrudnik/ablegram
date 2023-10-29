@@ -21,42 +21,42 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	simplePath := strings.ToLower(filepath.ToSlash(path))
 
 	if util.PathContainsFolder(path, "Live Recordings") {
-		tags.AddSystemTag("location:live-recording")
+		tags.AddSystemTag("file:location:live-recording")
 	}
 
 	if util.PathContainsFolder(path, "Trash") || util.PathContainsFolder(path, "$Recycle.Bin") {
-		tags.AddSystemTag("location:trash")
+		tags.AddSystemTag("file:location:trash")
 	} else if util.PathContainsFolder(path, "Factory Packs") {
-		tags.AddSystemTag("location:factory-pack")
+		tags.AddSystemTag("file:location:factory-pack")
 	} else if util.PathContainsFolder(path, "Cloud Manager") {
-		tags.AddSystemTag("location:cloud-manager")
+		tags.AddSystemTag("file:location:cloud-manager")
 	} else if util.PathContainsFolder(path, "User Library") {
-		tags.AddSystemTag("location:user-library")
+		tags.AddSystemTag("file:location:user-library")
 	} else if strings.Contains(simplePath, "/dropbox") {
-		tags.AddSystemTag("location:dropbox")
+		tags.AddSystemTag("file:location:dropbox")
 	} else if strings.Contains(simplePath, "/onedrive") {
-		tags.AddSystemTag("location:onedrive")
+		tags.AddSystemTag("file:location:onedrive")
 	} else if strings.Contains(simplePath, "/google drive") {
-		tags.AddSystemTag("location:google-drive")
+		tags.AddSystemTag("file:location:google-drive")
 	} else {
-		tags.AddSystemTag("location:elsewhere")
+		tags.AddSystemTag("file:location:elsewhere")
 	}
 
 	// @todo Factory Preset, User Preset, User Library, Factory Library
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 {
-		tags.AddSystemTag("live-set:has-audio-track")
+		tags.AddSystemTag("live-set:tracks:has-audio")
 	} else {
-		tags.AddSystemTag("live-set:no-audio-track")
+		tags.AddSystemTag("live-set:tracks:no-audio")
 	}
 
 	if len(data.LiveSet.Tracks.MidiTracks) > 0 {
-		tags.AddSystemTag("live-set:has-midi-track")
+		tags.AddSystemTag("live-set:tracks:has-midi")
 	} else {
-		tags.AddSystemTag("live-set:no-midi-track")
+		tags.AddSystemTag("live-set:tracks:no-midi")
 	}
 
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 && len(data.LiveSet.Tracks.MidiTracks) > 0 {
-		tags.AddSystemTag("live-set:has-midi-audio-tracks")
+		tags.AddSystemTag("live-set:tracks:has-midi-audio")
 	}
 
 	if strings.HasPrefix(data.Creator, "Ableton Live ") {

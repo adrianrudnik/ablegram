@@ -103,39 +103,47 @@ error:
 tags:
   sys: System
 
+  sys:example: Kategorie
+  sys:example:topic: Detail
+  sys:example:topic:detail: Information
+  sys:example:topic:detail:count: Treffer gefunden
+
   sys:ableton: Ableton
   sys:ableton:version: Version
 
   sys:live-set: Live Set
   sys:live-set:tempo: Tempo
-  sys:live-set:has-audio-track: Hat Audiospur
-  sys:live-set:no-audio-track: Keine Audiospur
-  sys:live-set:has-midi-track: Hat MIDI-Spur
-  sys:live-set:no-midi-track: Keine MIDI-Spur
-  sys:live-set:has-midi-audio-tracks: Hat MIDI- und Audiospur
 
-  sys:location: Speicherort
-  sys:location:live-recording: Live Recording
-  sys:location:user-library: User Library
-  sys:location:factory-pack: Factory Pack
-  sys:location:cloud-manager: Cloud Manager
-  sys:location:trash: Papierkorb
-  sys:location:dropbox: Dropbox
-  sys:location:onedrive: OneDrive
-  sys:location:google-drive: Google Drive
-  sys:location:elsewhere: Sonstwo
+  sys:live-set:tracks: Spuren
+  sys:live-set:tracks:has-audio: Hat Audiospur
+  sys:live-set:tracks:no-audio: Keine Audiospur
+  sys:live-set:tracks:has-midi: Hat MIDI-Spur
+  sys:live-set:tracks:no-midi: Keine MIDI-Spur
+  sys:live-set:tracks:has-midi-audio: Hat MIDI- und Audiospur
 
   sys:file: Datei
+
+  sys:file:location: Speicherort
+  sys:file:location:live-recording: Live Recording
+  sys:file:location:user-library: User Library
+  sys:file:location:factory-pack: Factory Pack
+  sys:file:location:cloud-manager: Cloud Manager
+  sys:file:location:trash: Papierkorb
+  sys:file:location:dropbox: Dropbox
+  sys:file:location:onedrive: OneDrive
+  sys:file:location:google-drive: Google Drive
+  sys:file:location:elsewhere: Sonstwo
+
   sys:file:btime-year: Erstelltes Jahr
   sys:file:btime-month: Erstellter Monat
   sys:file:btime-quarter: Erstelltes Quartal
   sys:file:btime-weekday: Erstellter Wochentag
-  sys:file:btime-weekno: Erstellte Woche
+  sys:file:btime-weekno: Erstellte KW
   sys:file:mtime-year: Geändertes Jahr
   sys:file:mtime-month: Geänderter Monat
   sys:file:mtime-quarter: Geändertes Quartal
   sys:file:mtime-weekday: Geänderter Wochentag
-  sys:file:mtime-weekno: Geänderte Woche
+  sys:file:mtime-weekno: Geänderte KW
 
   sys:file:zodiac-western: Westliches Sternzeichen
   sys:file:zodiac-chinese: Chinesisches Sternzeichen
@@ -189,11 +197,6 @@ tag-overview:
       beschreiben. Sie werden automatisch aus den Dateien extrahiert und können
       zum Suchen nach bestimmten Dateien verwendet werden. Hier ist ein Beispiel
       welcher Teil des Tags was ist:
-    parts:
-      category: Kategorie
-      detail: Detail
-      value: Wert
-      count: Anzahl gefunden
   software:
     title: Software bezogene Tags
     description: >-

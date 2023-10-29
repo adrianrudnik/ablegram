@@ -4,7 +4,7 @@
       <p>{{ t('tag-overview.explain.description') }}</p>
     </template>
 
-    <SearchTag :tag="exampleTag" show-count :disable-translation="true" />
+    <SearchTag v-if="exampleTag" :tag="exampleTag" show-count :disable-translation="true" />
   </SectionHeadline>
 
   <SectionHeadline :title="t('tag-overview.software.title')">
@@ -40,62 +40,57 @@
       <p>{{ t('tag-overview.file.description') }}</p>
     </template>
 
-    <div class="mb-3" v-if="filesYear">
-      <SearchTag :tag="tag" v-for="tag in filesYear" :key="tag.id" show-count />
+    <div class="mb-3" v-if="fileYears">
+      <SearchTag :tag="tag" v-for="tag in fileYears" :key="tag.id" show-count />
     </div>
 
-    <div class="mb-3" v-if="filesMonth">
-      <SearchTag :tag="tag" v-for="tag in filesMonth" :key="tag.id" show-count />
+    <div class="mb-3" v-if="fileMonths">
+      <SearchTag :tag="tag" v-for="tag in fileMonths" :key="tag.id" show-count />
     </div>
 
-    <div class="mb-3" v-if="filesQuarter">
-      <SearchTag :tag="tag" v-for="tag in filesQuarter" :key="tag.id" show-count />
+    <div class="mb-3" v-if="fileQuarters">
+      <SearchTag :tag="tag" v-for="tag in fileQuarters" :key="tag.id" show-count />
     </div>
 
-    <div class="mb-3" v-if="filesWeekday">
-      <SearchTag :tag="tag" v-for="tag in filesWeekday" :key="tag.id" show-count />
+    <div class="mb-3" v-if="fileWeekdays">
+      <SearchTag :tag="tag" v-for="tag in fileWeekdays" :key="tag.id" show-count />
     </div>
 
-    <div class="mb-3" v-if="filesWeekNo">
-      <SearchTag :tag="tag" v-for="tag in filesWeekNo" :key="tag.id" show-count />
-    </div>
-
-    <div class="mb-3">
-      <SearchTag :tag="tag" v-for="tag in wZodiacs" :key="tag.id" show-count />
+    <div class="mb-3" v-if="fileWeekNumbers">
+      <SearchTag :tag="tag" v-for="tag in fileWeekNumbers" :key="tag.id" show-count />
     </div>
 
     <div class="mb-3">
-      <SearchTag :tag="tag" v-for="tag in cZodiacs" :key="tag.id" show-count />
+      <SearchTag :tag="tag" v-for="tag in westernZodiacs" :key="tag.id" show-count />
+    </div>
+
+    <div class="mb-3">
+      <SearchTag :tag="tag" v-for="tag in chineseZodiacs" :key="tag.id" show-count />
     </div>
   </SectionHeadline>
 </template>
 
 <script setup lang="ts">
-import { useTagStore } from '@/stores/tags'
+import { createTagFromString, TagCategory, useTagStore } from '@/stores/tags'
 import { computed } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
 import SectionHeadline from '@/components/structure/SectionHeadline.vue'
 import sortBy from 'lodash/sortBy'
 import orderBy from 'lodash/orderBy'
 import { useI18n } from 'vue-i18n'
-import type { Tag } from '@/stores/tags'
 
 const { t } = useI18n()
 
-const exampleTag: Tag = {
-  type: 'sys',
-  id: [
-    'sys',
-    t('tag-overview.explain.parts.category'),
-    t('tag-overview.explain.parts.detail'),
-    t('tag-overview.explain.parts.value')
-  ].join(':'),
-  count: t('tag-overview.explain.parts.count')
-}
+const exampleTag = createTagFromString(
+  'sys:example:topic:detail:value',
+  t('tags.sys:example:topic:detail:count')
+)
+
+const entries = computed(() => useTagStore().entries)
 
 const softwareTags = computed(() =>
   orderBy(
-    useTagStore().entries.filter((tag) => tag.id.startsWith('sys:ableton:')),
+    entries.value.filter((t) => t.category === TagCategory.Software),
     ['value'],
     ['desc']
   )
@@ -103,72 +98,70 @@ const softwareTags = computed(() =>
 
 const locationTags = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.startsWith('sys:location:')),
+    entries.value.filter((t) => t.category === TagCategory.Location),
     'id'
   )
 )
 
 const liveSetTags = computed(() =>
   sortBy(
-    useTagStore().entries.filter(
-      (tag) => tag.id.startsWith('sys:live-set:') && !tag.id.includes(':tempo')
-    ),
+    entries.value.filter((t) => t.category === TagCategory.Tracks),
     'id'
   )
 )
 
 const tempoTags = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.startsWith('sys:live-set:tempo')),
+    entries.value.filter((t) => t.category === TagCategory.Tempo),
     'value'
   )
 )
 
-const filesYear = computed(() =>
+const fileYears = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.includes('time-year:')),
+    entries.value.filter((t) => t.category === TagCategory.Year),
     ['id', 'value']
   )
 )
 
-const filesMonth = computed(() =>
+const fileMonths = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.includes('time-month:')),
+    entries.value.filter((t) => t.category === TagCategory.Month),
     ['id', 'value']
   )
 )
 
-const filesQuarter = computed(() =>
+const fileQuarters = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.includes('time-quarter:')),
+    entries.value.filter((t) => t.category === TagCategory.Quarter),
     ['id', 'value']
   )
 )
 
-const filesWeekday = computed(() =>
+const fileWeekdays = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.includes('time-weekday:')),
+    entries.value.filter((t) => t.category === TagCategory.Weekday),
     ['id', 'value']
   )
 )
 
-const filesWeekNo = computed(() =>
+const fileWeekNumbers = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.includes('time-weekno:')),
+    entries.value.filter((t) => t.category === TagCategory.WeekNumber),
     ['id', 'value']
   )
 )
 
-const wZodiacs = computed(() =>
+const westernZodiacs = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.startsWith('sys:file:zodiac-western:')),
+    entries.value.filter((t) => t.category === TagCategory.WesternZodiac),
     'value'
   )
 )
 
-const cZodiacs = computed(() =>
+const chineseZodiacs = computed(() =>
   sortBy(
-    useTagStore().entries.filter((tag) => tag.id.startsWith('sys:file:zodiac-chinese:')),
+    entries.value.filter((t) => t.category === TagCategory.ChineseZodiac),
     'value'
   )
 )

@@ -14,15 +14,16 @@ import SearchResultCard from '@/components/parts/search/SearchResultCard.vue'
 import { useTagStore } from '@/stores/tags'
 import { computed } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
-import type {Tag} from "@/stores/tags";
+import type { Tag } from '@/stores/tags'
 
 const props = defineProps<{
   result: LiveSetResult
 }>()
 
 const tags = computed(() => {
-  const rawTags = props.result.tags?.filter(t => useTagStore().entries.find((tt) => tt.id === t)) ?? [];
-  return rawTags.map(t => useTagStore().entries.find((tt) => tt.id === t)) as Tag[]
+  const rawTags =
+    props.result.tags?.filter((t) => useTagStore().entries.find((tt) => tt.id === t)) ?? []
+  return rawTags.map((t) => useTagStore().entries.find((tt) => tt.id === t)) as Tag[]
 })
 </script>
 

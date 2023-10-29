@@ -72,12 +72,12 @@ func main() {
 
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
-		collectorWorkers := collector.NewWorkerPool(3, filesPipeline.Chan, pusherPipeline.Chan)
+		collectorWorkers := collector.NewWorkerPool(5, filesPipeline.Chan, pusherPipeline.Chan)
 		go collectorWorkers.Run(progress, appConfig.SearchablePaths)
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
-		parserWorkers := parser.NewWorkerPool(5, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
+		parserWorkers := parser.NewWorkerPool(10, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
 		go parserWorkers.Run(progress, appMetrics)
 
 		// Create the indexerWorker

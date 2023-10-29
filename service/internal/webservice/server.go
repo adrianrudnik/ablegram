@@ -9,6 +9,7 @@ import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/icza/gox/osx"
 	"github.com/rs/zerolog"
 	"net/http"
 	"os"
@@ -109,6 +110,21 @@ func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) erro
 func registerApiRoutes(rg *gin.RouterGroup) {
 	rg.GET("/status", func(c *gin.Context) {
 		c.String(200, "pong")
+	})
+
+	rg.POST("/open", func(c *gin.Context) {
+		var json OpenInput
+		if err := c.ShouldBindJSON(&json); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		err := osx.OpenDefault(json.Path)
+		if err != nil {
+			Logger.Warn().Err(err).Msg("Unable to open given path")
+		}
+
+		c.JSON(200, gin.H{"status": "opened"})
 	})
 }
 

@@ -112,7 +112,7 @@ tags:
   sys:ableton:version: Version
 
   sys:live-set: Live Set
-  sys:live-set:tempo: Tempo
+  sys:live-set:tempo: BPM
 
   sys:live-set:tracks: Tracks
   sys:live-set:tracks:has-audio: Has audio track

@@ -12,6 +12,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/parser"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
+	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/webservice"
 	"github.com/icza/gox/osx"
@@ -43,6 +44,11 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Info().Msg("App starting")
 
+	// Create some channel based pipelines to pass around the different workloads
+	pusherPipeline := pipeline.NewFrontendPush()
+	filesPipeline := pipeline.NewFilesForProcessor()
+	resultsPipeline := pipeline.NewDocumentsToIndex()
+
 	// Kick of the webservice
 	go func() {
 		if *noWebserviceFlag {
@@ -53,11 +59,6 @@ func main() {
 		config.Logger = log.With().Str("module", "config").Logger()
 		appConfig := config.LoadWithDefaults("")
 
-		// Create some channel based pipelines to pass around the different workloads
-		pusherPipeline := pipeline.NewFrontendPush()
-		filesPipeline := pipeline.NewFilesForProcessor()
-		resultsPipeline := pipeline.NewDocumentsToIndex()
-
 		// ProcessProgress is responsible in holding the current progress and
 		// notifying the frontend about it
 		progress := stats.NewProcessProgress(pusherPipeline.Chan)
@@ -67,12 +68,12 @@ func main() {
 
 		// Start the frontend push worker
 		webservice.Logger = log.With().Str("module", "webservice").Logger()
-		pusher := webservice.NewPushChannel(pusherPipeline.Chan)
-		go pusher.Run()
+		appPusher := webservice.NewPushChannel(pusherPipeline.Chan)
+		go appPusher.Run()
 
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
-		collectorWorkers := collector.NewWorkerPool(5, filesPipeline.Chan, pusherPipeline.Chan)
+		collectorWorkers := collector.NewWorkerPool(10, filesPipeline.Chan, pusherPipeline.Chan)
 		go collectorWorkers.Run(progress, appConfig.SearchablePaths)
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
@@ -96,7 +97,7 @@ func main() {
 			openBrowser()
 		}()
 
-		webservice.Serve(search, pusher, ":10000")
+		webservice.Serve(search, appPusher, ":10000")
 	}()
 
 	if *noGuiFlag {
@@ -121,6 +122,10 @@ func main() {
 		w.SetContent(content)
 
 		w.ShowAndRun()
+
+		// Say goodbye in the browser window, if available.
+		pusherPipeline.Chan <- pusher.NewNavigatePush("goodbye")
+		time.Sleep(100 * time.Millisecond)
 	}
 }
 

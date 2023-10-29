@@ -64,7 +64,7 @@ datetime:
 donate:
   title:
     short: Spende
-    long: Unterstützte die Entwicklung
+    long: Unterstütze die Entwicklung
   description: >-
     Wenn Ihnen dieses Projekt gefällt, erwägen Sie bitte eine Spende zur Unterstützung der Entwicklung.
   usage: >-

@@ -4,6 +4,7 @@ import { useStatStore } from '@/stores/stats'
 import type { PushMessage } from '@/websocket/messages/global'
 import { PushMessageType } from '@/websocket/messages/global'
 import { hydrateTags } from '@/stores/tags'
+import router from '@/router'
 
 export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
   autoReconnect: true,
@@ -26,7 +27,10 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
         }
 
         useStatStore().isProcessing = payload.routines !== 0
+        break
 
+      case PushMessageType.ForceNavigate:
+        await router.push({ name: payload.target })
         break
     }
   }

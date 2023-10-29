@@ -58,3 +58,15 @@ func NewProcessingStatusPush(status int64) *ProcessingStatusPush {
 		Status: status,
 	}
 }
+
+type NavigatePush struct {
+	Type   string `json:"type"`
+	Target string `json:"target"`
+}
+
+func NewNavigatePush(url string) *NavigatePush {
+	return &NavigatePush{
+		Type:   "force_navigate",
+		Target: url,
+	}
+}

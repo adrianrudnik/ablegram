@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -110,7 +111,6 @@ func main() {
 		a.Settings().SetTheme(&ablegramTheme{})
 		a.SetIcon(resourceIconPng)
 		w := a.NewWindow("Ablegram")
-		w.SetFixedSize(true)
 		w.CenterOnScreen()
 
 		logo := canvas.NewImageFromResource(resourceLogoPng)
@@ -126,6 +126,10 @@ func main() {
 		content := container.New(layout.NewPaddedLayout(), container.New(layout.NewVBoxLayout(), logo, statusTxt, startBtn, quitBtn))
 
 		w.SetContent(content)
+		w.SetFixedSize(true)
+
+		// Hotfix for https://github.com/fyne-io/fyne/issues/4350
+		w.Resize(fyne.NewSize(1, 1))
 
 		w.ShowAndRun()
 

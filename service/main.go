@@ -116,14 +116,15 @@ func main() {
 		logo := canvas.NewImageFromResource(resourceLogoPng)
 		logo.FillMode = canvas.ImageFillOriginal
 
-		statusTxt := canvas.NewText("Starting up...", color.White)
+		statusTxt := canvas.NewText("The service is processing files...", color.White)
 		quitBtn := widget.NewButton("Shut down service", func() { a.Quit() })
 		startBtn := widget.NewButton("Open results in browser", func() { openBrowser() })
+		progressBar := widget.NewProgressBarInfinite()
 
-		uiUpdater := ui.NewUiUpdater(statusTxt)
+		uiUpdater := ui.NewUiUpdater(statusTxt, progressBar)
 		go uiUpdater.Run(progress)
 
-		content := container.New(layout.NewPaddedLayout(), container.New(layout.NewVBoxLayout(), logo, statusTxt, startBtn, quitBtn))
+		content := container.New(layout.NewPaddedLayout(), container.New(layout.NewVBoxLayout(), logo, statusTxt, progressBar, startBtn, quitBtn))
 
 		w.SetContent(content)
 		w.SetFixedSize(true)

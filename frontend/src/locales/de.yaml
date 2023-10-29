@@ -211,6 +211,10 @@ tag-overview:
     title: Live Set bezogene Tags
     description: >-
       Enthält Tags die sich auf Live Sets und deren Eigenschaften beziehen.
+  file:
+    title: Datei bezogene Tags
+    description: >-
+      Enthält Tags die sich auf die Datei selbst beziehen.
 
 goodbye-view:
   title: Auf Wiedersehen

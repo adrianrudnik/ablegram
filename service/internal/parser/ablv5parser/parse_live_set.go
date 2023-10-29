@@ -10,6 +10,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/util"
 	"github.com/djherbis/times"
 	"github.com/duaneking/gozodiacs"
+	"math"
 	"path/filepath"
 	"strings"
 )
@@ -64,7 +65,15 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	}
 
 	if data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value > 0 {
-		tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
+		// If we have a rounded tempo, we just need to add one tag
+		if math.Trunc(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value) == data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value {
+			tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", int(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+		} else {
+			// Otherwise it's a weird file where the tempo is a fraction, like in some Ableton delivered ALS files.
+			// We just add both rounded values to the tags
+			tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", int(math.Floor(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+			tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", int(math.Ceil(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+		}
 	}
 
 	// Extract some details about the file itself
@@ -124,7 +133,7 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	liveSet.ScaleName = data.LiveSet.ScaleInformation.Name.Value
 	liveSet.Scale = fmt.Sprintf("%s %s", liveSet.ScaleRootNote, liveSet.ScaleName)
 	liveSet.InKey = data.LiveSet.InKey.Value
-	liveSet.Tempo = data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value
+	liveSet.Tempo = int64(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
 
 	m.AddLiveSet()
 

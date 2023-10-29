@@ -21,8 +21,8 @@ type LiveSetDocument struct {
 	ScaleName     string `json:"scaleName,omitempty"`
 	ScaleRootNote string `json:"scaleRootNote,omitempty"`
 
-	InKey bool    `json:"inKey,omitempty"`
-	Tempo float64 `json:"tempo,omitempty"`
+	InKey bool  `json:"inKey,omitempty"`
+	Tempo int64 `json:"tempo,omitempty"`
 
 	ScaleInformation string ``
 }

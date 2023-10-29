@@ -10,7 +10,7 @@
       <span v-if="props.tag.trans.extra" class="p-1 px-2 border-900">
         {{ t(props.tag.trans.extra) }}
       </span>
-      <span v-if="showCount" class="p-1 px-2 bg-black-alpha-30 border-900">
+      <span v-if="showCount" class="p-1 px-2 bg-gray-200 border-900">
         {{ props.tag.count }}
       </span>
 

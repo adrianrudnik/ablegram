@@ -33,9 +33,11 @@ func (p *Worker) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
 			progress.Add()
 
 			err := p.search.Index.Index(msg.Id, msg.Document)
+
+			progress.Done()
 			if err != nil {
 				log.Error().Err(err).Str("document", msg.Id).Msg("Failed to add document to batch")
-				progress.Done()
+
 				continue
 			}
 

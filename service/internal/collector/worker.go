@@ -2,6 +2,7 @@ package collector
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
+	"github.com/adrianrudnik/ablegram/internal/stats"
 )
 
 type WorkerPool struct {
@@ -21,7 +22,7 @@ func NewWorkerPool(workerCount int, filesChan chan<- *pipeline.FilesForProcessor
 	}
 }
 
-func (p *WorkerPool) Run(paths []string) {
+func (p *WorkerPool) Run(progress *stats.ProcessProgress, paths []string) {
 	Logger.Info().
 		Int("count", p.workerCount).
 		Strs("paths", paths).
@@ -29,7 +30,7 @@ func (p *WorkerPool) Run(paths []string) {
 
 	// Spool up workers first
 	for i := 0; i < p.workerCount; i++ {
-		go p.doWork()
+		go p.doWork(progress)
 	}
 
 	// Pipe in paths next
@@ -38,14 +39,18 @@ func (p *WorkerPool) Run(paths []string) {
 	}
 }
 
-func (p *WorkerPool) doWork() {
+func (p *WorkerPool) doWork(progress *stats.ProcessProgress) {
 	for {
 		select {
 		case path := <-p.inPathChan:
+			progress.Add()
+
 			err := Collect(path, p.outFilesChan, p.pushChan)
 			if err != nil {
 				Logger.Warn().Err(err).Str("path", path).Msg("Failed to collect files")
 			}
+
+			progress.Done()
 		}
 	}
 }

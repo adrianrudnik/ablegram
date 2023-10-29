@@ -22,17 +22,20 @@ func NewWorkerPool(workerCount int, pathChan <-chan *pipeline2.FilesForProcessor
 	}
 }
 
-func (p *WorkerPool) Run(m *stats.Metrics) {
+func (p *WorkerPool) Run(progress *stats.ProcessProgress, m *stats.Metrics) {
 	Logger.Info().Int("count", p.workerCount).Msg("Starting parser workers")
 
 	for i := 0; i < p.workerCount; i++ {
-		go p.doWork(m)
+		go p.doWork(progress, m)
 	}
 }
 
-func (p *WorkerPool) doWork(m *stats.Metrics) {
+func (p *WorkerPool) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
 	for msg := range p.inputPathsChan {
+		progress.Add()
 		docs, err := ParseAls(msg.AbsPath, m)
+
+		progress.Done()
 		if err != nil {
 			Logger.Warn().Err(err).Str("path", msg.AbsPath).Msg("Failed to parse file")
 

@@ -21,9 +21,12 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
 
       case PushMessageType.ProcessingStatus:
         // Hydrate the new tags on completion
-        await hydrateTags()
+        if (payload.routines === 0) {
+          await hydrateTags()
+        }
 
-        useStatStore().isProcessing = payload.status
+        useStatStore().isProcessing = payload.routines !== 0
+
         break
     }
   }

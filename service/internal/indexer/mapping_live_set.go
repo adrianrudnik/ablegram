@@ -32,14 +32,14 @@ type LiveSetDocument struct {
 	ScaleInformation string ``
 }
 
-func (d *LiveSetDocument) Type() string {
-	return d.T
-}
-
 func NewLiveSetDocument() *LiveSetDocument {
 	return &LiveSetDocument{
 		T: "LiveSet",
 	}
+}
+
+func (d *LiveSetDocument) Type() string {
+	return d.T
 }
 
 func buildLiveSetMapping() *mapping.DocumentMapping {

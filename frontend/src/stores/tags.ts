@@ -2,19 +2,22 @@ import { defineStore } from 'pinia'
 import { setupStore } from '@/stores/base'
 import { executeQuerySearch } from '@/plugins/search'
 import i18n from '@/plugins/i18n'
+import { resolveColorByIndex } from '@/plugins/colors'
 
 const { t } = i18n.global
 
 export const enum TagType {
   StringValue = 'string',
   NumValue = 'numeric',
-  VersionValue = 'version'
+  VersionValue = 'version',
+  ColorValue = 'color'
 }
 
 export const enum TagCategory {
   Unknown,
   Type,
   Software,
+  Info,
   Location,
   Tracks,
   Tempo,
@@ -37,6 +40,7 @@ export interface Tag {
   id: string
   type: TagType
   category: TagCategory
+  color?: string
   realm: string
   topic: string
   detail: string
@@ -117,6 +121,13 @@ export function createTagFromString(term: string, count: number | string): Tag |
           tag.trans.extra = t(tag.extra)
         }
         break
+      case TagType.ColorValue:
+        tag.value = parseInt(parts[3])
+        if (tag.value) {
+          tag.type = type
+          tag.trans.extra = t('color.' + tag.extra)
+          tag.color = colorizeTag(tag) ?? undefined
+        }
     }
   }
 
@@ -127,6 +138,7 @@ export function createTagFromString(term: string, count: number | string): Tag |
 
 function categorizeTag(tag: Tag): TagCategory {
   if (tag.topic === 'type') return TagCategory.Type
+  if (tag.topic === 'info') return TagCategory.Info
   if (tag.topic === 'ableton') return TagCategory.Software
   if (tag.topic === 'file' && tag.detail === 'location') return TagCategory.Location
   if (tag.topic === 'live-set' && tag.detail === 'tracks') return TagCategory.Tracks
@@ -147,6 +159,10 @@ function categorizeTag(tag: Tag): TagCategory {
 function classifyTag(tag: Tag): TagType {
   if (tag.topic === 'ableton' && tag.detail === 'version') {
     return TagType.VersionValue
+  }
+
+  if (tag.topic === 'color') {
+    return TagType.ColorValue
   }
 
   const numValTags = [
@@ -195,6 +211,12 @@ function overrideTranslations(tag: Tag) {
         break
     }
   }
+}
+
+function colorizeTag(tag: Tag): string | null {
+  if (tag.type !== TagType.ColorValue) return null
+  if (typeof tag.value !== 'number') return null
+  return resolveColorByIndex(tag.value)
 }
 
 function parseVersionNumber(v: string): number | null {

@@ -75,6 +75,38 @@ datetime:
     dog: Dog
     pig: Pig
 
+color:
+  # Colors picked from ableton track color picker.
+  # Names picked from gpick namification.
+
+  # Column 1
+  0: Rose pink
+  14: Cherry red
+  28: Dark coral
+  42: Reddish grey
+  56: Dull red
+
+  # Column 2
+  1: Mango
+  15: Orange
+  29: Peach
+  43: Tan brown
+  57: Adobe
+
+  # Column 3
+  2: Mustard brown
+  16: Mocha
+  30: Tan
+  44: Brownish grey
+  58: Dark taupe
+
+  # Column 4
+  3: Manilla
+  17: Canary yellow
+  31: Light khaki
+  45: Khaki
+  59: Mustard yellow
+
 donate:
   title:
     short: Donate
@@ -122,6 +154,12 @@ common:
     hide-tags: Hide tags
 
   label:
+    anything: Anything
+    everything: Everything
+    color:
+      s: Color
+      c: Colors | Color | Colors
+      nc: No colors | One color | {count} colors
     search-result:
       s: Search results
       c: Search results | Search result | Search results
@@ -144,6 +182,8 @@ common:
       nc: No tracks | One track | {count} tracks
     beats-per-minute:
       s: BPM
+      c: BPM
+      nc: No BPM | One BPM | {count} BPM
     software:
       s: Software
     fs-folder:
@@ -154,6 +194,12 @@ common:
       s: File
       c: Files | File | Files
       nc: No files | One file | {count} files
+    fs-filename:
+      s: Filename
+    annotation:
+      s: Comment
+      c: Comments | Comment | Comments
+      nc: No comments | One comment | {count} comments
 
 tags:
   sys: System
@@ -172,7 +218,7 @@ tags:
   sys:type:midi-track: '@:common.label.midi-track.s'
 
   sys:live-set: '@:common.label.live-set.s'
-  sys:live-set:tempo: '@:common.label.bpm.s'
+  sys:live-set:tempo: '@:common.label.beats-per-minute.s'
   sys:live-set:tracks: Tracks
   sys:live-set:tracks:has-audio: Has audio track
   sys:live-set:tracks:no-audio: No audio track
@@ -206,6 +252,14 @@ tags:
 
   sys:file:zodiac-western: Western zodiac
   sys:file:zodiac-chinese: Chinese zodiac
+
+  sys:info: Info
+  sys:info:has-annotation: Has annotation
+  sys:info:no-annotation: No annotation
+
+  sys:color: '@:common.label.color.s'
+  sys:color:all: '@:common.label.anything'
+  sys:color:track: '@:common.label.track.s'
 
 app-status:
   title: App status
@@ -276,6 +330,16 @@ tag-overview:
     title: Live Set related tags
     description: >-
       Contains tags that are related to Live Sets and their properties.
+  info:
+    title: Info related tags
+    description: >-
+      Contains tags that are related to the information that is stored within
+      found datapoint. Mostly based on meta information the software provides.
+  color:
+    title: Color related tags
+    description: >-
+      Contains tags that are related to the color of the found element.
+      Can either relate to anything or specific datapoints.
 
 goodbye-view:
   title: Goodbye

@@ -5,6 +5,12 @@ export interface AudioTrackResult {
   type: ResultType.AudioTrack
   tags?: string[]
 
-  displayName?: string
+  pathAbsolute?: string
+  pathFolder?: string
   filename?: string
+
+  displayName?: string
+  annotation?: string
+
+  color?: number
 }

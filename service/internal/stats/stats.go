@@ -40,17 +40,17 @@ func (s *Metrics) collect() *pusher.MetricUpdatePush {
 	})
 }
 
-func (s *Metrics) AddValidFile() {
+func (s *Metrics) CountValidFile() {
 	s.validFiles.Add(1)
 	s.triggerUpdate()
 }
 
-func (s *Metrics) AddInvalidFile() {
+func (s *Metrics) CountInvalidFile() {
 	s.invalidFiles.Add(1)
 	s.triggerUpdate()
 }
 
-func (s *Metrics) AddLiveSet() {
+func (s *Metrics) CountLiveSet() {
 	s.liveSets.Add(1)
 	s.triggerUpdate()
 }
@@ -60,12 +60,12 @@ func (s *Metrics) SetIndexDocuments(count uint64) {
 	s.triggerUpdate()
 }
 
-func (s *Metrics) AddMidiTrack() {
+func (s *Metrics) CountMidiTrack() {
 	s.midiTracks.Add(1)
 	s.triggerUpdate()
 }
 
-func (s *Metrics) AddAudioTrack() {
+func (s *Metrics) CountAudioTrack() {
 	s.audioTracks.Add(1)
 	s.triggerUpdate()
 }

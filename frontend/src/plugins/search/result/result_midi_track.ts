@@ -5,6 +5,12 @@ export interface MidiTrackResult {
   type: ResultType.MidiTrack
   tags?: string[]
 
-  displayName?: string
+  pathAbsolute?: string
+  pathFolder?: string
   filename?: string
+
+  displayName?: string
+  annotation?: string
+
+  color?: number
 }

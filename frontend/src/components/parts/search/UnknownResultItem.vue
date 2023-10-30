@@ -1,8 +1,14 @@
 <template>
-  <div>Unknown item</div>
+  <div>Unknown item: {{ result.type }}</div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { HitFieldset } from '@/plugins/search/result'
+
+const props = defineProps<{
+  result: HitFieldset
+}>()
+</script>
 
 <style scoped lang="scss"></style>
 

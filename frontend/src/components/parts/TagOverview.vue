@@ -43,6 +43,22 @@
     <SearchTag :tag="tag" v-for="tag in tempoTags" :key="tag.id" show-count />
   </SectionHeadline>
 
+  <SectionHeadline :title="t('tag-overview.info.title')">
+    <template #description>
+      <p>{{ t('tag-overview.info.description') }}</p>
+    </template>
+
+    <SearchTag :tag="tag" v-for="tag in infoTags" :key="tag.id" show-count />
+  </SectionHeadline>
+
+  <SectionHeadline :title="t('tag-overview.color.title')">
+    <template #description>
+      <p>{{ t('tag-overview.color.description') }}</p>
+    </template>
+
+    <SearchTag :tag="tag" v-for="tag in colorTags" :key="tag.id" show-count />
+  </SectionHeadline>
+
   <SectionHeadline :title="t('tag-overview.file.title')">
     <template #description>
       <p>{{ t('tag-overview.file.description') }}</p>
@@ -79,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { createTagFromString, TagCategory, useTagStore } from '@/stores/tags'
+import { createTagFromString, TagCategory, TagType, useTagStore } from '@/stores/tags'
 import { computed } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
 import SectionHeadline from '@/components/structure/SectionHeadline.vue'
@@ -178,6 +194,20 @@ const chineseZodiacs = computed(() =>
   sortBy(
     entries.value.filter((t) => t.category === TagCategory.ChineseZodiac),
     'value'
+  )
+)
+
+const infoTags = computed(() =>
+  sortBy(
+    entries.value.filter((t) => t.category === TagCategory.Info),
+    'id'
+  )
+)
+
+const colorTags = computed(() =>
+  sortBy(
+    entries.value.filter((t) => t.type === TagType.ColorValue),
+    ['trans.extra']
   )
 )
 </script>

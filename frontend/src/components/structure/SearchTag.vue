@@ -7,34 +7,22 @@
       <span class="p-1 px-2 bg-black-alpha-60 text-white border-900">
         {{ props.tag.trans.detail }}
       </span>
+      <span v-if="color" :style="'background-color: ' + color" class="p-1 px-2"> &nbsp; </span>
       <span v-if="props.tag.trans.extra" class="p-1 px-2 border-900">
         {{ props.tag.trans.extra }}
       </span>
       <span v-if="showCount" class="p-1 px-2 bg-gray-200 border-900">
         {{ props.tag.count }}
       </span>
-
-      <!--      <div class="p-1 px-2 text-base bg-black-alpha-10 border-900">-->
-      <!--        {{ t(props.tag.trans.detail) }}-->
-      <!--      </div>-->
-      <!--      <div v-if="parts.detail" class="p-1 px-2 bg-black-alpha-90 text-white border-900">-->
-      <!--        {{ t(props.tag.trans.extra) }}-->
-      <!--      </div>-->
-      <!--      <div v-if="parts.extra" class="p-1 px-2 bg-black-alpha-50 text-white border-900">-->
-      <!--        {{ props.tag.extra }}-->
-      <!--      </div>-->
-      <!--      <div v-if="showCount" class="p-1 px-2 bg-black-alpha-30 border-900">-->
-      <!--        {{ props.tag.count }}-->
-      <!--      </div>-->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Tag } from '@/stores/tags'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
+import { TagType } from '@/stores/tags'
+import { ref } from 'vue'
+import { resolveColorByIndex } from '@/plugins/colors'
 
 const props = withDefaults(
   defineProps<{
@@ -49,54 +37,13 @@ const props = withDefaults(
   }
 )
 
-//
-// const pt = (part: number, value: string | null): string => {
-//   switch(part) {
-//
-//   }
-// }
-//
-// const translate = (prefix: string, value: string | number | null): string | null => {
-//   if (props.disableTranslation) return String(value)
-//
-//   if (value === null) {
-//     return null
-//   }
-//
-//   if (prefix.endsWith('ableton:version:')) {
-//     return value.toString()
-//   }
-//
-//   if (prefix.endsWith('time-weekday:')) {
-//     return t('datetime.weekday.' + value.toString())
-//   }
-//
-//   if (prefix.endsWith('time-month:')) {
-//     return t('datetime.month.' + value.toString())
-//   }
-//
-//   if (prefix.endsWith('time-quarter:')) {
-//     return t('datetime.quarter.' + value.toString())
-//   }
-//
-//   if (prefix.endsWith('zodiac-western:')) {
-//     return t('datetime.zodiac-western.' + value.toString())
-//   }
-//
-//   if (prefix.endsWith('zodiac-chinese:')) {
-//     return t('datetime.zodiac-chinese.' + value.toString())
-//   }
-//
-//   if (typeof value === 'number') {
-//     return value.toString()
-//   }
-//
-//   if (!Number.isNaN(Number(value))) {
-//     return value.toString()
-//   }
-//
-//   return t(prefix + value)
-// }
+const color = ref<string | null>()
+
+if (props.tag.type === TagType.ColorValue) {
+  if (typeof props.tag.value === 'number') {
+    color.value = resolveColorByIndex(props.tag.value) ?? null
+  }
+}
 </script>
 
 <style lang="scss">

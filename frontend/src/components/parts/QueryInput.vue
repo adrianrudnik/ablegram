@@ -62,7 +62,7 @@ watchDebounced(
 )
 
 setTimeout(() => {
-  query.value = 'beat'
+  query.value = 'midi'
 }, 500)
 
 const isSearching = computed(() => useStatStore().isSearching)

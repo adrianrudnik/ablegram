@@ -9,12 +9,17 @@ type MidiTrackDocument struct {
 	T    string   `json:"type"`
 	Tags []string `json:"tags,omitempty"`
 
-	DisplayName            string `json:"display_name,omitempty"`
-	EffectiveName          string `json:"effective_name,omitempty"`
-	UserName               string `json:"user_name,omitempty"`
+	PathAbsolute string `json:"pathAbsolute,omitempty"`
+	PathFolder   string `json:"pathFolder,omitempty"`
+	Filename     string `json:"filename,omitempty"`
+
+	DisplayName            string `json:"displayName,omitempty"`
+	EffectiveName          string `json:"effectiveName,omitempty"`
+	UserName               string `json:"userName,omitempty"`
+	MemorizedFirstClipName string `json:"memorizedFirstClipName,omitempty"`
 	Annotation             string `json:"annotation,omitempty"`
-	MemorizedFirstClipName string `json:"memorized_first_clip_name,omitempty"`
-	Filename               string `json:"filename,omitempty"`
+
+	Color uint8 `json:"color,omitempty"`
 }
 
 func NewMidiTrackDocument() *MidiTrackDocument {
@@ -22,6 +27,7 @@ func NewMidiTrackDocument() *MidiTrackDocument {
 		T: "MidiTrack",
 	}
 }
+
 func (d *MidiTrackDocument) Type() string {
 	return d.T
 }
@@ -32,12 +38,17 @@ func buildMidiTrackMapping() *mapping.DocumentMapping {
 	m.AddFieldMappingsAt("type", mapping.NewKeywordFieldMapping())
 	m.AddFieldMappingsAt("tags", mapping.NewKeywordFieldMapping())
 
-	m.AddFieldMappingsAt("displayName", NewPayloadFieldMapping())
+	m.AddFieldMappingsAt("pathFolder", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("pathAbsolute", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("filename", mapping.NewKeywordFieldMapping())
+
+	m.AddFieldMappingsAt("displayName", NewFulltextTextFieldMapping(true))
 	m.AddFieldMappingsAt("effectiveName", NewFulltextTextFieldMapping(false))
 	m.AddFieldMappingsAt("userName", NewFulltextTextFieldMapping(false))
-	m.AddFieldMappingsAt("annotation", NewFulltextTextFieldMapping(false))
 	m.AddFieldMappingsAt("memorizedFirstClipName", NewFulltextTextFieldMapping(false))
-	m.AddFieldMappingsAt("filename", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("annotation", NewFulltextTextFieldMapping(true))
+
+	m.AddFieldMappingsAt("color", mapping.NewNumericFieldMapping())
 
 	return m
 }

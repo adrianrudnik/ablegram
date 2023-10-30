@@ -40,10 +40,10 @@ func ParseAls(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, er
 
 	r, err := parseAlsV5(path, m)
 	if err != nil {
-		m.AddInvalidFile()
+		m.CountInvalidFile()
 		return nil, err
 	}
 
-	m.AddValidFile()
+	m.CountValidFile()
 	return r, nil
 }

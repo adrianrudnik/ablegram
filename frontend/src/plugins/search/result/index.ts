@@ -1,6 +1,6 @@
 import type { LiveSetResult } from '@/plugins/search/result/result_live_set'
-import type { MidiTrackResult } from '@/plugins/search/result/midi_track'
-import type { AudioTrackResult } from '@/plugins/search/result/audio_track'
+import type { MidiTrackResult } from '@/plugins/search/result/result_midi_track'
+import type { AudioTrackResult } from '@/plugins/search/result/result_audio_track'
 
 export interface SearchResult {
   status: StatusNode

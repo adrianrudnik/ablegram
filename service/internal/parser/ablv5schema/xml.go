@@ -32,13 +32,13 @@ type Tracks struct {
 type MidiTrack struct {
 	Id    int64      `xml:"Id,attr"`
 	Name  TrackNames `xml:"Name"`
-	Color ColorValue `xml:"ColorValue"`
+	Color ColorValue `xml:"Color"`
 }
 
 type AudioTrack struct {
 	Id     int64        `xml:"Id,attr"`
 	Name   TrackNames   `xml:"Name"`
-	Color  ColorValue   `xml:"ColorValue"`
+	Color  ColorValue   `xml:"Color"`
 	Frozen BooleanValue `xml:"Freeze"`
 }
 
@@ -96,7 +96,7 @@ type BooleanValue struct {
 }
 
 type ColorValue struct {
-	Value int64 `xml:"Value,attr"`
+	Value uint8 `xml:"Value,attr"`
 }
 
 type RootNoteValue struct {

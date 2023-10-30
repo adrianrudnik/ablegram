@@ -55,8 +55,7 @@ func NewSearch() *Search {
 
 	indexMapping.DefaultAnalyzer = en.AnalyzerName
 
-	//indexMapping.AddDocumentMapping("als_file", buildAlsFileMapping(options))
-	//indexMapping.AddDocumentMapping("AudioTrack", buildAudioTrackMapping(options))
+	indexMapping.AddDocumentMapping("AudioTrack", buildAudioTrackMapping())
 	indexMapping.AddDocumentMapping("LiveSet", buildLiveSetMapping())
 	indexMapping.AddDocumentMapping("MidiTrack", buildMidiTrackMapping())
 

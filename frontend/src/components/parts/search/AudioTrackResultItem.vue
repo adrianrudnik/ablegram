@@ -1,7 +1,7 @@
 <template>
   <div>
     <SearchResultCard
-      :header="t('common.label.midi-track.s')"
+      :header="t('common.label.audio-track.s')"
       :title="props.result.displayName"
       :tags="props.result.tags"
     >
@@ -70,13 +70,13 @@ import { openLocalPath } from '@/plugins/api'
 import PropertyList from '@/components/structure/PropertyList.vue'
 import PropertyListItem from '@/components/structure/PropertyListItem.vue'
 import { useI18n } from 'vue-i18n'
-import type { MidiTrackResult } from '@/plugins/search/result/result_midi_track'
+import type { AudioTrackResult } from '@/plugins/search/result/result_audio_track'
 import { resolveColorByIndex } from '@/plugins/colors'
 
 const { t } = useI18n()
 
 const props = defineProps<{
-  result: MidiTrackResult
+  result: AudioTrackResult
 }>()
 
 const resolvedColor = resolveColorByIndex(props.result.color)

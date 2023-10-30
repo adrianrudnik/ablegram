@@ -146,7 +146,7 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	liveSet.MidiTrackCount = len(data.LiveSet.Tracks.MidiTracks)
 	liveSet.AudioTrackCount = len(data.LiveSet.Tracks.AudioTracks)
 
-	m.AddLiveSet()
+	m.CountLiveSet()
 
 	return pipeline.NewDocumentToIndexMsg(tagger.IdHash(path), liveSet)
 }

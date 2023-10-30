@@ -61,9 +61,9 @@ watchDebounced(
   { debounce: 200, maxWait: 400 } // maxWait should be lower than the progress indicator "delay" in AppLayout.
 )
 
-setTimeout(() => {
-  query.value = 'midi'
-}, 500)
+// setTimeout(() => {
+//   query.value = 'midi'
+// }, 500)
 
 const isSearching = computed(() => useStatStore().isSearching)
 const searchResultCount = computed(() => useStatStore().searchResultCount)

@@ -69,8 +69,7 @@ func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) erro
 
 	// Mount a fallback to the Vue frontend, if no matching route was found
 	r.NoRoute(func(c *gin.Context) {
-		c.Status(200)
-		c.FileFromFS("index.html", frontendFS)
+		c.FileFromFS("/", frontendFS)
 	})
 
 	api := r.Group("/api")
@@ -98,7 +97,6 @@ func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) erro
 	})
 
 	// Register the fallback route to the frontend UI bootstrap
-
 	err = r.Run(bindAddr)
 	if err != nil {
 		return err

@@ -96,7 +96,7 @@ type BooleanValue struct {
 }
 
 type ColorValue struct {
-	Value uint8 `xml:"Value,attr"`
+	Value int16 `xml:"Value,attr"`
 }
 
 type RootNoteValue struct {

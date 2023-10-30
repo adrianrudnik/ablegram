@@ -19,7 +19,7 @@ type AudioTrackDocument struct {
 	MemorizedFirstClipName string `json:"memorizedFirstClipName,omitempty"`
 	Annotation             string `json:"annotation,omitempty"`
 
-	Color uint8 `json:"color,omitempty"`
+	Color int16 `json:"color,omitempty"`
 }
 
 func NewAudioTrackDocument() *AudioTrackDocument {

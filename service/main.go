@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -21,6 +22,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"image/color"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -109,10 +111,18 @@ func main() {
 			}
 
 			time.Sleep(50 * time.Millisecond)
-			ui.OpenFrontend()
+			ui.OpenFrontend(appConfig)
 		}()
 
-		webservice.Serve(search, appPusher, ":10000")
+		for _, port := range appConfig.Webservice.TryPorts {
+			appConfig.Webservice.ChosenPort = port
+			err := webservice.Serve(search, appPusher, fmt.Sprintf(":%d", port))
+			if err != nil && strings.Contains(err.Error(), "bind: permission denied") {
+				log.Warn().Err(err).Int("port", port).Msg("Could not start webservice, trying other port")
+				continue
+			}
+			break
+		}
 	}()
 
 	if !appConfig.Behaviour.ShowGui {
@@ -131,7 +141,7 @@ func main() {
 
 		statusTxt := canvas.NewText("The service is processing files...", color.White)
 		quitBtn := widget.NewButton("Shut down service", func() { a.Quit() })
-		startBtn := widget.NewButton("Open results in browser", func() { ui.OpenFrontend() })
+		startBtn := widget.NewButton("Open results in browser", func() { ui.OpenFrontend(appConfig) })
 		progressBar := widget.NewProgressBarInfinite()
 
 		uiUpdater := ui.NewUiUpdater(statusTxt, progressBar)

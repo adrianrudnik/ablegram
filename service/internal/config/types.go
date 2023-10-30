@@ -1,9 +1,10 @@
 package config
 
 type Config struct {
-	Log       LogConfig       `yaml:"log"`
-	Behaviour BehaviourConfig `yaml:"behaviour"`
-	Collector CollectorConfig `yaml:"collector"`
+	Log        LogConfig        `yaml:"log"`
+	Behaviour  BehaviourConfig  `yaml:"behaviour"`
+	Collector  CollectorConfig  `yaml:"collector"`
+	Webservice WebserviceConfig `yaml:"webservice"`
 }
 
 type LogConfig struct {
@@ -21,4 +22,9 @@ type BehaviourConfig struct {
 type CollectorConfig struct {
 	SearchablePaths      []string `yaml:"searchable_paths"`
 	ExcludeSystemFolders bool     `yaml:"exclude_system_folders"`
+}
+
+type WebserviceConfig struct {
+	TryPorts   []int `yaml:"try_ports"`
+	ChosenPort int   `yaml:"-"`
 }

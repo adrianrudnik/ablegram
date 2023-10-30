@@ -29,6 +29,10 @@ func newConfig() *Config {
 			SearchablePaths:      make([]string, 0, 100),
 			ExcludeSystemFolders: true,
 		},
+
+		Webservice: WebserviceConfig{
+			TryPorts: []int{10000, 20000, 30000, 40000, 50000, 10001},
+		},
 	}
 }
 

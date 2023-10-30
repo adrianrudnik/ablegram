@@ -41,8 +41,6 @@ func (p *Worker) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
 				continue
 			}
 
-			log.Debug().Str("document", msg.Id).Msg("Document indexed")
-
 			docCount, err := p.search.Index.DocCount()
 			if err != nil {
 				log.Warn().Err(err).Msg("Failed to retrieve document count from index")

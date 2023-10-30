@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import type { LiveSetResult } from '@/plugins/search/result/result_live_set'
-import SearchResultCard from '@/components/parts/search/SearchResultCard.vue'
+import SearchResultCard from '@/components/structure/SearchResultCard.vue'
 import Button from 'primevue/button'
 import { openLocalPath } from '@/plugins/api'
 import DescriptionList from '@/components/structure/DescriptionList.vue'

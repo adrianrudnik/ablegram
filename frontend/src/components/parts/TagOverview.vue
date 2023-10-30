@@ -7,6 +7,14 @@
     <SearchTag v-if="exampleTag" :tag="exampleTag" show-count :disable-translation="true" />
   </SectionHeadline>
 
+  <SectionHeadline :title="t('tag-overview.type.title')">
+    <template #description>
+      <p>{{ t('tag-overview.type.description') }}</p>
+    </template>
+
+    <SearchTag :tag="tag" v-for="tag in typeTags" :key="tag.id" show-count />
+  </SectionHeadline>
+
   <SectionHeadline :title="t('tag-overview.software.title')">
     <template #description>
       <p>{{ t('tag-overview.software.description') }}</p>
@@ -87,6 +95,13 @@ const exampleTag = createTagFromString(
 )
 
 const entries = computed(() => useTagStore().entries)
+
+const typeTags = computed(() =>
+  sortBy(
+    entries.value.filter((t) => t.category === TagCategory.Type),
+    'id'
+  )
+)
 
 const softwareTags = computed(() =>
   orderBy(

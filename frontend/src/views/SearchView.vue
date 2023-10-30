@@ -9,8 +9,8 @@
 <script setup lang="ts">
 import MetaBar from '@/components/parts/MetaBar.vue'
 import QueryInput from '@/components/parts/QueryInput.vue'
-import SearchResultList from '@/components/parts/search/SearchResultList.vue'
-import SearchResultListItem from '@/components/parts/search/SearchResultListItem.vue'
+import SearchResultList from '@/components/structure/SearchResultList.vue'
+import SearchResultListItem from '@/components/structure/SearchResultListItem.vue'
 import { computed } from 'vue'
 import { useSearchResultStore } from '@/stores/results'
 

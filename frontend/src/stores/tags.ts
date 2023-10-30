@@ -13,6 +13,7 @@ export const enum TagType {
 
 export const enum TagCategory {
   Unknown,
+  Type,
   Software,
   Location,
   Tracks,
@@ -125,6 +126,7 @@ export function createTagFromString(term: string, count: number | string): Tag |
 }
 
 function categorizeTag(tag: Tag): TagCategory {
+  if (tag.topic === 'type') return TagCategory.Type
   if (tag.topic === 'ableton') return TagCategory.Software
   if (tag.topic === 'file' && tag.detail === 'location') return TagCategory.Location
   if (tag.topic === 'live-set' && tag.detail === 'tracks') return TagCategory.Tracks

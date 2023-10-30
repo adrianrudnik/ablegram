@@ -15,7 +15,7 @@ import UnknownResultItem from '@/components/parts/search/UnknownResultItem.vue'
 const resultTypeComponentMap = {
   LiveSet: LiveSetResultItem,
   MidiTrack: UnknownResultItem,
-  AudioTrack: UnknownResultItem,
+  AudioTrack: UnknownResultItem
 }
 const props = defineProps<{
   result: HitFieldset

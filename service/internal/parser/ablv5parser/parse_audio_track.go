@@ -12,6 +12,7 @@ import (
 
 func ParseAudioTrack(m *stats.Metrics, path string, data *ablv5schema.Ableton) []*pipeline.DocumentToIndexMsg {
 	tags := tagger.NewTagger()
+	tags.AddSystemTag("type:audio-track")
 
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 

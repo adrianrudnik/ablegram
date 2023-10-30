@@ -18,6 +18,7 @@ import (
 func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pipeline.DocumentToIndexMsg {
 	// Extract the tags for live sets
 	tags := tagger.NewTagger()
+	tags.AddSystemTag("type:live-set")
 
 	simplePath := strings.ToLower(filepath.ToSlash(path))
 

@@ -111,9 +111,13 @@ tags:
   sys:ableton: Ableton
   sys:ableton:version: Version
 
-  sys:live-set: Live Set
-  sys:live-set:tempo: BPM
+  sys:type: Typ
+  sys:type:live-set: Live Sets
+  sys:type:audio-track: Audio track
+  sys:type:midi-track: MIDI track
 
+  sys:live-set: '@:tags.sys:type:live-set'
+  sys:live-set:tempo: BPM
   sys:live-set:tracks: Tracks
   sys:live-set:tracks:has-audio: Has audio track
   sys:live-set:tracks:no-audio: No audio track
@@ -122,7 +126,6 @@ tags:
   sys:live-set:tracks:has-midi-audio: Has MIDI and audio tracks
 
   sys:file: File
-
   sys:file:location: Location
   sys:file:location:live-recording: Live Recording
   sys:file:location:user-library: User Library
@@ -196,6 +199,10 @@ tag-overview:
       Tags are a way to describe files with additional information. They are
       automatically extracted from the files and can be used to search for
       specific files. Here is an example tag on what part of the tag is what:
+  type:
+    title: Type related tags
+    description: >-
+      Contains tags that are related to the nature of the found element.
   software:
     title: Software related tags
     description: >-
@@ -210,7 +217,6 @@ tag-overview:
     title: File related tags
     description: >-
       Contains tags that are related to the file itself.
-
   live-set:
     title: Live Set related tags
     description: >-

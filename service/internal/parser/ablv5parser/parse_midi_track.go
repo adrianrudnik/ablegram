@@ -12,6 +12,7 @@ import (
 
 func ParseMidiTracks(m *stats.Metrics, path string, data *ablv5schema.Ableton) []*pipeline.DocumentToIndexMsg {
 	tags := tagger.NewTagger()
+	tags.AddSystemTag("type:midi-track")
 
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 

@@ -75,38 +75,6 @@ datetime:
     dog: Dog
     pig: Pig
 
-color:
-  # Colors picked from ableton track color picker.
-  # Names picked from gpick namification.
-
-  # Column 1
-  0: Rose pink
-  14: Cherry red
-  28: Dark coral
-  42: Reddish grey
-  56: Dull red
-
-  # Column 2
-  1: Mango
-  15: Orange
-  29: Peach
-  43: Tan brown
-  57: Adobe
-
-  # Column 3
-  2: Mustard brown
-  16: Mocha
-  30: Tan
-  44: Brownish grey
-  58: Dark taupe
-
-  # Column 4
-  3: Manilla
-  17: Canary yellow
-  31: Light khaki
-  45: Khaki
-  59: Mustard yellow
-
 donate:
   title:
     short: Donate
@@ -363,3 +331,106 @@ result-item-component:
 
 live-set-result-item-component:
   header: '@:common.label.live-set.s'
+
+
+color:
+  # Colors picked from ableton track color picker.
+  # Names picked from gpick namification.
+
+  # Column 1
+  0: Rose pink
+  14: Cherry red
+  28: Dark coral
+  42: Reddish grey
+  56: Dull red
+
+  # Column 2
+  1: Mango
+  15: Orange
+  29: Peach
+  43: Tan brown
+  57: Adobe
+
+  # Column 3
+  2: Mustard brown
+  16: Mocha
+  30: Tan
+  44: Brownish grey
+  58: Dark taupe
+
+  # Column 4
+  3: Manilla
+  17: Canary yellow
+  31: Light khaki
+  45: Khaki
+  59: Mustard yellow
+
+  # Column 5
+  4: Yellowgreen
+  18: Lighter green
+  32: Pale olive
+  46: Snot
+  60: Swamp green
+
+  # Column 6
+  5: Hot green
+  19: Toxic green
+  33: Light olive
+  47: Asparagus
+  61: Turtle green
+
+  # Column 7
+  6: Bright sea green
+  20: Topaz
+  34: Lichen
+  48: Pale teal
+  62: Blue/green
+
+  # Column 8
+  7: Aqua
+  21: Aqua blue
+  35: Pale aqua
+  49: Bluey grey
+  63: Ugly blue
+
+  # Column 9
+  8: Sky blue
+  22: Water blue
+  36: Very light blue
+  50: Grey blue
+  64: Sapphire
+
+  # Column 10
+  9: Soft blue
+  23: Water blue
+  37: Light blue grey
+  51: Faded blue
+  65: Cobalt
+
+  # Column 11
+  10: Periwinkle blue
+  24: Light indigo
+  38: Pale lavender
+  52: Greyish purple
+  66: Blueberry
+
+  # Column 12
+  11: Purply pink
+  25: Soft purple
+  39: Lavender
+  53: Very light purple
+  67: Medium purple
+
+  # Column 13
+  12: Bubblegum
+  26: Hot magenta
+  40: Very light pink
+  54: Dull pink
+  68: Darkish pink
+
+  # Column 14
+  13: White
+  27: Light silver
+  41: Silver
+  55: Medium grey
+  69: Dark grey

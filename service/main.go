@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -17,7 +16,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/webservice"
-	"github.com/icza/gox/osx"
+	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"image/color"
@@ -29,21 +28,35 @@ import (
 //go:generate fyne bundle -o bundled.go -append assets/logo.png
 
 func main() {
-	// Parse flags
-	noBrowserFlag := flag.Bool("no-browser", false, "Skip the automatic browser opening")
-	noGuiFlag := flag.Bool("no-gui", false, "Do no start the GUI")
-	noWebserviceFlag := flag.Bool("no-webservice", false, "Do no start the webservice")
+	// Let's look for a configuration within one of the folders
+	config.Logger = log.With().Str("module", "config").Logger()
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	appConfig := config.LoadWithDefaults("")
 
-	flag.Parse()
-
-	log.Info().
-		Bool("no-browser", !*noBrowserFlag).
-		Bool("no-gui", !*noGuiFlag).
-		Bool("no-webservice", !*noWebserviceFlag).
-		Msg("Parsed executable flags")
+	parseFlags(appConfig)
 
 	// Set up logging
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	switch appConfig.Log.Level {
+	case "debug":
+		gin.SetMode(gin.DebugMode)
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+		break
+	default:
+		gin.SetMode(gin.ReleaseMode)
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	}
+
+	if appConfig.Log.ToFiles {
+		logPath := config.GetRelativeFilePath(".runtime.log")
+		logFile, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Error().Err(err).Msg("Could not open log file")
+		} else {
+			defer logFile.Close()
+			log.Logger = zerolog.New(logFile).With().Timestamp().Logger()
+		}
+	}
+
 	log.Info().Msg("App starting")
 
 	// Create some channel based pipelines to pass around the different workloads
@@ -53,17 +66,17 @@ func main() {
 
 	// ProcessProgress is responsible in holding the current progress and
 	// notifying the frontend about it
+	stats.Logger = log.With().Str("module", "stats").Logger()
 	progress := stats.NewProcessProgress(pusherPipeline.Chan)
 
 	// Kick of the webservice
 	go func() {
-		if *noWebserviceFlag {
+		if !appConfig.Behaviour.WebserviceAutostart {
 			return
 		}
 
-		// Let's look for a configuration within one of the folders
-		config.Logger = log.With().Str("module", "config").Logger()
-		appConfig := config.LoadWithDefaults("")
+		// Set the logger for the UI helper
+		ui.Logger = log.With().Str("module", "ui").Logger()
 
 		// Metrics is responsible in keeping and communicating key metrics for the frontend
 		appMetrics := stats.NewMetrics(pusherPipeline.Chan)
@@ -76,7 +89,7 @@ func main() {
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
 		collectorWorkers := collector.NewWorkerPool(10, filesPipeline.Chan, pusherPipeline.Chan)
-		go collectorWorkers.Run(progress, appConfig.SearchablePaths)
+		go collectorWorkers.Run(appConfig, progress)
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
@@ -91,18 +104,18 @@ func main() {
 
 		// Try to open the default browser on the given OS
 		go func() {
-			if *noBrowserFlag {
+			if !appConfig.Behaviour.BrowserAutostart {
 				return
 			}
 
 			time.Sleep(50 * time.Millisecond)
-			openBrowser()
+			ui.OpenFrontend()
 		}()
 
 		webservice.Serve(search, appPusher, ":10000")
 	}()
 
-	if *noGuiFlag {
+	if !appConfig.Behaviour.ShowGui {
 		select {}
 	} else {
 		// Define a clean theme
@@ -118,7 +131,7 @@ func main() {
 
 		statusTxt := canvas.NewText("The service is processing files...", color.White)
 		quitBtn := widget.NewButton("Shut down service", func() { a.Quit() })
-		startBtn := widget.NewButton("Open results in browser", func() { openBrowser() })
+		startBtn := widget.NewButton("Open results in browser", func() { ui.OpenFrontend() })
 		progressBar := widget.NewProgressBarInfinite()
 
 		uiUpdater := ui.NewUiUpdater(statusTxt, progressBar)
@@ -137,12 +150,5 @@ func main() {
 		// Say goodbye in the browser window, if available.
 		pusherPipeline.Chan <- pusher.NewNavigatePush("goodbye")
 		time.Sleep(100 * time.Millisecond)
-	}
-}
-
-func openBrowser() {
-	err := osx.OpenDefault("http://localhost:10000")
-	if err != nil {
-		log.Warn().Err(err).Msg("Could not open default browser")
 	}
 }

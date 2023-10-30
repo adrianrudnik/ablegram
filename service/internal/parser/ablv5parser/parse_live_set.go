@@ -39,6 +39,8 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 		tags.AddSystemTag("file:location:onedrive")
 	} else if strings.Contains(simplePath, "/google drive") {
 		tags.AddSystemTag("file:location:google-drive")
+	} else if strings.Contains(simplePath, "/pCloudDrive") {
+		tags.AddSystemTag("file:location:pcloud")
 	} else {
 		tags.AddSystemTag("file:location:elsewhere")
 	}

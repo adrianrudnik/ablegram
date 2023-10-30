@@ -60,7 +60,7 @@ func NewSearch() *Search {
 	indexMapping.AddDocumentMapping("LiveSet", buildLiveSetMapping())
 	indexMapping.AddDocumentMapping("MidiTrack", buildMidiTrackMapping())
 
-	Logger.Info().Msg("Indexes created")
+	Logger.Info().Msg("Index documents mapped")
 
 	return &Search{
 		Index: index,

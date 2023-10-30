@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 )
@@ -22,35 +23,35 @@ func NewWorkerPool(workerCount int, filesChan chan<- *pipeline.FilesForProcessor
 	}
 }
 
-func (p *WorkerPool) Run(progress *stats.ProcessProgress, paths []string) {
+func (wp *WorkerPool) Run(c *config.Config, p *stats.ProcessProgress) {
 	Logger.Info().
-		Int("count", p.workerCount).
-		Strs("paths", paths).
+		Int("count", wp.workerCount).
+		Strs("paths", c.Collector.SearchablePaths).
 		Msg("Starting collector workers")
 
 	// Spool up workers first
-	for i := 0; i < p.workerCount; i++ {
-		go p.doWork(progress)
+	for i := 0; i < wp.workerCount; i++ {
+		go wp.doWork(c, p)
 	}
 
 	// Pipe in paths next
-	for _, path := range paths {
-		p.inPathChan <- path
+	for _, path := range c.Collector.SearchablePaths {
+		wp.inPathChan <- path
 	}
 }
 
-func (p *WorkerPool) doWork(progress *stats.ProcessProgress) {
+func (wp *WorkerPool) doWork(c *config.Config, p *stats.ProcessProgress) {
 	for {
 		select {
-		case path := <-p.inPathChan:
-			progress.Add()
+		case path := <-wp.inPathChan:
+			p.Add()
 
-			err := Collect(path, p.outFilesChan, p.pushChan)
+			err := Collect(c, path, wp.outFilesChan, wp.pushChan)
 			if err != nil {
 				Logger.Warn().Err(err).Str("path", path).Msg("Failed to collect files")
 			}
 
-			progress.Done()
+			p.Done()
 		}
 	}
 }

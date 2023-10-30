@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/rs/zerolog"
@@ -21,18 +22,17 @@ var excludePaths = []string{
 }
 
 var excludeFolders = []string{
-	".git",
-	".idea",
+	"node_modules",
 }
 
 type Collection struct {
 	files []string
 }
 
-func Collect(path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+func Collect(c *config.Config, path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
 	allowedExtensions := []string{".als"}
 
-	err := findFilesByExtension(path, allowedExtensions, filesChan, broadcastChan)
+	err := findFilesByExtension(c, path, allowedExtensions, filesChan, broadcastChan)
 	if err != nil {
 		return err
 	}
@@ -44,27 +44,41 @@ func Collect(path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broad
 	return nil
 }
 
-func findFilesByExtension(root string, extensions []string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+func findFilesByExtension(c *config.Config, root string, extensions []string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+
+	folders := make([]string, 0, 1000000)
+
 	err := filepath.WalkDir(root, func(s string, d fs.DirEntry, e error) error {
+		if e != nil {
+			Logger.Warn().Err(e).Str("path", s).Msg("Skipped folder due to error")
+			return nil
+		}
+
+		// Exclude folders beginning with a dot
+		if c.Collector.ExcludeSystemFolders && d.IsDir() && strings.HasPrefix(d.Name(), ".") {
+			Logger.Debug().Str("path", s).Msg("Skipping dot folder")
+			return filepath.SkipDir
+		}
+
 		// Exclude paths by prefix
-		if d.IsDir() && slices.IndexFunc(excludePaths, func(s string) bool {
+		if c.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludePaths, func(s string) bool {
 			return strings.HasPrefix(d.Name(), s)
 		}) != -1 {
-			Logger.Info().Str("path", s).Msg("Skipping excluded path")
+			Logger.Debug().Str("path", s).Msg("Skipping excluded path")
 			return filepath.SkipDir
 		}
 
 		// Exclude folders by name
-		if d.IsDir() && slices.IndexFunc(excludeFolders, func(s string) bool {
+		if c.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludeFolders, func(s string) bool {
 			return s == filepath.Base(d.Name())
 		}) != -1 {
-			Logger.Info().Str("path", s).Msg("Skipping excluded folder")
+			Logger.Debug().Str("path", s).Msg("Skipping excluded folder")
 			return filepath.SkipDir
 		}
 
-		if e != nil {
-			Logger.Warn().Err(e).Str("path", s).Msg("Skipped folder due to error")
-			return nil
+		// Log at least the folders we are visiting
+		if d.IsDir() {
+			folders = append(folders, s)
 		}
 
 		for _, ext := range extensions {
@@ -81,6 +95,15 @@ func findFilesByExtension(root string, extensions []string, filesChan chan<- *pi
 
 		return nil
 	})
+
+	if c.Log.ScannedFolders {
+		scanLogPath := config.GetRelativeFilePath(".scanned-folders.log")
+		lines := strings.Join([]string(folders), "\n")
+		err := os.WriteFile(scanLogPath, []byte(lines), 0666)
+		if err != nil {
+			Logger.Warn().Err(err).Msg("Failed to write scanned folders to file")
+		}
+	}
 
 	if err != nil {
 		return err

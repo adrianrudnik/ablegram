@@ -3,13 +3,13 @@ package webservice
 import (
 	"embed"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
+	"github.com/adrianrudnik/ablegram/internal/ui"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/logger"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/icza/gox/osx"
 	"github.com/rs/zerolog"
 	"net/http"
 	"os"
@@ -33,7 +33,7 @@ func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) erro
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
-		Logger.Info().
+		Logger.Debug().
 			Str("method", httpMethod).
 			Str("path", absolutePath).
 			Str("handler", handlerName).
@@ -119,12 +119,9 @@ func registerApiRoutes(rg *gin.RouterGroup) {
 			return
 		}
 
-		err := osx.OpenDefault(json.Path)
-		if err != nil {
-			Logger.Warn().Err(err).Msg("Unable to open given path")
-		}
+		ui.OpenDefault(json.Path)
 
-		c.JSON(200, gin.H{"status": "opened"})
+		c.JSON(200, gin.H{"status": "ok"})
 	})
 }
 

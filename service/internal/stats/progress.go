@@ -25,6 +25,11 @@ func NewProcessProgress(pushChan chan<- interface{}) *ProcessProgress {
 
 	p.pushTrigger, _ = lo.NewDebounce(50*time.Millisecond, func() {
 		p.pushChan <- pusher.NewProcessingStatusPush(p.progressCount.Load())
+		Logger.Debug().Int64("routines", p.progressCount.Load()).Msg("Processing progress updated")
+
+		if p.progressCount.Load() == 0 {
+			Logger.Info().Msg("Processing finished")
+		}
 	})
 
 	return p

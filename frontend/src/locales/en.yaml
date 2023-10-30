@@ -132,6 +132,7 @@ tags:
   sys:file:location:dropbox: Dropbox
   sys:file:location:onedrive: OneDrive
   sys:file:location:google-drive: Google Drive
+  sys:file:location:pcloud: pCloud
   sys:file:location:elsewhere: Elsewhere
 
   sys:file:btime-year: Creation year

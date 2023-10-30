@@ -29,7 +29,7 @@ func NewSearch() *Search {
 	err = indexMapping.AddCustomTokenFilter("edgeNgram325",
 		map[string]interface{}{
 			"type": edgengram.Name,
-			"min":  3.0,
+			"min":  2.0,
 			"max":  25.0,
 		})
 	if err != nil {

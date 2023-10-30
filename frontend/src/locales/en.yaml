@@ -1,4 +1,18 @@
 # See https://vue-i18n.intlify.dev/guide/essentials/pluralization for pluralization
+# An example how this is done in here:
+#
+# audio-track:
+#   s: Audio track
+#   c: Audio tracks | Audio track | Audio tracks
+#   nc: No audio tracks | 1 audio track | {count} audio tracks
+#
+# The order is NONE | SINGLE | MULTIPLE
+#
+# "s" is the singular term
+# "c" is the counted term, but without the counter, like "Cars" instead of "3 Cars".
+# "nc" is the counted and numbered term, like "3 Cars" instead of "Cars".
+#
+# Values beginning with "'@:" are references to other values in this file.
 
 language: English
 
@@ -90,15 +104,56 @@ menu:
 metric:
   valid_files: Files | File | Files
   invalid_files: Invalid files | Invalid file | Invalid files
-  live_sets: Live Sets | Live Set | Live Sets
+  live_sets: '@:common.label.live-set.c'
   index_docs: Data points | Data point | Data points
-  midi_tracks: MIDI tracks | MIDI track | MIDI tracks
-  audio_tracks: Audio tracks | Audio track | Audio tracks
+  midi_tracks: '@:common.label.midi-track.c'
+  audio_tracks: '@:common.label.audio-track.c'
 
 error:
   404:
     title: 404 Not found
     back-to-search: Return to search
+
+common:
+  button:
+    open-folder: Open folder
+    open-file: Open file
+    show-tags: Show tags
+    hide-tags: Hide tags
+
+  label:
+    search-result:
+      s: Search results
+      c: Search results | Search result | Search results
+      nc: No search results | One search result | {count} search results
+    live-set:
+      s: Live Set
+      c: Live Sets | Live Set | Live Sets
+      nc: No Live Sets | One Live Set | {count} Live Sets
+    audio-track:
+      s: Audio track
+      c: Audio tracks | Audio track | Audio tracks
+      nc: No audio tracks | One audio track | {count} audio tracks
+    midi-track:
+      s: MIDI track
+      c: MIDI tracks | MIDI track | MIDI tracks
+      nc: No MIDI tracks | One MIDI track | {count} MIDI tracks
+    track:
+      s: Track
+      c: Tracks | Track | Tracks
+      nc: No tracks | One track | {count} tracks
+    beats-per-minute:
+      s: BPM
+    software:
+      s: Software
+    fs-folder:
+      s: Folder
+      c: Folders | Folder | Folders
+      nc: No folders | One folder | {count} folders
+    fs-file:
+      s: File
+      c: Files | File | Files
+      nc: No files | One file | {count} files
 
 tags:
   sys: System
@@ -111,13 +166,13 @@ tags:
   sys:ableton: Ableton
   sys:ableton:version: Version
 
-  sys:type: Typ
-  sys:type:live-set: Live Sets
-  sys:type:audio-track: Audio track
-  sys:type:midi-track: MIDI track
+  sys:type: Type
+  sys:type:live-set: '@:common.label.live-set.s'
+  sys:type:audio-track: '@:common.label.audio-track.s'
+  sys:type:midi-track: '@:common.label.midi-track.s'
 
-  sys:live-set: '@:tags.sys:type:live-set'
-  sys:live-set:tempo: BPM
+  sys:live-set: '@:common.label.live-set.s'
+  sys:live-set:tempo: '@:common.label.bpm.s'
   sys:live-set:tracks: Tracks
   sys:live-set:tracks:has-audio: Has audio track
   sys:live-set:tracks:no-audio: No audio track
@@ -234,4 +289,13 @@ shutdown-confirm-modal:
   reject: Return
 
 query-input-component:
-  placeholder: Search your files here
+  placeholder: Enter a search query
+  hits: '@:common.label.search-result.nc'
+
+result-item-component:
+  button:
+    show-tags: '@:common.button.show-tags'
+    hide-tags: '@:common.button.hide-tags'
+
+live-set-result-item-component:
+  header: '@:common.label.live-set.s'

@@ -1,41 +1,24 @@
 <template>
   <div>
-    <SearchResultCard
-      :header="t('common.label.live-set.s')"
-      :title="result.displayName"
-      :tags="props.result.tags"
-    >
+    <SearchResultCard header="Midi Track" :title="result.displayName" :tags="props.result.tags">
       <PropertyList>
-        <PropertyListItem
-          v-if="result.pathFolder"
-          :title="t('common.label.fs-folder.s')"
-          icon="pi pi-folder"
-        >
+        <PropertyListItem v-if="result.pathFolder" title="Ordner" icon="pi pi-folder">
           {{ result.pathFolder }}
         </PropertyListItem>
 
-        <PropertyListItem
-          v-if="result.tempo"
-          :title="t('common.label.beats-per-minute.s')"
-          icon="pi pi-clock"
-        >
+        <PropertyListItem v-if="result.tempo" title="BPM" icon="pi pi-clock">
           {{ result.tempo }}
         </PropertyListItem>
 
         <PropertyListItem
           v-if="result.audioTrackCount || result.midiTrackCount"
-          :title="t('common.label.track.c', { count: 2 })"
+          title="Spuren"
           icon="pi pi-bars"
         >
-          {{ t('common.label.midi-track.nc', { count: result.midiTrackCount }) }}.
-          {{ t('common.label.audio-track.nc', { count: result.audioTrackCount }) }}.
+          {{ result.midiTrackCount }} MIDI, {{ result.audioTrackCount }} Audio
         </PropertyListItem>
 
-        <PropertyListItem
-          v-if="result.creator"
-          :title="t('common.label.software.s')"
-          icon="pi pi-desktop"
-        >
+        <PropertyListItem v-if="result.creator" title="Software" icon="pi pi-desktop">
           {{ result.creator }}
         </PropertyListItem>
       </PropertyList>
@@ -47,7 +30,7 @@
           icon="pi pi pi-folder-open"
           v-if="result.pathFolder"
           @click="openLocalPath(result.pathFolder)"
-          :label="t('common.button.open-folder')"
+          label="Open folder"
         />
 
         <Button
@@ -56,7 +39,7 @@
           icon="pi pi-file-o"
           v-if="result.pathAbsolute"
           @click="openLocalPath(result.pathAbsolute)"
-          :label="t('common.button.open-file')"
+          label="Open file"
         />
       </template>
     </SearchResultCard>
@@ -68,11 +51,10 @@ import type { LiveSetResult } from '@/plugins/search/result/result_live_set'
 import SearchResultCard from '@/components/structure/SearchResultCard.vue'
 import Button from 'primevue/button'
 import { openLocalPath } from '@/plugins/api'
+import DescriptionList from '@/components/structure/DescriptionList.vue'
+import DescriptionListItem from '@/components/structure/DescriptionListItem.vue'
 import PropertyList from '@/components/structure/PropertyList.vue'
 import PropertyListItem from '@/components/structure/PropertyListItem.vue'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
 
 const props = defineProps<{
   result: LiveSetResult

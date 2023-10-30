@@ -5,7 +5,6 @@
         <i class="pi pi-search"></i>
       </span>
       <InputText
-        @update:model-value="search"
         type="search"
         v-model="query"
         class="w-full"
@@ -13,7 +12,9 @@
       />
     </div>
 
-    <div class="my-2 text-sm" v-if="query !== ''">{{ n(searchResultCount) }} Treffer gefunden</div>
+    <div class="my-2 text-sm" v-if="!isSearching && query !== ''">
+      {{ t('query-input-component.hits', { count: searchResultCount }) }}
+    </div>
   </div>
 </template>
 
@@ -24,8 +25,9 @@ import { useI18n } from 'vue-i18n'
 import { executeQuerySearch } from '@/plugins/search'
 import { useSearchResultStore } from '@/stores/results'
 import { useStatStore } from '@/stores/stats'
+import { watchDebounced } from '@vueuse/core'
 
-const { t, n } = useI18n()
+const { t } = useI18n()
 
 const search = async (query: string) => {
   useStatStore().isSearching = true
@@ -51,5 +53,18 @@ const search = async (query: string) => {
 
 const query = ref('')
 
+watchDebounced(
+  query,
+  () => {
+    search(query.value)
+  },
+  { debounce: 200, maxWait: 400 } // maxWait should be lower than the progress indicator "delay" in AppLayout.
+)
+
+setTimeout(() => {
+  query.value = 'beat'
+}, 500)
+
+const isSearching = computed(() => useStatStore().isSearching)
 const searchResultCount = computed(() => useStatStore().searchResultCount)
 </script>

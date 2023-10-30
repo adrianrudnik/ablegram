@@ -1,6 +1,6 @@
 <template>
   <MetaBar class="mb-3" />
-  <QueryInput class="mb-3" />
+  <QueryInput class="mb-3" v-if="dataPoints" />
   <SearchResultList>
     <SearchResultListItem v-for="result of results" :key="result.id" :result="result" />
   </SearchResultList>
@@ -13,6 +13,9 @@ import SearchResultList from '@/components/structure/SearchResultList.vue'
 import SearchResultListItem from '@/components/structure/SearchResultListItem.vue'
 import { computed } from 'vue'
 import { useSearchResultStore } from '@/stores/results'
+import { useStatStore } from '@/stores/stats'
+
+const dataPoints = computed(() => useStatStore().indexDocumentCount)
 
 const results = computed(() => useSearchResultStore().entries)
 </script>

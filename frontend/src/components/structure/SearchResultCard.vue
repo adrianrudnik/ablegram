@@ -20,14 +20,14 @@
           @click="showTags = true"
           v-if="props.tags && !showTags"
           size="small"
-          label="Show tags"
+          :label="t('result-item-component.button.show-tags')"
         />
         <Button
           icon="pi pi-tags"
           @click="showTags = false"
           v-if="props.tags && showTags"
           size="small"
-          label="Hide tags"
+          :label="t('result-item-component.button.hide-tags')"
         />
       </div>
 
@@ -40,6 +40,9 @@
 import { ref } from 'vue'
 import TagRow from '@/components/parts/search/TagRow.vue'
 import Button from 'primevue/button'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   header?: string

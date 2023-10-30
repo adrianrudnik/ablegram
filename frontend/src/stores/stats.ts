@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export const useStatStore = defineStore('stats', () => {
   const isProcessing = ref(false)
@@ -15,6 +15,8 @@ export const useStatStore = defineStore('stats', () => {
   const indexDocumentCount = ref(0)
   const midiTrackCount = ref(0)
   const audioTrackCount = ref(0)
+
+  const inProgress = computed(() => isProcessing.value || isSearching.value)
 
   const updateMetrics = (values: { [key: string]: number }) => {
     for (const [k, v] of Object.entries(values)) {
@@ -45,6 +47,7 @@ export const useStatStore = defineStore('stats', () => {
     updateMetrics,
     isProcessing,
     isSearching,
+    inProgress,
     searchResultCount,
     validFileCount,
     invalidFileCount,

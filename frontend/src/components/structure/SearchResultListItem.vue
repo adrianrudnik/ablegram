@@ -11,12 +11,14 @@
 import type { HitFieldset } from '@/plugins/search/result'
 import LiveSetResultItem from '@/components/parts/search/LiveSetResultItem.vue'
 import UnknownResultItem from '@/components/parts/search/UnknownResultItem.vue'
+import MidiTrackResultItem from '@/components/parts/search/MidiTrackResultItem.vue'
 
 const resultTypeComponentMap = {
   LiveSet: LiveSetResultItem,
-  MidiTrack: UnknownResultItem,
+  MidiTrack: MidiTrackResultItem,
   AudioTrack: UnknownResultItem
 }
+
 const props = defineProps<{
   result: HitFieldset
 }>()

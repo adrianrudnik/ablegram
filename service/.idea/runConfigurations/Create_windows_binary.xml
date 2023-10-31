@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-version https://git-lfs.github.com/spec/v1
-oid sha256:585f3948b6e1695ca565cd99e5a66b789458bd7a4f69a60734be8520572ae9fe
-size 996
-=======
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Create windows binary" type="ShConfigurationType">
     <option name="SCRIPT_TEXT" value="go build -ldflags -H=windowsgui -o Ablegram.exe ." />
@@ -24,4 +19,3 @@ size 996
     <method v="2" />
   </configuration>
 </component>
->>>>>>> 4cbc494 (Fixed window binary run configuration)

@@ -24,7 +24,7 @@ type LiveSetDocument struct {
 	ScaleRootNote string `json:"scaleRootNote,omitempty"`
 
 	InKey bool  `json:"inKey,omitempty"`
-	Tempo int64 `json:"tempo,omitempty"`
+	Tempo int64 `json:"bpm,omitempty"`
 
 	MidiTrackCount  int `json:"midiTrackCount,omitempty"`
 	AudioTrackCount int `json:"audioTrackCount,omitempty"`
@@ -64,7 +64,7 @@ func buildLiveSetMapping() *mapping.DocumentMapping {
 	m.AddFieldMappingsAt("scaleRootNote", mapping.NewKeywordFieldMapping())
 
 	m.AddFieldMappingsAt("inKey", mapping.NewBooleanFieldMapping())
-	m.AddFieldMappingsAt("tempo", mapping.NewNumericFieldMapping())
+	m.AddFieldMappingsAt("bpm", mapping.NewNumericFieldMapping())
 
 	m.AddFieldMappingsAt("midiTrackCount", mapping.NewNumericFieldMapping())
 	m.AddFieldMappingsAt("audioTrackCount", mapping.NewNumericFieldMapping())

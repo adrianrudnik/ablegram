@@ -15,11 +15,11 @@
         </PropertyListItem>
 
         <PropertyListItem
-          v-if="result.tempo"
+          v-if="result.bpm"
           :title="t('common.label.beats-per-minute.s')"
           icon="pi pi-clock"
         >
-          {{ result.tempo }}
+          {{ result.bpm }}
         </PropertyListItem>
 
         <PropertyListItem

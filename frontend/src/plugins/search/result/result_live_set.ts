@@ -20,7 +20,7 @@ export interface LiveSetResult {
   scale?: string
 
   inKey?: boolean
-  tempo?: number
+  bpm?: number
 
   midiTrackCount?: number
   audioTrackCount?: number

@@ -21,8 +21,15 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
         break
 
       case PushMessageType.ProcessingStatus:
-        // Hydrate the new tags on completion
+        // Hydrate the new tags on completion and update them in periods while
+        // eslint-disable-next-line no-case-declarations
+        const stop = setInterval(async () => {
+          await hydrateTags()
+        }, 1500)
+
+        // Once finished, stop that interval and reload one last time
         if (payload.routines === 0) {
+          clearInterval(stop)
           await hydrateTags()
         }
 

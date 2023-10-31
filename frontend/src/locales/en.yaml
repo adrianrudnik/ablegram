@@ -332,13 +332,12 @@ result-item-component:
 live-set-result-item-component:
   header: '@:common.label.live-set.s'
 
-
 color:
   # Colors picked from ableton track color picker.
   # Names picked from gpick namification.
 
   # Specials
-  "-1": No color
+  '-1': No color
 
   # Column 1
   0: Rose pink

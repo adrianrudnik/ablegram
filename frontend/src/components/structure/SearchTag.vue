@@ -14,6 +14,9 @@
       <span v-if="showCount" class="p-1 px-2 bg-gray-200 border-900">
         {{ props.tag.count }}
       </span>
+      <span v-if="$slots.action" class="p-1 px-2 bg-gray-200 border-900">
+        <slot name="action" />
+      </span>
     </div>
   </div>
 </template>
@@ -48,8 +51,6 @@ if (props.tag.type === TagType.ColorValue) {
 
 <style lang="scss">
 .SearchTag {
-  cursor: default;
-
   & > div > span {
     overflow: hidden;
     text-overflow: ellipsis;

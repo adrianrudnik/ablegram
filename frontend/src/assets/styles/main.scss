@@ -1,7 +1,9 @@
-@import "fonts.css";
+@import 'fonts.css';
 @import '../../../node_modules/primevue/resources/primevue.min.css';
 @import '../../../node_modules/primeflex/primeflex.css';
 @import '../../../node_modules/primeicons/primeicons.css';
+
+$errorColor: red;
 
 @import '@/assets/primefaces/themes/ablegram/ablegram-light/blackwhite/theme.scss';
 
@@ -23,4 +25,8 @@
 
 p {
   line-height: 1.4;
+}
+
+body {
+  overflow-y: scroll;
 }

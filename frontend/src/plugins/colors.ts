@@ -96,7 +96,7 @@ export const colorMap: { [key: number]: string } = {
   27: '#CFCFCF',
   41: '#A8A8A8',
   55: '#7A7A7A',
-  69: '#3E3E3E',
+  69: '#3E3E3E'
 }
 
 export function resolveColorByIndex(index: number | undefined): string | null {

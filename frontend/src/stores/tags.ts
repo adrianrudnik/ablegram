@@ -34,6 +34,7 @@ interface TagTranslation {
   topic: string
   detail: string
   extra: string | undefined
+  plain?: string // contains the full tag in plain translated form for searches and copy/pastes
 }
 
 export interface Tag {
@@ -187,6 +188,7 @@ function classifyTag(tag: Tag): TagType {
 }
 
 function overrideTranslations(tag: Tag) {
+  // Special handling for mtime/btime fields with shared logic
   if (tag.topic === 'file') {
     const marker = tag.detail.substring(1)
 
@@ -211,6 +213,11 @@ function overrideTranslations(tag: Tag) {
         break
     }
   }
+
+  // Finalize the plain text translated tag
+  tag.trans.plain = [tag.trans.topic, tag.trans.detail, tag.trans.extra]
+    .filter((v) => !!v)
+    .join(':')
 }
 
 function colorizeTag(tag: Tag): string | null {

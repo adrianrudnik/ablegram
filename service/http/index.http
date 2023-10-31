@@ -1,0 +1,66 @@
+### Simple query
+
+### GET request with parameter
+# https://blevesearch.com/docs/Query-String-Query/
+// @no-cookie-jar
+// @no-log
+// @no-redirect
+POST {{webservice}}/search/query
+Accept: application/json
+Content-Type: application/json
+
+{
+  "size": 3,
+  "from": 0,
+  "explain": false,
+  "query": {
+    "query": "*"
+  },
+  "fields": [
+    "*"
+  ]
+}
+
+### GET by document type
+// @no-cookie-jar
+// @no-log
+// @no-redirect
+POST {{webservice}}/search/query
+Accept: application/json
+Content-Type: application/json
+
+{
+  "size": 10,
+  "from": 0,
+  "query": {
+    "query": "+type:LiveSet"
+  },
+  "fields": [
+    "*"
+  ]
+}
+
+### GET tag facets
+// @no-cookie-jar
+// @no-log
+// @no-redirect
+POST {{webservice}}/search/query
+Accept: application/json
+Content-Type: application/json
+
+{
+  "size": 0,
+  "from": 0,
+  "query": {
+    "query": "*"
+  },
+  "facets": {
+    "tags": {
+      "field": "tags",
+      "size": 1000
+    }
+  },
+  "fields": [
+    "tags"
+  ]
+}

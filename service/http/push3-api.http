@@ -1,0 +1,160 @@
+### Show legal page
+
+GET {{push}}/legal
+
+### Show pair page
+
+// @no-log
+// @no-redirect
+GET {{push}}/pair
+
+### Start challenge process
+
+// @no-redirect
+POST {{push}}/api/v1/challenge
+
+### Submit challenge
+# Response also contains the token
+# { "token": "0350d8b46ade81e82dbeb19de2a22054ac0d5242c565c3704f9cf2c8e779923d" }
+
+// @no-log
+// @no-redirect
+POST {{push}}/api/v1/challenge-response
+Content-Type: application/json
+
+{
+  "secret": "183851"
+}
+
+> {%
+    client.test("Retry header must be present on failure", function() {
+        if (response.status !== 200) {
+            client.assert(response.headers.valueOf("X-Retries-Left") !== null);
+        }
+    });
+
+    client.test("Token must be set on success", function() {
+        if (response.status === 200) {
+            client.assert(response.headers.valueOf('Set-Cookie').startsWith('Ableton-Challenge-Response-Token='));
+        }
+    });
+%}
+
+### Update API
+
+POST {{push}}/api/v1/update
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="first"; filename="update.swu"
+
+< ./update-push3-1.1.20b3-release-v1.1.20b3.swu
+
+### Reboot over Update API
+
+POST {{push}}/api/v1/update/reboot
+
+### Download logfiles
+
+GET {{push}}/logs
+
+### Fetch current version
+#```json
+#{
+#  "id": 152,
+#  "version": "1.1.12",
+#  "created": "2023-10-10T14:51:16.663592",
+#  "product": "push3-release",
+#  "mandatory": false,
+#  "updatefiles": [
+#    {
+#      "id": 288,
+#      "path": "push3-release/1.1.12/update.swu",
+#      "url": "https://cdn-hardware-updates.ableton.com/aks-hardwareupdates-files/update-server/artifacts/push3-release/1.1.12/update.swu",
+#      "filename": "update.swu",
+#      "update_rel": {
+#        "id": 152,
+#        "version": "1.1.12",
+#        "created": "2023-10-10T14:51:16.663592",
+#        "product": "push3-release",
+#        "mandatory": false
+#      }
+#    }
+#  ]
+#}
+#```
+
+GET https://hardware-updates.ableton.com/api/v1/update/push3-release/1.1.11/
+
+### Get all releases?
+#```json
+#[
+#  {
+#    "id": 92,
+#    "version": "1.0",
+#    "created": "2023-03-10T13:53:29.205114",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  },
+#  {
+#    "id": 101,
+#    "version": "1.0.1",
+#    "created": "2023-03-30T09:40:26.530096",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  },
+#  {
+#    "id": 117,
+#    "version": "1.1",
+#    "created": "2023-05-16T07:13:17.298060",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  },
+#  {
+#    "id": 120,
+#    "version": "1.1.1",
+#    "created": "2023-06-05T09:58:46.575129",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  },
+#  {
+#    "id": 129,
+#    "version": "1.1.2",
+#    "created": "2023-07-04T09:31:19.252289",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  },
+#  {
+#    "id": 140,
+#    "version": "1.1.10",
+#    "created": "2023-08-23T09:09:21.994163",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  },
+#  {
+#    "id": 146,
+#    "version": "1.1.11",
+#    "created": "2023-09-20T08:59:45.293434",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  },
+#  {
+#    "id": 152,
+#    "version": "1.1.12",
+#    "created": "2023-10-10T14:51:16.663592",
+#    "product": "push3-release",
+#    "mandatory": false,
+#    "updatefiles": []
+#  }
+#]
+#```
+
+GET https://hardware-updates.ableton.com/api/v1/update/push3-release/
+

@@ -65,9 +65,11 @@ func (c *PushChannel) AddClient(client *PushClient) {
 	for _, msg := range c.history {
 		client.tx <- msg
 	}
+	count := len(c.history)
 	c.historyLock.RUnlock()
 
-	Logger.Info().Str("client", client.ID).Msg("Websocket client received history")
+	Logger.Info().Int("messages", count).Str("client", client.ID).Msg("Websocket client received history")
+
 }
 
 func (c *PushChannel) RemoveClient(client *PushClient) {
@@ -92,8 +94,6 @@ func (c *PushChannel) Broadcast(message interface{}) {
 	for client := range clients {
 		select {
 		case client.tx <- message:
-		default:
-			close(client.tx)
 		}
 	}
 	c.clientsLock.RUnlock()

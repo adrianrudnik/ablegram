@@ -80,9 +80,9 @@ donate:
     short: Donate
     long: Support the development
   description: >-
-    If you like this project, please consider supporting the development by donating.
+    If you like this project, please consider supporting its development by donating.
   usage: >-
-    Donations allow me to spend more time on this project, to keep it free and open source.
+    Donations allow me to spend more time on this project and keep it free and open source.
   processors:
     patreon:
       label: Patreon
@@ -249,8 +249,8 @@ app-status:
 file-view:
   title: Found files
   description: >-
-    Contains a list of files that the application has found within the specified
-    folders.
+    The following table lists all files that have been considered for processing.
+    The processing success is also shown.
 
 file-table:
   header:
@@ -275,47 +275,55 @@ file-table:
 
 tag-overview:
   explain:
-    title: What are tags?
+    title: Tags explained
     description: >-
-      Tags are a way to describe files with additional information. They are
-      automatically extracted from the files and can be used to search for
-      specific files. Here is an example tag on what part of the tag is what:
+      As the files are processed, tags are derived from the content and information found.
+      They help to create meaningful search queries. Tags are made up of several components.
+      The following example describes each component:
+    about: >-
+      The categories below provide an insight into the tags identified.
+      These are available in the search to formulate search queries.
+      
+
   type:
-    title: Type related tags
+    title: Type category
     description: >-
-      Contains tags that are related to the nature of the found element.
+      Types group the information found according to its nature. They do not describe files,
+      but the components of a single file.
   software:
-    title: Software related tags
+    title: Software category
     description: >-
-      Contains tags that are related to the software that was used to create the
-      file.
+      This is the software that was used to create the file. The version numbers found are broken
+      down into exact hits or individual Semver variants.
   location:
-    title: Location related tags
+    title: Location category
     description: >-
       Contains tags that are related to the location of the
       file within the scanned drives and folders.
   file:
-    title: File related tags
+    title: File category
     description: >-
-      Contains tags that are related to the file itself.
+      These tags have been extracted from the processed files. They give an overview of what we know
+      about the file itself and how we might classify it.
   live-set:
-    title: Live Set related tags
+    title: Live Set category
     description: >-
-      Contains tags that are related to Live Sets and their properties.
+      Although Live Sets are very similar to a single file, they give us different data.
+      We learn more about the actual settings.
   info:
-    title: Info related tags
+    title: Information category
     description: >-
-      Contains tags that are related to the information that is stored within
-      found datapoint. Mostly based on meta information the software provides.
+      This category collects information that is not directly related to the other categories.
+      It tries to give more insight into small details that can be found throughout the files.
   color:
-    title: Color related tags
+    title: Color category
     description: >-
-      Contains tags that are related to the color of the found element.
-      Can either relate to anything or specific datapoints.
+      The software allows visual labelling using colours.
+      This category collects this information and makes it available for searching.
 
 goodbye-view:
-  title: Goodbye
-  description: You can close this window (or tab) now.
+  title: Goodbye!
+  description: You can close this window.
 
 shutdown-confirm-modal:
   title: Confirm shutdown

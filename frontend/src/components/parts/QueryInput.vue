@@ -28,7 +28,7 @@
         <template #removetokenicon="slotProps">
           <div
             @click="slotProps.onClick"
-            class="inline-flex bg-red-500 align-items-center px-1 text-white cursor-pointer"
+            class="RemoveItem inline-flex bg-red-500 align-items-center px-1 text-white cursor-pointer"
           >
             <i class="pi pi-times"></i>
           </div>
@@ -168,6 +168,13 @@ watchDebounced(
   border-right-style: solid;
   border-radius: var(--border-radius);
 
+  .RemoveItem {
+    border-right-width: 0 !important;
+    border-right-style: solid !important;
+    border-bottom-right-radius: calc(var(--border-radius) / 1.6) !important;
+    border-top-right-radius: calc(var(--border-radius) / 1.6) !important;
+  }
+
   .SearchTag {
     margin: unset !important;
 
@@ -179,8 +186,8 @@ watchDebounced(
       span:first-child {
         border-left-width: 2px !important;
         border-left-style: solid;
-        border-top-left-radius: var(--border-radius) !important;
-        border-bottom-left-radius: var(--border-radius) !important;
+        border-top-left-radius: calc(var(--border-radius) / 1.6) !important;
+        border-bottom-left-radius: calc(var(--border-radius) / 1.6) !important;
       }
 
       span:last-child {
@@ -198,6 +205,10 @@ watchDebounced(
 }
 
 .QueryInput {
+  input {
+    caret-shape: block;
+  }
+
   .Options {
     a {
       color: var(--gray-500);

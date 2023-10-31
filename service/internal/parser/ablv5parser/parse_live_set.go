@@ -12,8 +12,11 @@ import (
 	"github.com/duaneking/gozodiacs"
 	"math"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
+
+var versionNumberRegex = regexp.MustCompile(`^(\d+\.)?(\d+\.)?(\d+)`)
 
 func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pipeline.DocumentToIndexMsg {
 	// Extract the tags for live sets
@@ -64,7 +67,24 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	}
 
 	if strings.HasPrefix(data.Creator, "Ableton Live ") {
-		tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", strings.TrimPrefix(data.Creator, "Ableton Live ")))
+		rawVersion := strings.TrimPrefix(data.Creator, "Ableton Live ")
+
+		tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", rawVersion))
+
+		if versionNumberRegex.MatchString(rawVersion) {
+			verParts := strings.Split(versionNumberRegex.FindString(rawVersion), ".")
+
+			// Major version tag
+			tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", strings.Join(verParts[:1], ".")))
+
+			// Minor version tag
+			tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", strings.Join(verParts[:2], ".")))
+
+			// Patch version tag, just to be sure, so that "11.1.5d1" also shows up.
+			if len(verParts) == 3 {
+				tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", strings.Join(verParts[:3], ".")))
+			}
+		}
 	}
 
 	if data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value > 0 {

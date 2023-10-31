@@ -227,6 +227,10 @@ function colorizeTag(tag: Tag): string | null {
 }
 
 function parseVersionNumber(v: string): number | null {
+  if (v.match(/^v?[0-9]*$/)) {
+    return (parseInt(v) + 1) * 10e5
+  }
+
   if (v.match(/^v?\d/) && v.includes('.')) {
     // Extract a common version number, skipping on typical alpha characters at the end.
     const e1 = v.match(/^(\d+\.)?(\d+\.)?(\d+)/)
@@ -234,13 +238,13 @@ function parseVersionNumber(v: string): number | null {
 
     // Split and reverse the version number
     // Then multiply each part with a exponential number to get a sortable number
-    const e2 = e1[0].split('.').reverse()
-    const exps = [10e5, 10e2, 1]
+    const e2 = e1[0].split('.')
+    const exps = [10e5, 10e3, 1]
 
     let e3 = 0
     for (let i = 0; i < exps.length; i++) {
       if (e2[i] === undefined) continue
-      e3 += parseInt(e2[i]) * exps[i]
+      e3 += (parseInt(e2[i]) + 1) * exps[i]
     }
 
     return e3

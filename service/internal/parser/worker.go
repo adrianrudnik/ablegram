@@ -7,18 +7,18 @@ import (
 )
 
 type WorkerPool struct {
-	workerCount         int
-	inputPathsChan      <-chan *pipeline2.FilesForProcessorMsg
-	outputResultChan    chan<- *pipeline2.DocumentToIndexMsg
-	outputBroadcastChan chan<- interface{}
+	workerCount      int
+	inputPathsChan   <-chan *pipeline2.FilesForProcessorMsg
+	outputResultChan chan<- *pipeline2.DocumentToIndexMsg
+	pushChan         chan<- interface{}
 }
 
-func NewWorkerPool(workerCount int, pathChan <-chan *pipeline2.FilesForProcessorMsg, resultChan chan<- *pipeline2.DocumentToIndexMsg, broadcastChan chan<- interface{}) *WorkerPool {
+func NewWorkerPool(workerCount int, pathChan <-chan *pipeline2.FilesForProcessorMsg, resultChan chan<- *pipeline2.DocumentToIndexMsg, pushChan chan<- interface{}) *WorkerPool {
 	return &WorkerPool{
-		workerCount:         workerCount,
-		inputPathsChan:      pathChan,
-		outputResultChan:    resultChan,
-		outputBroadcastChan: broadcastChan,
+		workerCount:      workerCount,
+		inputPathsChan:   pathChan,
+		outputResultChan: resultChan,
+		pushChan:         pushChan,
 	}
 }
 
@@ -40,13 +40,13 @@ func (p *WorkerPool) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
 			Logger.Warn().Err(err).Str("path", msg.AbsPath).Msg("Failed to parse file")
 
 			// Notify the UI about the failure
-			p.outputBroadcastChan <- pusher.NewFileStatusPush(msg.AbsPath, "failed", err.Error())
+			p.pushChan <- pusher.NewFileStatusPush(msg.AbsPath, "failed", err.Error())
 
 			continue
 		}
 
 		// Notify the UI about the file progress
-		p.outputBroadcastChan <- pusher.NewFileStatusPush(msg.AbsPath, "processed", "")
+		p.pushChan <- pusher.NewFileStatusPush(msg.AbsPath, "processed", "")
 
 		Logger.Debug().Str("path", msg.AbsPath).Msg("Finished processing")
 

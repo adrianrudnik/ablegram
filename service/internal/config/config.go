@@ -44,8 +44,6 @@ func LoadWithDefaults(path string) *Config {
 		// Create fallback configuration
 		c := newConfig()
 
-		Logger.Info().Err(err).Msg("Could not load config, falling back to defaults")
-
 		// For the searchable paths, we prefer the users home directory as initial configuration
 		homeDir, err := os.UserHomeDir()
 		if err == nil {

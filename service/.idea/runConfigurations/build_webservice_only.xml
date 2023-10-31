@@ -1,0 +1,17 @@
+<<<<<<< HEAD:service/.idea/runConfigurations/build_no_browser.xml
+version https://git-lfs.github.com/spec/v1
+oid sha256:11eabe888773f1c6f8bbe04a2119c2500f369056e5d52f88bbb81b0fd3ff6ae1
+size 470
+=======
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="build webservice only" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="ablegram" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="-no-browser -no-gui" />
+    <kind value="PACKAGE" />
+    <package value="github.com/adrianrudnik/ablegram" />
+    <directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>
+>>>>>>> dc9b720 (Added shutdown flow, split status view into files and tag subpages):service/.idea/runConfigurations/build_webservice_only.xml

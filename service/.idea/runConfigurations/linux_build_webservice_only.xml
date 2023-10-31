@@ -1,0 +1,17 @@
+<<<<<<< HEAD:service/.idea/runConfigurations/compile_linux_binary.xml
+version https://git-lfs.github.com/spec/v1
+oid sha256:e5462985250c6ad31f84a4626f3ab46e19b5e938f8f595e2d3de91eb8fe98d70
+size 556
+=======
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="linux-build webservice only" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="ablegram" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="-no-browser -no-gui -log-level=debug" />
+    <kind value="PACKAGE" />
+    <package value="github.com/adrianrudnik/ablegram" />
+    <directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>
+>>>>>>> 4c4740d (Optimized builds, logging and app config):service/.idea/runConfigurations/linux_build_webservice_only.xml

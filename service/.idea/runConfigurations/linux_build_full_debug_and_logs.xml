@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="linux-build full debug and logs" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="ablegram" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="-log-level=debug -enable-logs -enable-scanned-log" />
+    <kind value="PACKAGE" />
+    <package value="github.com/adrianrudnik/ablegram" />
+    <directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>

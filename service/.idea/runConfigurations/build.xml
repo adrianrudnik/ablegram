@@ -1,0 +1,16 @@
+<<<<<<< HEAD:service/.idea/runConfigurations/build_with_browser.xml
+version https://git-lfs.github.com/spec/v1
+oid sha256:17849bc4ab4e1d12dc824b3a5086f3be75cbf90d8846df6a53b239ceb9c2c740
+size 776
+=======
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="build" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="ablegram" />
+    <working_directory value="$PROJECT_DIR$" />
+    <kind value="PACKAGE" />
+    <package value="github.com/adrianrudnik/ablegram" />
+    <directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>
+>>>>>>> f6638ea (Added fyne based service GUI):service/.idea/runConfigurations/build.xml

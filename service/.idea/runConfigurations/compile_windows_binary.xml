@@ -1,0 +1,24 @@
+<<<<<<< HEAD
+version https://git-lfs.github.com/spec/v1
+oid sha256:7606233e222800162eee246a4673b4367063f4b7d6e76004535d8d80700cd9f6
+size 725
+=======
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="compile windows binary" type="GoApplicationRunConfiguration" factoryName="Go Application" folderName="Windows">
+    <module name="ablegram" />
+    <working_directory value="$PROJECT_DIR$" />
+    <go_parameters value="-ldflags -H=windowsgui -o ablegram.exe" />
+    <envs>
+      <env name="CGO_ENABLED" value="1" />
+      <env name="GOOS" value="windows" />
+      <env name="CC" value="x86_64-w64-mingw32-gcc" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="github.com/adrianrudnik/ablegram" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$" />
+    <option name="run" value="false" />
+    <method v="2" />
+  </configuration>
+</component>
+>>>>>>> 5cca0a6 (Added flags to compile windows binary without log console)

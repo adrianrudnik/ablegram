@@ -337,6 +337,9 @@ color:
   # Colors picked from ableton track color picker.
   # Names picked from gpick namification.
 
+  # Specials
+  "-1": No color
+
   # Column 1
   0: Rose pink
   14: Cherry red

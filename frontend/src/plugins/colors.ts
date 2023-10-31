@@ -1,6 +1,6 @@
 export const colorMap: { [key: number]: string } = {
   // Taken from Ableton Track colorization
-  // Column 2
+  // Column 1
   0: '#FF94A6',
   14: '#FF3636',
   28: '#E2675A',

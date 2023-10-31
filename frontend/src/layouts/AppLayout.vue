@@ -1,6 +1,6 @@
 <template>
   <div class="AppLayout">
-    <h1 class="text-3xl flex gap-2">
+    <h1 class="text-3xl flex gap-2 font-medium">
       <RouterLink
         :to="{ name: 'search' }"
         class="inline-flex h-2rem w-2rem"

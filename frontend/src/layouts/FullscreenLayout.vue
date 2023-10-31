@@ -2,7 +2,7 @@
   <div class="layout">
     <div class="fullscreen">
       <div class="w-25rem">
-        <h1 class="text-3xl flex flex-row gap-2">
+        <h1 class="text-3xl flex flex-row gap-2 font-medium">
           <img src="@/assets/media/logo.svg" class="h-2rem" alt="Ablegram logo" />
           Ablegram
         </h1>

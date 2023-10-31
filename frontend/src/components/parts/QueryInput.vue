@@ -9,7 +9,7 @@
         :suggestions="suggestions"
         :virtualScrollerOptions="{ itemSize: 50, scrollWidth: '100vw', scrollHeight: '300px' }"
         multiple
-        placeholder="Search for files by string or tag"
+        :placeholder="t('query-input-component.placeholder')"
         @complete="aComplete"
         @item-select="clearAfterSelect"
         @clear="clearInput"
@@ -36,20 +36,38 @@
       </AutoComplete>
     </div>
 
-    <div class="Options flex justify-content-between gap-2 mt-2">
+    <div class="Options flex justify-content-between gap-2 mt-2 mb-3">
       <div class="my-2 text flex gap-2">
         <span>{{ t('query-input-component.hits', { count: currentResultCount }) }}</span>
-        <span class="text-red-500" v-if="!currentRequestValid">INVALID QUERY</span>
+        <span class="text-red-500" v-if="!currentRequestValid">
+          {{ t('query-input-component.invalid-query') }}
+        </span>
       </div>
 
       <div class="flex justify-content-end gap-2">
-        <RouterLink v-slot="{ navigate }" to="/x" custom>
-          <Button @click="navigate" text size="small" label="examples" />
-        </RouterLink>
+        <Button
+          @click="showHelp = !showHelp"
+          size="small"
+          :label="
+            !showHelp
+              ? t('query-input-component.action.show-examples')
+              : t('query-input-component.action.hide-examples')
+          "
+          :plain="!showHelp"
+          :text="!showHelp"
+        />
 
-        <Button @click="clearInput" text size="small" label="clear" />
+        <Button
+          @click="clearInput"
+          plain
+          text
+          size="small"
+          :label="t('query-input-component.action.reset-search')"
+        />
       </div>
     </div>
+
+    <SearchExamples v-if="showHelp" />
   </div>
 </template>
 
@@ -66,13 +84,15 @@ import { useI18n } from 'vue-i18n'
 import { watchDebounced } from '@vueuse/core'
 import { executeQuerySearch } from '@/plugins/search'
 import Button from 'primevue/button'
-import { isEmpty } from 'lodash'
+import SearchExamples from '@/components/parts/search/SearchExamples.vue'
 
 const { t } = useI18n()
 const currentSelection = ref<Tag[]>([])
 const suggestions = ref<Tag[]>([])
 const currentPlainValue = ref('')
 const hidePanel = ref(false)
+
+const showHelp = ref(false)
 
 const resultStore = useSearchResultStore()
 const statStore = useStatStore()

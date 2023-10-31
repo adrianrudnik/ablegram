@@ -168,6 +168,10 @@ common:
       s: Comment
       c: Comments | Comment | Comments
       nc: No comments | One comment | {count} comments
+    tag:
+      s: Tag
+      c: Tags | Tag | Tags
+      nc: No tags | One tag | {count} tags
 
 tags:
   sys: System
@@ -321,13 +325,74 @@ shutdown-confirm-modal:
   reject: Return
 
 query-input-component:
-  placeholder: Enter a search query
+  placeholder: Search by tag, string or boolean query
   hits: '@:common.label.search-result.nc'
+  invalid-query: Invalid query
+  action:
+    reset-search: clear
+    show-examples: examples / help
+    hide-examples: hide examples / help
 
 result-item-component:
   button:
     show-tags: '@:common.button.show-tags'
     hide-tags: '@:common.button.hide-tags'
+
+search-examples:
+  basic:
+    title: Basics
+    rules:
+      description: >-
+        The input field is a combination of automatic tag completion (via AutoComplete)
+        and manual input. Here are some rules of conduct:
+      list:
+        1: >-
+          If tags are to be used for the search, they must be entered first. The
+          combination {0} is not possible via the AutoComplete function.
+        2:
+          text: >-
+            The selection of several tags and possibly a free text is interpreted as a wish to
+            find everything, in the sense of {e1}, not {e2}. The selection of a single tag or word
+            is interpreted as a {e2}.
+          should: should # e1
+          must: must # e2
+        3: >-
+          The free texts are sorted by accuracy. The closer an entry is to the formulated text,
+          the higher the search result is displayed.
+      example:
+        intro: >-
+          Here is a simple example of a combined search and how the search engine understands it:
+        explain:
+          text: >-
+            {e1} searches all results that contain {e2}, {e3} or
+            the word {e4}. The more combinations found, the higher the search result. So the example
+            project {e5} with a {e2} could be the first result.
+
+    advanced:
+      title: Advanced
+      examples:
+        description: >-
+          Advanced search is possible via simple binary entries. Here are some examples to give ideas:
+        list:
+          1: >-
+            {0} searches only for audio tracks, regardless of whether additional
+            search parameters have been specified. Other types are also 'MidiTrack' and 'LiveSet'.
+          2: >-
+            {0} searches for all hits that are not MIDI tracks.
+          3: >-
+            {0} (watch the signs!) prefers MIDI tracks that must contain the word "fx".
+          4: >-
+            {0} searches for all data points that have the attribute BPM and whose
+            value lies between 110 and 120.
+          5: >-
+            {0} searches for all data points associated
+            with this exact filename.
+          6: >-
+            {e1} will exclude all results related to this folder. The same goes for the
+            absolute path of a file with {e2}.
+          7: >-
+            {e1} without any further information searches all manual info field entries for
+            the word {e1}, which includes e.g. the word {e2}.
 
 live-set-result-item-component:
   header: '@:common.label.live-set.s'

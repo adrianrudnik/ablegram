@@ -48,14 +48,14 @@ func (c *PushClient) Send() {
 			if !ok {
 				err := c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				if err != nil {
-					Logger.Info().Err(err).Msg("Could not send close message to client")
+					Logger.Debug().Err(err).Msg("Could not send close message to client")
 				}
 				return
 			}
 
 			err = c.Conn.WriteJSON(msg)
 			if err != nil {
-				Logger.Error().Err(err).Msg("Could not write JSON message to client")
+				Logger.Debug().Err(err).Msg("Could not write JSON message to client")
 			}
 
 		case <-pingTicker.C:
@@ -91,7 +91,7 @@ func (c *PushClient) Receive() {
 		// Currently we do not support client messages, so we just keep the connection empty
 		_, _, err := c.Conn.ReadMessage()
 		if err != nil {
-			Logger.Info().Err(err).Msg("Failed to read client message")
+			Logger.Debug().Err(err).Msg("Failed to read client message")
 			break
 		}
 	}

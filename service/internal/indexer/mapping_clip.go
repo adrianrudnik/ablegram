@@ -1,0 +1,37 @@
+package indexer
+
+import (
+	"github.com/blevesearch/bleve/v2"
+	"github.com/blevesearch/bleve/v2/mapping"
+)
+
+type ClipDocument struct {
+	T    string   `json:"type"`
+	Tags []string `json:"tags,omitempty"`
+
+	PathAbsolute string `json:"pathAbsolute,omitempty"`
+	PathFolder   string `json:"pathFolder,omitempty"`
+	Filename     string `json:"filename,omitempty"`
+}
+
+func NewClipDocument() *ClipDocument {
+	return &ClipDocument{
+		T: "Clip",
+	}
+}
+
+func (d *ClipDocument) Type() string {
+	return d.T
+}
+
+func buildClipMapping() *mapping.DocumentMapping {
+	m := bleve.NewDocumentMapping()
+	m.AddFieldMappingsAt("type", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("tags", mapping.NewKeywordFieldMapping())
+
+	m.AddFieldMappingsAt("pathFolder", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("pathAbsolute", mapping.NewKeywordFieldMapping())
+	m.AddFieldMappingsAt("filename", mapping.NewKeywordFieldMapping())
+
+	return m
+}

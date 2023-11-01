@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/adrianrudnik/ablegram/internal/collector"
 	"github.com/adrianrudnik/ablegram/internal/config"
@@ -20,14 +21,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"image/color"
 	"os"
 	"strings"
 	"time"
 )
 
 //go:generate fyne bundle -o bundled.go assets/icon.png
-//go:generate fyne bundle -o bundled.go -append assets/logo.png
+//go:generate fyne bundle -o bundled.go -append assets/logo-wide-light.static.png
+//go:generate fyne bundle -o bundled.go -append assets/logo-wide-dark.static.png
 
 func main() {
 	// Let's look for a configuration within one of the folders
@@ -131,18 +132,31 @@ func main() {
 		// Define a clean theme
 
 		a := app.New()
-		a.Settings().SetTheme(&ui.AblegramTheme{})
 		a.SetIcon(resourceIconPng)
+		a.Settings().SetTheme(&ui.AblegramTheme{})
+
 		w := a.NewWindow("Ablegram")
 		w.CenterOnScreen()
 
-		logo := canvas.NewImageFromResource(resourceLogoPng)
+		var logo *canvas.Image
+		if a.Settings().ThemeVariant() == theme.VariantLight {
+			log.Debug().Msg("UI is using light theme")
+			logo = canvas.NewImageFromResource(resourceLogoWideLightStaticPng)
+		} else {
+			log.Debug().Msg("UI is using dark theme")
+			logo = canvas.NewImageFromResource(resourceLogoWideDarkStaticPng)
+		}
 		logo.FillMode = canvas.ImageFillOriginal
 
-		statusTxt := canvas.NewText("The service is processing files...", color.White)
+		statusTxt := canvas.NewText("The service is processing files...", theme.ForegroundColor())
 		quitBtn := widget.NewButton("Shut down service", func() { a.Quit() })
 		startBtn := widget.NewButton("Open results in browser", func() { ui.OpenFrontend(appConfig) })
+
 		progressBar := widget.NewProgressBarInfinite()
+
+		// @see https://github.com/fyne-io/fyne/issues/2469#issuecomment-1789642706
+		quitBtn.Importance = widget.HighImportance
+		startBtn.Importance = widget.HighImportance
 
 		uiUpdater := ui.NewUiUpdater(statusTxt, progressBar)
 		go uiUpdater.Run(progress)

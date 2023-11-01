@@ -9,13 +9,6 @@ import (
 type AblegramTheme struct{}
 
 func (m AblegramTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
-	if name == theme.ColorNameBackground {
-		if variant == theme.VariantLight {
-			return color.White
-		}
-		return color.Black
-	}
-
 	return theme.DefaultTheme().Color(name, variant)
 }
 

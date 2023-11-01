@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="320.39984mm"
+   height="61.833172mm"
+   viewBox="0 0 320.39984 61.833172"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="logo-w.inkscape.svg"
+   inkscape:export-filename="/home/adrian/code/own/ablegram/frontend/src/assets/media/logo-w.inkscape.png"
+   inkscape:export-xdpi="19.717571"
+   inkscape:export-ydpi="19.717571"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:document-units="mm"
+     showgrid="false"
+     width="300mm"
+     inkscape:zoom="0.38885733"
+     inkscape:cx="173.58552"
+     inkscape:cy="446.17907"
+     inkscape:window-width="2418"
+     inkscape:window-height="1230"
+     inkscape:window-x="1072"
+     inkscape:window-y="38"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g844"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect7412"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,7.14375,0,1 @ F,0,0,1,0,7.14375,0,1 @ F,0,0,1,0,7.14375,0,1 @ F,0,0,1,0,7.14375,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="27"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Background"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline"
+     transform="translate(-23.981607,-19.04483)">
+    <g
+       id="g844"
+       transform="matrix(0.99750728,0,0,0.99750728,13.800845,-0.90531535)">
+      <path
+         style="fill:#000000;fill-opacity:1;stroke-width:0.231006"
+         id="rect6192"
+         width="60"
+         height="60"
+         x="10.206203"
+         y="20"
+         inkscape:path-effect="#path-effect7412"
+         d="m 17.349953,20 45.7125,0 a 7.14375,7.14375 45 0 1 7.14375,7.14375 v 45.7125 A 7.14375,7.14375 135 0 1 63.062453,80 l -45.7125,0 a 7.14375,7.14375 45 0 1 -7.14375,-7.14375 V 27.14375 A 7.14375,7.14375 135 0 1 17.349953,20 Z"
+         sodipodi:type="rect" />
+      <g
+         id="g1689"
+         transform="matrix(0.67521916,0,0,0.67521916,-45.017593,10.712044)"
+         style="display:inline;fill:#ffffff">
+        <path
+           d="M 154.93043,83.061669 139.4262,67.557443 c 3.35539,-4.107462 5.20664,-9.279394 5.20664,-14.925709 0,-13.294294 -10.77543,-24.066259 -24.06626,-24.066259 -13.29082,0 -23.962147,10.775436 -23.962147,24.066259 0,13.290824 10.774307,24.066262 23.962147,24.066262 5.64516,0 10.82403,-1.956544 14.92571,-5.211273 l 15.50422,15.504225 c 0.64794,0.548431 1.3653,0.814552 2.07109,0.814552 0.70579,0 1.42084,-0.271211 1.96349,-0.813511 1.07951,-1.084022 1.07951,-2.842712 -0.10066,-3.93032 z M 102.15821,52.631734 c 0,-10.207333 8.30517,-18.512507 18.51251,-18.512507 10.20733,0 18.5125,8.305174 18.5125,18.512507 0,10.207334 -8.30517,18.512508 -18.5125,18.512508 -10.20734,0 -18.51251,-8.307488 -18.51251,-18.512508 z"
+           id="path9"
+           style="fill:#ffffff;fill-opacity:1;stroke-width:0.115703" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:56.4444px;line-height:1.25;font-family:Inconsolata;-inkscape-font-specification:Inconsolata;fill:#000000;fill-opacity:1;stroke-width:0.264583"
+         x="79.571709"
+         y="69.72348"
+         id="text2872"><tspan
+           sodipodi:role="line"
+           id="tspan2870"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:56.4444px;font-family:Inter;-inkscape-font-specification:Inter;fill:#000000;fill-opacity:1;stroke-width:0.264583"
+           x="79.571709"
+           y="69.72348">Ablegram</tspan></text>
+    </g>
+  </g>
+</svg>

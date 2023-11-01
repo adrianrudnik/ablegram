@@ -1,6 +1,4 @@
 <template>
-  <SectionHeadline title="How it works"> </SectionHeadline>
-
   <AppStatus class="pb-3" />
 </template>
 

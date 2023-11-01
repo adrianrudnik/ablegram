@@ -383,8 +383,8 @@ search-examples:
           Advanced search is possible via simple binary entries. Here are some examples to give ideas:
         list:
           1: >-
-            {0} searches only for audio tracks, regardless of whether additional
-            search parameters have been specified. Other types are also 'MidiTrack' and 'LiveSet'.
+            {e1} searches only for audio tracks, regardless of whether additional
+            search parameters have been specified. Other types are also {e2} and {e3}.
           2: >-
             {0} searches for all hits that are not MIDI tracks.
           3: >-
@@ -400,7 +400,7 @@ search-examples:
             absolute path of a file with {e2}.
           7: >-
             {e1} without any further information searches all manual info field entries for
-            the word {e1}, which includes e.g. the word {e2}.
+            the word {e2}, which includes e.g. the word {e3}.
 
 live-set-result-item-component:
   header: '@:common.label.live-set.s'

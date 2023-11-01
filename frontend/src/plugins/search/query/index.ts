@@ -3,6 +3,9 @@ export interface SearchQuery {
   query: SearchQueryString
   facets?: SearchFacets
   fields?: string[]
+  sort?: string[]
+  search_after?: string[]
+  search_before?: string[]
 }
 
 export interface SearchFacets {

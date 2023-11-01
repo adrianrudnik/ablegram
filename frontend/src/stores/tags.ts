@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { setupStore } from '@/stores/base'
-import { executeQuerySearch } from '@/plugins/search'
 import i18n from '@/plugins/i18n'
 import { resolveColorByIndex } from '@/plugins/colors'
+import {useSearchStore} from "@/stores/search";
 
 const { t } = i18n.global
 
@@ -54,7 +54,7 @@ export interface Tag {
 export const useTagStore = defineStore('tags', setupStore<Tag>())
 
 export const hydrateTags = async () => {
-  const r = await executeQuerySearch({
+  const r = await useSearchStore().executeQuerySearch({
     size: 4,
     query: {
       query: '*'

@@ -155,6 +155,7 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	liveSet.MinorVersion = data.MinorVersion
 	liveSet.Creator = data.Creator
 	liveSet.Revision = data.Revision
+	liveSet.Annotation = data.LiveSet.Annotation.Value
 
 	liveSet.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
 	liveSet.ScaleName = data.LiveSet.ScaleInformation.Name.Value

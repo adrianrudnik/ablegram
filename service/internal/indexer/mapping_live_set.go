@@ -18,6 +18,7 @@ type LiveSetDocument struct {
 	MinorVersion string `json:"minorVersion,omitempty"`
 	Creator      string `json:"creator,omitempty"`
 	Revision     string `json:"revision,omitempty"`
+	Annotation   string `json:"annotation,omitempty"`
 
 	Scale         string `json:"scale,omitempty"`
 	ScaleName     string `json:"scaleName,omitempty"`
@@ -58,6 +59,7 @@ func buildLiveSetMapping() *mapping.DocumentMapping {
 	m.AddFieldMappingsAt("minorVersion", NewPayloadFieldMapping())
 	m.AddFieldMappingsAt("creator", mapping.NewKeywordFieldMapping())
 	m.AddFieldMappingsAt("revision", NewPayloadFieldMapping())
+	m.AddFieldMappingsAt("annotation", NewFulltextTextFieldMapping(true))
 
 	m.AddFieldMappingsAt("scale", mapping.NewKeywordFieldMapping())
 	m.AddFieldMappingsAt("scaleName", mapping.NewKeywordFieldMapping())

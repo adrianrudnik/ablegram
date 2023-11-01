@@ -22,6 +22,7 @@ type LiveSet struct {
 	ScaleInformation ScaleInformation `xml:"ScaleInformation"`
 	InKey            BooleanValue     `xml:"InKey"`
 	MasterTrack      MasterTrack      `xml:"MasterTrack"`
+	Annotation       StringValue      `xml:"Annotation"`
 }
 
 type Tracks struct {

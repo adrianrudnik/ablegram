@@ -17,9 +17,15 @@
 
       <ul class="pl-0 list-none">
         <li>
-          <strong>{{ t('donate.processors.patreon.label') }}: </strong>
+          <strong>{{ t('donate.processors.patreon.label') }}:</strong>
           <a :href="t('donate.processors.patreon.link')" target="_blank" rel="noopener noreferrer">
             {{ t('donate.processors.patreon.link') }}
+          </a>
+        </li>
+        <li>
+          <strong>{{ t('donate.processors.github.label') }}:</strong>
+          <a :href="t('donate.processors.github.link')" target="_blank" rel="noopener noreferrer">
+            {{ t('donate.processors.github.link') }}
           </a>
         </li>
       </ul>

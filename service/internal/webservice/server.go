@@ -44,12 +44,13 @@ func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) erro
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(logger.SetLogger())
+	r.Use(CacheControl())
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:10000", "http://localhost:5173"},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Accept-Encoding"},
-		ExposeHeaders:    []string{"Content-Length", "Content-Type", "Content-Encoding"},
+		ExposeHeaders:    []string{"*"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
 			return true

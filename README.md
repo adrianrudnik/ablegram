@@ -34,11 +34,11 @@ The software is designed to leave no footprint. If you avoid saving settings or 
 
 For general feedback, questions, or any form of discussion, please use the [Discussions tab](https://github.com/adrianrudnik/ablegram/discussions) on the GitHub repository.
 
-If you've found a bug or want to suggest a new feature, please [open an issue](https://github.com/adrianrudnik/ablegram/issues) in the repository. This helps me track and resolve issues effectively.
+If you've found a bug or want to suggest a new feature, please [open an issue](https://github.com/adrianrudnik/ablegram/issues) or head over to the [idea discussions](https://github.com/adrianrudnik/ablegram/discussions/categories/ideas) in the repository. This helps me track and resolve issues effectively.
 
 For more detailed inquiries, or if you prefer a direct line of communication, you can email me at [support@ablegram.app](mailto:support@ablegram.app).
 
-Remember, by actively providing feedback or raising concerns, you're helpting to improve of the project. I appreciate your support input!
+Remember, by actively providing feedback or raising concerns, you're helping to improve of the project. I appreciate your support input!
 
 ## Contribute
 

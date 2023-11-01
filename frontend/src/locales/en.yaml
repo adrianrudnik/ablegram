@@ -283,7 +283,6 @@ tag-overview:
     about: >-
       The categories below provide an insight into the tags identified.
       These are available in the search to formulate search queries.
-      
 
   type:
     title: Type category
@@ -399,8 +398,8 @@ search-examples:
             {e1} will exclude all results related to this folder. The same goes for the
             absolute path of a file with {e2}.
           7: >-
-            {e1} without any further information searches all manual info field entries for
-            the word {e2}, which includes e.g. the word {e3}.
+            {e1} without any further information searches all manual info field entries
+            (like the Ableton Info-Text) for the word {e2}, which includes e.g. the word {e3}.
 
 live-set-result-item-component:
   header: '@:common.label.live-set.s'

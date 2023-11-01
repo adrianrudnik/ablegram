@@ -7,7 +7,7 @@
     :result="result"
   />
 
-  <InfiniteScrollTrigger @trigger="loadMore" class="mb-6"/>
+  <InfiniteScrollTrigger @trigger="loadMore" class="mb-6" />
 </template>
 
 <script lang="ts" setup>
@@ -18,9 +18,8 @@ import UnknownResultItem from '@/components/parts/search/UnknownResultItem.vue'
 import { useSearchResultStore } from '@/stores/results'
 import { computed } from 'vue'
 import type { ResultType } from '@/plugins/search/result'
-import InfiniteScrollTrigger from "@/components/structure/InfiniteScrollTrigger.vue";
-import {useSearchStore} from "@/stores/search";
-
+import InfiniteScrollTrigger from '@/components/structure/InfiniteScrollTrigger.vue'
+import { useSearchStore } from '@/stores/search'
 
 const currentQuery = computed(() => useSearchStore().currentQuery)
 const lastSortKey = computed(() => useSearchStore().lastSortKey)
@@ -41,13 +40,12 @@ function resolveComponent(type: ResultType): any {
 }
 
 const loadMore = async () => {
-    if (!currentQuery.value) {
+  if (!currentQuery.value) {
     return
   }
 
   // Get the last result to retrieve the sort offset
   if (!lastSortKey.value) return
-
 
   const q = currentQuery.value
   if (lastSortKey.value) {
@@ -57,10 +55,10 @@ const loadMore = async () => {
   const result = await executeQuerySearch(q)
 
   useSearchResultStore().updateBatch(
-      result.hits.map((h) => {
-        h.fields.id = h.id
-        return h.fields
-      })
+    result.hits.map((h) => {
+      h.fields.id = h.id
+      return h.fields
+    })
   )
 }
 

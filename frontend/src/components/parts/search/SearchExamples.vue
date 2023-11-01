@@ -36,8 +36,11 @@
       <i18n-t keypath="search-examples.basic.rules.example.explain.text" tag="p">
         <template v-slot:e1>
           <code>
-            [{{ t('common.label.tag.s') }} {{ t('common.label.beats-per-minute.nc', { count: 110 }) }}]
-            [{{ t('common.label.tag.s') }} {{ t('common.label.beats-per-minute.nc', { count: 120 }) }}] Taste
+            [{{ t('common.label.tag.s') }}
+            {{ t('common.label.beats-per-minute.nc', { count: 110 }) }}] [{{
+              t('common.label.tag.s')
+            }}
+            {{ t('common.label.beats-per-minute.nc', { count: 120 }) }}] Taste
           </code>
         </template>
 
@@ -158,7 +161,7 @@ const { t } = useI18n()
     code {
       white-space: nowrap;
       font-size: 0.9em;
-      margin-right: 0.20em;
+      margin-right: 0.2em;
       background-color: black;
       color: white;
       padding: 0.25rem;

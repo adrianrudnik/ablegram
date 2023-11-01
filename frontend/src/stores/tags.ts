@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { setupStore } from '@/stores/base'
 import i18n from '@/plugins/i18n'
 import { resolveColorByIndex } from '@/plugins/colors'
-import {useSearchStore} from "@/stores/search";
+import { useSearchStore } from '@/stores/search'
 
 const { t } = i18n.global
 

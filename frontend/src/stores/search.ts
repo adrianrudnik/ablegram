@@ -1,16 +1,16 @@
-import {defineStore} from "pinia";
-import {computed, ref, watch} from "vue";
-import type {SearchQuery} from "@/plugins/search/query";
-import type {SearchResult} from "@/plugins/search/result";
-import {useStatStore} from "@/stores/stats";
-import {useSearchResultStore} from "@/stores/results";
+import { defineStore } from 'pinia'
+import { computed, ref, watch } from 'vue'
+import type { SearchQuery } from '@/plugins/search/query'
+import type { SearchResult } from '@/plugins/search/result'
+import { useStatStore } from '@/stores/stats'
+import { useSearchResultStore } from '@/stores/results'
 
 export const useSearchStore = defineStore('search', () => {
-  const currentQuery = ref<SearchQuery|undefined>()
+  const currentQuery = ref<SearchQuery | undefined>()
   const currentOffset = ref(0)
-  const lastSortKey = ref<string[]|undefined>([])
+  const lastSortKey = ref<string[] | undefined>([])
 
-  const executeQuerySearch = async (query: SearchQuery): Promise<SearchResult>=>  {
+  const executeQuerySearch = async (query: SearchQuery): Promise<SearchResult> => {
     const response = await fetch(import.meta.env.VITE_API_URL + '/search/query', {
       credentials: 'include',
       headers: {
@@ -58,4 +58,3 @@ export const useSearchStore = defineStore('search', () => {
     executeQuerySearch
   }
 })
-

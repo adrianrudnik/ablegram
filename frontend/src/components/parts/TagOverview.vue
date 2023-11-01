@@ -6,7 +6,7 @@
 
     <SearchTag v-if="exampleTag" :tag="exampleTag" show-count :disable-translation="true" />
 
-    <p>{{t('tag-overview.explain.about')}}</p>
+    <p>{{ t('tag-overview.explain.about') }}</p>
   </SectionHeadline>
 
   <SectionHeadline :title="t('tag-overview.type.title')">

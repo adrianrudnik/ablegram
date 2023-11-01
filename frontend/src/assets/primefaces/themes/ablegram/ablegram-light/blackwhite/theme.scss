@@ -12,3 +12,17 @@ $highlightFocusBg: rgba($primaryColor, 0.24) !default;
 @import 'fonts';
 @import '../../../../theme-base/_components';
 @import '../../extensions';
+
+.p-autocomplete-panel {
+  &.HidePanel {
+    display: none;
+  }
+
+  &.p-focus {
+    @include focused();
+
+    border: $inputBorder;
+    border-radius: $borderRadius;
+    border: 0;
+  }
+}

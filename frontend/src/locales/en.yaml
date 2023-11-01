@@ -88,6 +88,10 @@ donate:
       label: Patreon
       description: Become a patron
       link: https://www.patreon.com/ablegram
+    github:
+      label: GitHub
+      description: Become a sponsor
+      link: https://github.com/adrianrudnik/ablegram
 
 menu:
   search:

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleName</key>
+        <string>ablegram</string>
+        <key>CFBundleExecutable</key>
+        <string>ablegram</string>
+        <key>CFBundleIdentifier</key>
+        <string>${APP_ID}</string>
+        <key>CFBundleIconFile</key>
+        <string>icon.icns</string>
+        <key>CFBundleShortVersionString</key>
+        <string>${APP_VERSION}</string>
+        <key>CFBundleSupportedPlatforms</key>
+        <array>
+            <string>MacOSX</string>
+        </array>
+        <key>CFBundleVersion</key>
+        <string>${APP_BUILD}</string>
+        <key>com.apple.security.app-sandbox</key>
+        <false/>
+        <key>NSHighResolutionCapable</key>
+        <true/>
+        <key>NSSupportsAutomaticGraphicsSwitching</key>
+        <true/>
+        <key>NSDesktopFolderUsageDescription</key>
+        <string>Ablegram needs access to your desktop to search for possible Ableton Live projects.</string>
+        <key>NSDocumentsFolderUsageDescription</key>
+        <string>Ablegram needs access to your documents to search for possible Ableton Live projects.</string>
+        <key>NSDownloadsFolderUsageDescription</key>
+        <string>Ablegram needs access to your downloads to search for possible Ableton Live projects.</string>
+        <key>NSNetworkVolumesUsageDescription</key>
+        <string>Ablegram needs access to your network volumes to search for possible Ableton Live projects.</string>
+        <key>NSRemovableVolumesUsageDescription</key>
+        <string>Ablegram needs access to your removable volumes to search for possible Ableton Live projects.</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>10.11</string>
+    </dict>
+</plist>

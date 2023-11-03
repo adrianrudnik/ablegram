@@ -48,6 +48,9 @@ func findFilesByExtension(c *config.Config, root string, extensions []string, fi
 
 	folders := make([]string, 0, 1000000)
 
+	// Exclude OS specific folders
+	enrichPlatformExcludePaths()
+
 	err := filepath.WalkDir(root, func(s string, d fs.DirEntry, e error) error {
 		if e != nil {
 			Logger.Warn().Err(e).Str("path", s).Msg("Skipped folder due to error")
@@ -61,8 +64,8 @@ func findFilesByExtension(c *config.Config, root string, extensions []string, fi
 		}
 
 		// Exclude paths by prefix
-		if c.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludePaths, func(s string) bool {
-			return strings.HasPrefix(d.Name(), s)
+		if c.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludePaths, func(f string) bool {
+			return strings.HasPrefix(s, f)
 		}) != -1 {
 			Logger.Debug().Str("path", s).Msg("Skipping excluded path")
 			return filepath.SkipDir

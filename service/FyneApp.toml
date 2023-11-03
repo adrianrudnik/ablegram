@@ -4,5 +4,4 @@ Website = "https://www.ablegram.app"
   Icon = "assets/icon.png"
   Name = "Ablegram"
   ID = "com.ablegram.app"
-  Version = "1.0.0"
-  Build = 10
+

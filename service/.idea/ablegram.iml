@@ -6,6 +6,8 @@
       <excludeFolder url="file://$MODULE_DIR$/.dist" />
       <excludeFolder url="file://$MODULE_DIR$/internal/webservice/.frontend" />
       <excludeFolder url="file://$MODULE_DIR$/samples" />
+      <excludeFolder url="file://$MODULE_DIR$/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/macOS" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

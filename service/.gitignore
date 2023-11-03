@@ -1,4 +1,8 @@
+/.cache/
 /internal/webservice/.frontend/
 /samples/
+/macOS/
+/dist/
 /Ablegram*
+/ablegram*
 /*.log

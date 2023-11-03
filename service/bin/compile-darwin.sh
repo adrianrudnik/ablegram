@@ -23,7 +23,9 @@ rm -rf dist/os/darwin
 mkdir -p dist/{deploy,os/darwin}
 
 SCRIPT_DIR=${0:a:h}
+cd ${SCRIPT_DIR}/..
 
+# Load personal settings
 source ${SCRIPT_DIR}/settings.sh
 
 APP_ID="app.ablegram.ablegram"
@@ -76,42 +78,8 @@ iconutil -c icns dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset -o 
 rm -rf dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset
 
 # build and place the plist
-cat <<EOF > dist/os/darwin/Ablegram.app/Contents/Info.plist
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>CFBundleName</key>
-	<string>ablegram</string>
-	<key>CFBundleExecutable</key>
-	<string>ablegram</string>
-	<key>CFBundleIdentifier</key>
-	<string>${APP_ID}</string>
-	<key>CFBundleIconFile</key>
-	<string>icon.icns</string>
-	<key>CFBundleShortVersionString</key>
-	<string>${APP_VERSION}</string>
-	<key>CFBundleSupportedPlatforms</key>
-	<array>
-		<string>MacOSX</string>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>${APP_BUILD}</string>
-	<key>NSHighResolutionCapable</key>
-	<true/>
-	<key>NSSupportsAutomaticGraphicsSwitching</key>
-	<true/>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.11</string>
-</dict>
-</plist>
-EOF
+export APP_ID APP_VERSION APP_BUILD
+envsubst '${APP_ID} ${APP_VERSION} ${APP_BUILD}' < os/macOS/plist-template.xml > dist/os/darwin/Ablegram.app/Contents/Info.plist
 
 # remove extended attributes
 xattr -cr dist/os/darwin/Ablegram.app
@@ -128,6 +96,9 @@ codesign --verify --verbose dist/os/darwin/Ablegram.app
 # Package a signed dmg
 hdiutil create -ov -volname Ablegram -format UDZO -srcfolder dist/os/darwin/Ablegram.app -o "dist/deploy/Ablegram-v${APP_VERSION}-macOS_universal.dmg"
 codesign --verify --verbose --sign ${SIGN_CERT} -i "${APP_ID}" "dist/deploy/Ablegram-v${APP_VERSION}-macOS_universal.dmg"
+
+# Review the entitlements
+codesign --display --entitlements - dist/os/darwin/Ablegram.app
 
 # Submit the dmg for notarization
 xcrun notarytool submit --apple-id "${APPLE_ID}" --password "${APPLE_APP_PASSWORD}" --team-id="${TEAM_ID}" --wait "dist/deploy/Ablegram-v${APP_VERSION}-macOS_universal.dmg"

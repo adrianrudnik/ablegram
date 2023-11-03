@@ -1,7 +1,11 @@
 #!/bin/zsh -ex
 
 # Requirements:
-# brew install imagemagick
+# - brew install imagemagick
+
+# Notes:
+# - Binary must be lowercase, codesign will fail when app is extracted from dmg with message "can't be opened"
+# - Signing with --deep not good https://developer.apple.com/forums/thread/129980
 
 if [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   APP_VERSION=$1
@@ -15,36 +19,45 @@ if [[ $(uname -m) != 'arm64' ]]; then
   exit 1
 fi
 
+rm -rf dist/os/darwin
 mkdir -p dist/{deploy,os/darwin}
+
+SCRIPT_DIR=${0:a:h}
+
+source ${SCRIPT_DIR}/settings.sh
+
+APP_ID="app.ablegram.ablegram"
+APP_BUILD=$(date +%s)
+
 
 # build AMD64
 CGO_ENABLED=1 \
 GOARCH=amd64 \
 GOOS=darwin \
-  go build -ldflags '-s' -o Ablegram_darwin_amd64 .
+  go build -ldflags '-s' -o ablegram_darwin_amd64 .
 
 # build ARM64
 CGO_ENABLED=1 \
 GOARCH=arm64 \
 GOOS=darwin \
-  go build -ldflags '-s' -o Ablegram_darwin_arm64 .
+  go build -ldflags '-s' -o ablegram_darwin_arm64 .
 
 # merge to universal binary
 lipo \
-  -create Ablegram_darwin_amd64 Ablegram_darwin_arm64 \
-  -o Ablegram_darwin_universal
+  -create ablegram_darwin_amd64 ablegram_darwin_arm64 \
+  -o ablegram_darwin_universal
 
 # review the universal binary
-lipo -archs Ablegram_darwin_universal
+lipo -archs ablegram_darwin_universal
 
 # move for app packaging
-mv Ablegram_darwin_* dist/os/darwin
+mv ablegram_darwin_* dist/os/darwin
 
 # prepare app structure
 mkdir -p dist/os/darwin/Ablegram.app/Contents/{MacOS,Resources}
 
 # place the universal binary
-cp dist/os/darwin/Ablegram_darwin_universal dist/os/darwin/Ablegram.app/Contents/MacOS/Ablegram
+cp dist/os/darwin/ablegram_darwin_universal dist/os/darwin/Ablegram.app/Contents/MacOS/ablegram
 
 # build and place the app icon
 mkdir -p dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset
@@ -69,11 +82,11 @@ cat <<EOF > dist/os/darwin/Ablegram.app/Contents/Info.plist
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Ablegram</string>
+	<string>ablegram</string>
 	<key>CFBundleExecutable</key>
 	<string>ablegram</string>
 	<key>CFBundleIdentifier</key>
-	<string>app.ablegram.ablegram</string>
+	<string>${APP_ID}</string>
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
 	<key>CFBundleShortVersionString</key>
@@ -100,14 +113,24 @@ cat <<EOF > dist/os/darwin/Ablegram.app/Contents/Info.plist
 </plist>
 EOF
 
-# sign the app
-codesign \
-  --force \
-  --options runtime \
-  --deep \
-  --sign "Developer ID Application: Adrian Rudnik (2TVJ7N94TN)" \
-  -i "app.ablegram.ablegram" \
-  dist/os/darwin/Ablegram.app
+# remove extended attributes
+xattr -cr dist/os/darwin/Ablegram.app
 
-# compress deployable
-tar -czvf dist/deploy/Ablegram-v${APP_VERSION}-macOS_Universal.tar.gz -C dist/os/darwin Ablegram.app
+# review extended attributes
+xattr -lr dist/os/darwin/Ablegram.app
+
+# sign the app
+codesign --force --options runtime --timestamp --sign "${SIGN_CERT}" -i "${APP_ID}" dist/os/darwin/Ablegram.app
+
+# verify the signature
+codesign --verify --verbose dist/os/darwin/Ablegram.app
+
+# Package a signed dmg
+hdiutil create -ov -volname Ablegram -format UDZO -srcfolder dist/os/darwin/Ablegram.app -o "dist/deploy/Ablegram-v${APP_VERSION}-macOS_universal.dmg"
+codesign --verify --verbose --sign ${SIGN_CERT} -i "${APP_ID}" "dist/deploy/Ablegram-v${APP_VERSION}-macOS_universal.dmg"
+
+# Submit the dmg for notarization
+xcrun notarytool submit --apple-id "${APPLE_ID}" --password "${APPLE_APP_PASSWORD}" --team-id="${TEAM_ID}" --wait "dist/deploy/Ablegram-v${APP_VERSION}-macOS_universal.dmg"
+
+# Validate the local dmg again for notarization
+spctl -a -t open --context context:primary-signature -v "dist/deploy/Ablegram-v${APP_VERSION}-macOS_universal.dmg"

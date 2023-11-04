@@ -1,21 +1,24 @@
 package parser
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/config"
 	pipeline2 "github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"time"
 )
 
 type WorkerPool struct {
+	config           *config.ParserConfig
 	workerCount      int
 	inputPathsChan   <-chan *pipeline2.FilesForProcessorMsg
 	outputResultChan chan<- *pipeline2.DocumentToIndexMsg
 	pushChan         chan<- interface{}
 }
 
-func NewWorkerPool(workerCount int, pathChan <-chan *pipeline2.FilesForProcessorMsg, resultChan chan<- *pipeline2.DocumentToIndexMsg, pushChan chan<- interface{}) *WorkerPool {
+func NewWorkerPool(c *config.ParserConfig, pathChan <-chan *pipeline2.FilesForProcessorMsg, resultChan chan<- *pipeline2.DocumentToIndexMsg, pushChan chan<- interface{}) *WorkerPool {
 	return &WorkerPool{
-		workerCount:      workerCount,
+		config:           c,
 		inputPathsChan:   pathChan,
 		outputResultChan: resultChan,
 		pushChan:         pushChan,
@@ -25,13 +28,18 @@ func NewWorkerPool(workerCount int, pathChan <-chan *pipeline2.FilesForProcessor
 func (p *WorkerPool) Run(progress *stats.ProcessProgress, m *stats.Metrics) {
 	Logger.Info().Int("count", p.workerCount).Msg("Starting parser workers")
 
-	for i := 0; i < p.workerCount; i++ {
+	for i := 0; i < p.config.WorkerCount; i++ {
 		go p.doWork(progress, m)
 	}
 }
 
 func (p *WorkerPool) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
 	for msg := range p.inputPathsChan {
+		// Add possible delay, for debugging or to simulate a slower system
+		if p.config.WorkerDelayInMs > 0 {
+			time.Sleep(time.Duration(p.config.WorkerDelayInMs) * time.Millisecond)
+		}
+
 		progress.Add()
 		docs, err := ParseAls(msg.AbsPath, m)
 

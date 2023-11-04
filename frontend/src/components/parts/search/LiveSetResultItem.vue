@@ -1,7 +1,7 @@
 <template>
   <div>
     <SearchResultCard
-      :header="t('common.label.live-set.s')"
+      :header="t('common.label.ableton-live-set.s')"
       :title="result.displayName"
       :tags="props.result.tags"
     >
@@ -24,11 +24,11 @@
 
         <PropertyListItem
           v-if="result.audioTrackCount || result.midiTrackCount"
-          :title="t('common.label.track.c', { count: 2 })"
+          :title="t('common.label.ableton-track.c', { count: 2 })"
           icon="pi pi-bars"
         >
-          {{ t('common.label.midi-track.nc', { count: result.midiTrackCount }) }}.
-          {{ t('common.label.audio-track.nc', { count: result.audioTrackCount }) }}.
+          {{ t('common.label.ableton-midi-track.nc', { count: result.midiTrackCount }) }}.
+          {{ t('common.label.ableton-audio-track.nc', { count: result.audioTrackCount }) }}.
         </PropertyListItem>
 
         <PropertyListItem

@@ -5,6 +5,9 @@ export const useStatStore = defineStore('stats', () => {
   const isProcessing = ref(false)
   const isSearching = ref(false)
 
+  // Processing related
+  const processRoutineCount = ref(-1)
+
   // Search related
   const searchResultCount = ref(0)
 
@@ -48,6 +51,7 @@ export const useStatStore = defineStore('stats', () => {
     isProcessing,
     isSearching,
     inProgress,
+    processRoutineCount,
     searchResultCount,
     validFileCount,
     invalidFileCount,

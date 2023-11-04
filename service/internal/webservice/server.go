@@ -2,6 +2,7 @@ package webservice
 
 import (
 	"embed"
+	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
@@ -29,7 +30,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) error {
+func Serve(conf *config.Config, indexer *indexer.Search, pushChan *PushChannel, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -85,6 +86,14 @@ func Serve(indexer *indexer.Search, pushChan *PushChannel, bindAddr string) erro
 
 	r.GET("/ws", func(c *gin.Context) {
 		connectClientWebsocket(c, pushChan)
+	})
+
+	r.GET("/about", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"version": conf.About.Version,
+			"commit":  conf.About.Commit,
+			"date":    conf.About.Date,
+		})
 	})
 
 	r.POST("/shutdown", func(c *gin.Context) {

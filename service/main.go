@@ -38,7 +38,12 @@ func main() {
 	// Let's look for a configuration within one of the folders
 	config.Logger = log.With().Str("module", "config").Logger()
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
+	// Set up the app configuration with defaults for now
 	appConfig := config.LoadWithDefaults("")
+	appConfig.About.Version = AppVersion
+	appConfig.About.Commit = BuildCommit
+	appConfig.About.Date = BuildDate
 
 	parseFlags(appConfig)
 
@@ -125,7 +130,7 @@ func main() {
 
 		for _, port := range appConfig.Webservice.TryPorts {
 			appConfig.Webservice.ChosenPort = port
-			err := webservice.Serve(search, appPusher, fmt.Sprintf(":%d", port))
+			err := webservice.Serve(appConfig, search, appPusher, fmt.Sprintf(":%d", port))
 			if err != nil && strings.Contains(err.Error(), "bind: permission denied") {
 				log.Warn().Err(err).Int("port", port).Msg("Could not start webservice, trying other port")
 				continue

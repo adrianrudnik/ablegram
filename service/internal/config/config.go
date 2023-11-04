@@ -30,6 +30,11 @@ func newConfig() *Config {
 			ExcludeSystemFolders: true,
 		},
 
+		ParserConfig: ParserConfig{
+			WorkerCount:     5,
+			WorkerDelayInMs: 0,
+		},
+
 		Webservice: WebserviceConfig{
 			TryPorts: []int{10000, 20000, 30000, 40000, 50000, 10001},
 		},

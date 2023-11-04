@@ -96,7 +96,7 @@ func main() {
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
-		parserWorkers := parser.NewWorkerPool(10, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
+		parserWorkers := parser.NewWorkerPool(&appConfig.ParserConfig, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
 		go parserWorkers.Run(progress, appMetrics)
 
 		// Create the indexerWorker

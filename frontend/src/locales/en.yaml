@@ -245,7 +245,7 @@ app-status:
   description: Contains information about the application and its current status.
   version:
     label: Version
-    content: v{version} based on commit ({hash})
+    content: v{version} based on commit ({hash}) from {date}
   websocket:
     label: Websocket
     status:

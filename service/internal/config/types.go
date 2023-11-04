@@ -1,11 +1,18 @@
 package config
 
 type Config struct {
+	About        About            `yaml:"about"`
 	Log          LogConfig        `yaml:"log"`
 	Behaviour    BehaviourConfig  `yaml:"behaviour"`
 	Collector    CollectorConfig  `yaml:"collector"`
 	ParserConfig ParserConfig     `yaml:"parser"`
 	Webservice   WebserviceConfig `yaml:"webservice"`
+}
+
+type About struct {
+	Version string `yaml:"version"`
+	Commit  string `yaml:"commit"`
+	Date    string `yaml:"date"`
 }
 
 type LogConfig struct {

@@ -30,6 +30,10 @@ import (
 //go:generate fyne bundle -o bundled.go -append assets/logo-wide-light.static.png
 //go:generate fyne bundle -o bundled.go -append assets/logo-wide-dark.static.png
 
+var AppVersion = "dev"
+var BuildCommit = "unknown"
+var BuildDate = "unknown"
+
 func main() {
 	// Let's look for a configuration within one of the folders
 	config.Logger = log.With().Str("module", "config").Logger()
@@ -60,7 +64,11 @@ func main() {
 		}
 	}
 
-	log.Info().Msg("App starting")
+	log.Info().
+		Str("build-version", AppVersion).
+		Str("build-commit", BuildCommit).
+		Str("build-date", BuildDate).
+		Msg("App starting")
 
 	// Create some channel based pipelines to pass around the different workloads
 	pusherPipeline := pipeline.NewFrontendPush()

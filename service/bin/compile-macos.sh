@@ -19,11 +19,11 @@ if [[ $(uname -m) != 'arm64' ]]; then
   exit 1
 fi
 
-rm -rf dist/os/darwin
-mkdir -p dist/{deploy,os/darwin}
-
 SCRIPT_DIR=${0:a:h}
 cd ${SCRIPT_DIR}/..
+
+rm -rf dist/os/darwin
+mkdir -p dist/{deploy,os/darwin}
 
 # Load personal settings
 source ${SCRIPT_DIR}/settings.sh

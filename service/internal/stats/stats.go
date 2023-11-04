@@ -14,6 +14,7 @@ type Metrics struct {
 	indexDocuments  atomic.Uint64
 	midiTracks      atomic.Uint64
 	audioTracks     atomic.Uint64
+	returnTracks    atomic.Uint64
 	pushHistorySize atomic.Uint64
 
 	triggerUpdate func()
@@ -37,6 +38,7 @@ func (s *Metrics) collect() *pusher.MetricUpdatePush {
 		"index_docs":    s.indexDocuments.Load(),
 		"midi_tracks":   s.midiTracks.Load(),
 		"audio_tracks":  s.audioTracks.Load(),
+		"return_tracks": s.returnTracks.Load(),
 	})
 }
 
@@ -67,5 +69,10 @@ func (s *Metrics) CountMidiTrack() {
 
 func (s *Metrics) CountAudioTrack() {
 	s.audioTracks.Add(1)
+	s.triggerUpdate()
+}
+
+func (s *Metrics) CountReturnTrack() {
+	s.returnTracks.Add(1)
 	s.triggerUpdate()
 }

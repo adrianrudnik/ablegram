@@ -30,6 +30,7 @@ func parseAlsV5(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, 
 	docs = append(docs, abletonv5.ParseLiveSet(m, path, &data))
 	docs = append(docs, abletonv5.ParseMidiTracks(m, path, &data)...)
 	docs = append(docs, abletonv5.ParseAudioTracks(m, path, &data)...)
+	docs = append(docs, abletonv5.ParseReturnTracks(m, path, &data)...)
 
 	return docs, nil
 }

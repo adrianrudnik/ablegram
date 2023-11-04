@@ -26,8 +26,9 @@ type LiveSet struct {
 }
 
 type Tracks struct {
-	MidiTracks  []MidiTrack  `xml:"MidiTrack"`
-	AudioTracks []AudioTrack `xml:"AudioTrack"`
+	MidiTracks   []MidiTrack   `xml:"MidiTrack"`
+	AudioTracks  []AudioTrack  `xml:"AudioTrack"`
+	ReturnTracks []ReturnTrack `xml:"ReturnTrack"`
 }
 
 type MidiTrack struct {
@@ -42,6 +43,12 @@ type AudioTrack struct {
 	Name   TrackNames   `xml:"Name"`
 	Color  ColorValue   `xml:"Color"`
 	Frozen BooleanValue `xml:"Freeze"`
+}
+
+type ReturnTrack struct {
+	Id    int64      `xml:"Id,attr"`
+	Name  TrackNames `xml:"Name"`
+	Color ColorValue `xml:"Color"`
 }
 
 type TrackNames struct {

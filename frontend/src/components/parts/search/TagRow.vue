@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
 import type { Tag } from '@/stores/tags'
-import { computed } from 'vue'
 import { useTagStore } from '@/stores/tags'
+import { computed } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
 
 const props = defineProps<{

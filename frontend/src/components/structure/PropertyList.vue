@@ -10,6 +10,7 @@
 .PropertyList {
   .PropertyListItem {
     padding-bottom: 0.5rem !important;
+
     &:not(:first-child) {
       border-top: 1px solid var(--gray-400);
       padding-top: 0.5rem !important;

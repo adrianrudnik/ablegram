@@ -43,6 +43,7 @@ const { t } = useI18n()
 <style lang="scss" scoped>
 li {
   margin-bottom: 0.5rem;
+
   a {
     margin-left: 0.5rem;
   }

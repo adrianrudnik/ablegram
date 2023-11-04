@@ -198,6 +198,7 @@
           padding-left: $val * ($index + 1);
         }
       }
+
       @if $index < $length {
         @include nested-submenu-indents($val, $index + 2, $length);
       }

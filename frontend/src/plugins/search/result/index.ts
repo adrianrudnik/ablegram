@@ -14,6 +14,7 @@ export interface StatusNode {
   failed: number
   success: number
 }
+
 export interface FacetsNode {
   [key: string]: FacetNode
 }

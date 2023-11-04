@@ -234,6 +234,7 @@ watchDebounced(
 
   .Suggestions {
     display: block;
+
     .p-autocomplete-panel {
       position: relative !important;
       top: unset !important;

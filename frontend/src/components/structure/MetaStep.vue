@@ -13,6 +13,7 @@
       display: none;
     }
   }
+
   .MetaStepItem:not(:first-child) {
     padding-left: 3rem !important;
 

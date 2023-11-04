@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { SearchQuery } from '@/plugins/search/query'
 import type { SearchResult } from '@/plugins/search/result'
 import { useStatStore } from '@/stores/stats'

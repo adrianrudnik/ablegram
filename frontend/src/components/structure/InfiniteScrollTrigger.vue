@@ -22,14 +22,12 @@ const trigger = ref<Element>()
 
 onMounted(() => {
   if (trigger.value) {
-    console.log('OBSERVE')
     observer.observe(trigger.value)
   }
 })
 
 onBeforeUnmount(() => {
   if (trigger.value) {
-    console.log('UNOBSERVE')
     observer.unobserve(trigger.value)
   }
 })

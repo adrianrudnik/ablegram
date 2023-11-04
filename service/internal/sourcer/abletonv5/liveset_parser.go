@@ -1,9 +1,7 @@
-package ablv5parser
+package abletonv5
 
 import (
 	"fmt"
-	"github.com/adrianrudnik/ablegram/internal/indexer"
-	"github.com/adrianrudnik/ablegram/internal/parser/ablv5schema"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
@@ -18,10 +16,10 @@ import (
 
 var versionNumberRegex = regexp.MustCompile(`^(\d+\.)?(\d+\.)?(\d+)`)
 
-func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pipeline.DocumentToIndexMsg {
+func ParseLiveSet(m *stats.Metrics, path string, data *Ableton) *pipeline.DocumentToIndexMsg {
 	// Extract the tags for live sets
 	tags := tagger.NewTagger()
-	tags.AddSystemTag("type:live-set")
+	tags.AddSystemTag("type:ableton-live-set")
 
 	simplePath := strings.ToLower(filepath.ToSlash(path))
 
@@ -51,19 +49,19 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 
 	// @todo Factory Preset, User Preset, User Library, Factory Library
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 {
-		tags.AddSystemTag("live-set:tracks:has-audio")
+		tags.AddSystemTag("ableton-live-set:tracks:has-audio")
 	} else {
-		tags.AddSystemTag("live-set:tracks:no-audio")
+		tags.AddSystemTag("ableton-live-set:tracks:no-audio")
 	}
 
 	if len(data.LiveSet.Tracks.MidiTracks) > 0 {
-		tags.AddSystemTag("live-set:tracks:has-midi")
+		tags.AddSystemTag("ableton-live-set:tracks:has-midi")
 	} else {
-		tags.AddSystemTag("live-set:tracks:no-midi")
+		tags.AddSystemTag("ableton-live-set:tracks:no-midi")
 	}
 
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 && len(data.LiveSet.Tracks.MidiTracks) > 0 {
-		tags.AddSystemTag("live-set:tracks:has-midi-audio")
+		tags.AddSystemTag("ableton-live-set:tracks:has-midi-audio")
 	}
 
 	if strings.HasPrefix(data.Creator, "Ableton Live ") {
@@ -90,12 +88,12 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	if data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value > 0 {
 		// If we have a rounded tempo, we just need to add one tag
 		if math.Trunc(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value) == data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value {
-			tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", int(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+			tags.AddSystemTag(fmt.Sprintf("ableton-live-set:tempo:%d", int(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
 		} else {
 			// Otherwise it's a weird file where the tempo is a fraction, like in some Ableton delivered ALS files.
 			// We just add both rounded values to the tags
-			tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", int(math.Floor(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
-			tags.AddSystemTag(fmt.Sprintf("live-set:tempo:%d", int(math.Ceil(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+			tags.AddSystemTag(fmt.Sprintf("ableton-live-set:tempo:%d", int(math.Floor(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+			tags.AddSystemTag(fmt.Sprintf("ableton-live-set:tempo:%d", int(math.Ceil(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
 		}
 	}
 
@@ -143,7 +141,7 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 		}
 	}
 
-	liveSet := indexer.NewLiveSetDocument()
+	liveSet := NewLiveSetDocument()
 	liveSet.Tags = tags.GetAllAndClear()
 
 	liveSet.PathAbsolute = path
@@ -155,7 +153,7 @@ func ParseLiveSet(m *stats.Metrics, path string, data *ablv5schema.Ableton) *pip
 	liveSet.MinorVersion = data.MinorVersion
 	liveSet.Creator = data.Creator
 	liveSet.Revision = data.Revision
-	liveSet.Annotation = data.LiveSet.Annotation.Value
+	liveSet.Annotation = parseAnnotation(tags, data.LiveSet.Annotation.Value)
 
 	liveSet.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
 	liveSet.ScaleName = data.LiveSet.ScaleInformation.Name.Value

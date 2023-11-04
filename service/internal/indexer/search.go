@@ -1,6 +1,7 @@
 package indexer
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/sourcer/abletonv5"
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/custom"
 	"github.com/blevesearch/bleve/v2/analysis/lang/en"
@@ -55,9 +56,7 @@ func NewSearch() *Search {
 
 	indexMapping.DefaultAnalyzer = en.AnalyzerName
 
-	indexMapping.AddDocumentMapping("AudioTrack", buildAudioTrackMapping())
-	indexMapping.AddDocumentMapping("LiveSet", buildLiveSetMapping())
-	indexMapping.AddDocumentMapping("MidiTrack", buildMidiTrackMapping())
+	abletonv5.RegisterToIndex(indexMapping)
 
 	Logger.Info().Msg("Index documents mapped")
 

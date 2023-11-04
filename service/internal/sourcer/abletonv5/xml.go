@@ -1,4 +1,4 @@
-package ablv5schema
+package abletonv5
 
 import (
 	"encoding/xml"
@@ -31,9 +31,10 @@ type Tracks struct {
 }
 
 type MidiTrack struct {
-	Id    int64      `xml:"Id,attr"`
-	Name  TrackNames `xml:"Name"`
-	Color ColorValue `xml:"Color"`
+	Id     int64        `xml:"Id,attr"`
+	Name   TrackNames   `xml:"Name"`
+	Color  ColorValue   `xml:"Color"`
+	Frozen BooleanValue `xml:"Freeze"`
 }
 
 type AudioTrack struct {

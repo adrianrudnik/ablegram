@@ -1,4 +1,4 @@
-package indexer
+package abletonv5
 
 import (
 	"github.com/blevesearch/bleve/v2"

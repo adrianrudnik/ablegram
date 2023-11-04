@@ -1,4 +1,4 @@
-#!/bin/zsh -ex
+#!/bin/zsh -e
 
 # Requirements:
 # - brew install imagemagick
@@ -22,6 +22,16 @@ fi
 SCRIPT_DIR=${0:a:h}
 cd ${SCRIPT_DIR}/..
 
+# Ensure the frontend is correctly built
+source $NVM_DIR/nvm.sh;
+rm -rf internal/webservice/.frontend
+cd ../frontend
+nvm use
+npm install
+npm run build
+mv dist ../service/internal/webservice/.frontend
+cd ../service
+
 rm -rf dist/os/darwin
 mkdir -p dist/{deploy,os/darwin}
 
@@ -29,20 +39,26 @@ mkdir -p dist/{deploy,os/darwin}
 source ${SCRIPT_DIR}/settings.sh
 
 APP_ID="app.ablegram.ablegram"
-APP_BUILD=$(date +%s)
-
+BUILD_DATE=$(date +%s)
+BUILD_COMMIT=$(git rev-parse --short HEAD)
 
 # build AMD64
 CGO_ENABLED=1 \
 GOARCH=amd64 \
 GOOS=darwin \
-  go build -ldflags '-s' -o ablegram_darwin_amd64 .
+  go build \
+    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE}" \
+    -o ablegram_darwin_amd64 \
+    .
 
 # build ARM64
 CGO_ENABLED=1 \
 GOARCH=arm64 \
 GOOS=darwin \
-  go build -ldflags '-s' -o ablegram_darwin_arm64 .
+  go build \
+    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE}" \
+    -o ablegram_darwin_arm64 \
+    .
 
 # merge to universal binary
 lipo \
@@ -78,8 +94,8 @@ iconutil -c icns dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset -o 
 rm -rf dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset
 
 # build and place the plist
-export APP_ID APP_VERSION APP_BUILD
-envsubst '${APP_ID} ${APP_VERSION} ${APP_BUILD}' < os/macOS/plist-template.xml > dist/os/darwin/Ablegram.app/Contents/Info.plist
+export APP_ID APP_VERSION BUILD_DATE
+envsubst '${APP_ID} ${APP_VERSION} ${BUILD_DATE}' < os/macOS/plist-template.xml > dist/os/darwin/Ablegram.app/Contents/Info.plist
 
 # remove extended attributes
 xattr -cr dist/os/darwin/Ablegram.app

@@ -126,7 +126,7 @@ export function createTagFromString(term: string, count: number | string): Tag |
         tag.value = parseInt(parts[3])
         if (tag.value) {
           tag.type = type
-          tag.trans.extra = t('color.' + tag.extra)
+          tag.trans.extra = t('color' + '.' + tag.detail + '.' + tag.extra)
           tag.color = colorizeTag(tag) ?? undefined
         }
     }
@@ -142,8 +142,8 @@ function categorizeTag(tag: Tag): TagCategory {
   if (tag.topic === 'info') return TagCategory.Info
   if (tag.topic === 'ableton') return TagCategory.Software
   if (tag.topic === 'file' && tag.detail === 'location') return TagCategory.Location
-  if (tag.topic === 'live-set' && tag.detail === 'tracks') return TagCategory.Tracks
-  if (tag.topic === 'live-set' && tag.detail === 'tempo') return TagCategory.Tempo
+  if (tag.topic === 'ableton-live-set' && tag.detail === 'tracks') return TagCategory.Tracks
+  if (tag.topic === 'ableton-live-set' && tag.detail === 'tempo') return TagCategory.Tempo
   if (tag.topic === 'file' && tag.detail.substring(1) === 'time-year') return TagCategory.Year
   if (tag.topic === 'file' && tag.detail.substring(1) === 'time-month') return TagCategory.Month
   if (tag.topic === 'file' && tag.detail.substring(1) === 'time-quarter') return TagCategory.Quarter
@@ -167,7 +167,7 @@ function classifyTag(tag: Tag): TagType {
   }
 
   const numValTags = [
-    'live-set:tempo',
+    'ableton-live-set:tempo',
     'file:mtime-year',
     'file:mtime-weekday',
     'file:mtime-month',

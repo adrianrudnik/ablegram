@@ -1,7 +1,7 @@
 <template>
   <div>
     <SearchResultCard
-      :header="t('common.label.audio-track.s')"
+      :header="t('common.label.ableton-audio-track.s')"
       :title="props.result.displayName"
       :tags="props.result.tags"
     >
@@ -24,7 +24,7 @@
 
         <PropertyListItem
           v-if="result.annotation"
-          :title="t('common.label.annotation.s')"
+          :title="t('common.label.user-memo.s')"
           icon="pi pi-user-edit"
         >
           {{ result.annotation }}
@@ -36,7 +36,7 @@
           icon="pi pi-palette"
         >
           <div class="ColorProperty" :style="'background-color: ' + resolvedColor"></div>
-          {{ t('color.' + result.color) }}
+          {{ t('color.ableton.' + result.color) }}
         </PropertyListItem>
       </PropertyList>
 

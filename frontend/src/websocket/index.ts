@@ -3,7 +3,6 @@ import { useFilesStore } from '@/stores/files'
 import { useStatStore } from '@/stores/stats'
 import type { PushMessage } from '@/websocket/messages/global'
 import { PushMessageType } from '@/websocket/messages/global'
-import { hydrateTags } from '@/stores/tags'
 import router from '@/router'
 
 export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
@@ -21,18 +20,7 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
         break
 
       case PushMessageType.ProcessingStatus:
-        // Hydrate the new tags on completion and update them in periods while
-        // eslint-disable-next-line no-case-declarations
-        const stop = setInterval(async () => {
-          await hydrateTags()
-        }, 1500)
-
-        // Once finished, stop that interval and reload one last time
-        if (payload.routines === 0) {
-          clearInterval(stop)
-          await hydrateTags()
-        }
-
+        useStatStore().processRoutineCount = payload.routines
         useStatStore().isProcessing = payload.routines !== 0
         break
 

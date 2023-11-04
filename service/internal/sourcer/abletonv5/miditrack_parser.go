@@ -1,9 +1,7 @@
-package ablv5parser
+package abletonv5
 
 import (
 	"fmt"
-	"github.com/adrianrudnik/ablegram/internal/indexer"
-	"github.com/adrianrudnik/ablegram/internal/parser/ablv5schema"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
@@ -11,12 +9,12 @@ import (
 	"path/filepath"
 )
 
-func ParseMidiTracks(m *stats.Metrics, path string, data *ablv5schema.Ableton) []*pipeline.DocumentToIndexMsg {
+func ParseMidiTracks(m *stats.Metrics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, midiTrack := range data.LiveSet.Tracks.MidiTracks {
 		tags := tagger.NewTagger()
-		tags.AddSystemTag("type:midi-track")
+		tags.AddSystemTag("type:ableton-midi-track")
 
 		// Derive document
 		id := tagger.IdHash(fmt.Sprintf("%s_%s", path, midiTrack.Name.EffectiveName.Value))
@@ -26,7 +24,7 @@ func ParseMidiTracks(m *stats.Metrics, path string, data *ablv5schema.Ableton) [
 			midiTrack.Name.EffectiveName.Value,
 		}
 
-		doc := indexer.NewMidiTrackDocument()
+		doc := NewMidiTrackDocument()
 
 		doc.PathAbsolute = path
 		doc.PathFolder = filepath.Dir(path)
@@ -36,19 +34,10 @@ func ParseMidiTracks(m *stats.Metrics, path string, data *ablv5schema.Ableton) [
 		doc.EffectiveName = midiTrack.Name.EffectiveName.Value
 		doc.UserName = midiTrack.Name.UserName.Value
 		doc.MemorizedFirstClipName = midiTrack.Name.MemorizedFirstClipName.Value
+		doc.Annotation = parseAnnotation(tags, midiTrack.Name.Annotation.Value)
 
-		doc.Color = midiTrack.Color.Value
-		tags.AddSystemTag(fmt.Sprintf("color:all:%d", midiTrack.Color.Value))
-		tags.AddSystemTag(fmt.Sprintf("color:track:%d", midiTrack.Color.Value))
-
-		// Annotation
-		val, empty := util.EvaluateUserInput(midiTrack.Name.Annotation.Value)
-		if !empty {
-			doc.Annotation = val
-			tags.AddSystemTag("info:has-annotation")
-		} else {
-			tags.AddSystemTag("info:no-annotation")
-		}
+		doc.Color = parseColor(tags, midiTrack.Color.Value)
+		doc.Frozen = midiTrack.Frozen.Value
 
 		doc.Tags = tags.GetAllAndClear()
 

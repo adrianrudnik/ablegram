@@ -1,39 +1,12 @@
-package indexer
+package abletonv5
 
 import (
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
-type MidiTrackDocument struct {
-	T    string   `json:"type"`
-	Tags []string `json:"tags,omitempty"`
-
-	PathAbsolute string `json:"pathAbsolute,omitempty"`
-	PathFolder   string `json:"pathFolder,omitempty"`
-	Filename     string `json:"filename,omitempty"`
-
-	DisplayName            string `json:"displayName,omitempty"`
-	EffectiveName          string `json:"effectiveName,omitempty"`
-	UserName               string `json:"userName,omitempty"`
-	MemorizedFirstClipName string `json:"memorizedFirstClipName,omitempty"`
-	Annotation             string `json:"annotation,omitempty"`
-
-	Color int16 `json:"color,omitempty"`
-}
-
-func NewMidiTrackDocument() *MidiTrackDocument {
-	return &MidiTrackDocument{
-		T: "MidiTrack",
-	}
-}
-
-func (d *MidiTrackDocument) Type() string {
-	return d.T
-}
-
 // @see service/vendor/github.com/blevesearch/bleve/v2/mapping.go
-func buildMidiTrackMapping() *mapping.DocumentMapping {
+func buildAudioTrackMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 	m.AddFieldMappingsAt("type", mapping.NewKeywordFieldMapping())
 	m.AddFieldMappingsAt("tags", mapping.NewKeywordFieldMapping())
@@ -49,6 +22,7 @@ func buildMidiTrackMapping() *mapping.DocumentMapping {
 	m.AddFieldMappingsAt("annotation", NewFulltextTextFieldMapping(true))
 
 	m.AddFieldMappingsAt("color", mapping.NewNumericFieldMapping())
+	m.AddFieldMappingsAt("frozen", mapping.NewBooleanFieldMapping())
 
 	return m
 }

@@ -2,9 +2,8 @@ package parser
 
 import (
 	"encoding/xml"
-	"github.com/adrianrudnik/ablegram/internal/parser/ablv5parser"
-	"github.com/adrianrudnik/ablegram/internal/parser/ablv5schema"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
+	"github.com/adrianrudnik/ablegram/internal/sourcer/abletonv5"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/rs/zerolog"
 	"os"
@@ -18,7 +17,7 @@ func parseAlsV5(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, 
 		return nil, err
 	}
 
-	var data ablv5schema.Ableton
+	var data abletonv5.Ableton
 
 	err = xml.Unmarshal(rawContent, &data)
 	if err != nil {
@@ -28,9 +27,9 @@ func parseAlsV5(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, 
 	// Create a slice to hold all documents that we out of the XML information
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 50)
 
-	docs = append(docs, ablv5parser.ParseLiveSet(m, path, &data))
-	docs = append(docs, ablv5parser.ParseMidiTracks(m, path, &data)...)
-	docs = append(docs, ablv5parser.ParseAudioTrack(m, path, &data)...)
+	docs = append(docs, abletonv5.ParseLiveSet(m, path, &data))
+	docs = append(docs, abletonv5.ParseMidiTracks(m, path, &data)...)
+	docs = append(docs, abletonv5.ParseAudioTracks(m, path, &data)...)
 
 	return docs, nil
 }
@@ -40,7 +39,7 @@ func ParseAls(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, er
 
 	r, err := parseAlsV5(path, m)
 	if err != nil {
-		m.CountInvalidFile()
+		go m.CountInvalidFile()
 		return nil, err
 	}
 

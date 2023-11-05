@@ -19,39 +19,54 @@ npm run build
 mv dist ../service/internal/webservice/.frontend
 cd ../service
 
+# Enable tracing mode for easier review
+set -ex
+
+# Ensure no old files are present
+rm -rf dist/os/{windows,linux} \
+  "dist/deploy/Ablegram-v${APP_VERSION}-Windows_amd64.zip" \
+  "dist/deploy/Ablegram-v${APP_VERSION}-Linux_amd64.tar.xz"
+
 # Prepare dist folder
-rm -rf dist/os/{windows,linux}
 mkdir -p dist/{deploy,os/windows,os/linux}
 
 APP_ID="app.ablegram.ablegram"
 
+# We can not take a timestamp for build numbers, due to Windows getting a side-by-side error on if the build number exceeds 65535.
+BUILD_NUMBER=$(git rev-list --count HEAD)
 BUILD_DATE=$(date +%s)
 BUILD_COMMIT=$(git rev-parse --short HEAD)
 
+# Ensure the bundled resources are up to date
+go generate
+
 # Build and package Windows binary
+# Using --executable to place the binary somewhere else breaks the icon and GOFLAGS.
 CGO_ENABLED=1 \
 GOOS=windows \
 CC=x86_64-w64-mingw32-gcc \
 CXX=x86_64-w64-mingw32-g++ \
-GOFLAGS="-ldflags=-X=main.AppVersion=${APP_VERSION} -ldflags=-X=main.BuildCommit=${BUILD_COMMIT} -ldflags=-X=main.BuildDate=${BUILD_DATE}" \
+GOFLAGS="-ldflags=-X=main.AppVersion=${APP_VERSION} -ldflags=-X=main.BuildCommit=${BUILD_COMMIT} -ldflags=-X=main.BuildDate=${BUILD_DATE} -ldflags=-X=main.BuildNumber=${BUILD_NUMBER}" \
   fyne package \
     --os windows \
-    --release \
-    --executable dist/os/windows/Ablegram.exe
+    --appVersion "${APP_VERSION}" \
+    --appBuild "${BUILD_NUMBER}" \
+    --release
 
-zip -j9 "dist/deploy/Ablegram-v${APP_VERSION}-Windows_amd64.zip" dist/os/windows/Ablegram.exe
-mv dist/os/windows/Ablegram.exe "dist/os/windows/Ablegram-v${APP_VERSION}.exe"
+mv Ablegram.exe "dist/os/windows/Ablegram-v${APP_VERSION}.exe"
+zip -j9 "dist/deploy/Ablegram-v${APP_VERSION}-Windows_amd64.zip" "dist/os/windows/Ablegram-v${APP_VERSION}.exe"
 
 # Build and package Linux binary
 CGO_ENABLED=1 \
 GOOS=linux \
+GOARCH= \
 CC= \
 CXX= \
-GOFLAGS="-ldflags=-X=main.AppVersion=${APP_VERSION} -ldflags=-X=main.BuildCommit=${BUILD_COMMIT} -ldflags=-X=main.BuildDate=${BUILD_DATE}" \
+GOFLAGS="-ldflags=-X=main.AppVersion=${APP_VERSION} -ldflags=-X=main.BuildCommit=${BUILD_COMMIT} -ldflags=-X=main.BuildDate=${BUILD_DATE} -ldflags=-X=main.BuildNumber=${BUILD_NUMBER}" \
   fyne package \
     --os linux \
     --appVersion "${APP_VERSION}" \
-    --appBuild "${BUILD_DATE}" \
+    --appBuild "${BUILD_NUMBER}" \
     --release
 
 tar -Jxvf Ablegram.tar.xz -C dist/os/linux usr/local/bin/ablegram --strip-components=3

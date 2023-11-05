@@ -32,6 +32,9 @@ npm run build
 mv dist ../service/internal/webservice/.frontend
 cd ../service
 
+# Enable tracing mode for easier review
+set -ex
+
 rm -rf dist/os/darwin
 mkdir -p dist/{deploy,os/darwin}
 
@@ -39,45 +42,49 @@ mkdir -p dist/{deploy,os/darwin}
 source ${SCRIPT_DIR}/settings.sh
 
 APP_ID="app.ablegram.ablegram"
+BUILD_NUMBER=$(git rev-list --count HEAD)
 BUILD_DATE=$(date +%s)
 BUILD_COMMIT=$(git rev-parse --short HEAD)
 
-# build AMD64
+# Ensure the bundled resources are up to date
+go generate
+
+# Build AMD64
 CGO_ENABLED=1 \
 GOARCH=amd64 \
 GOOS=darwin \
   go build \
-    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE}" \
+    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE} -ldflags=-X=main.BuildNumber=${BUILD_NUMBER}" \
     -o ablegram_darwin_amd64 \
     .
 
-# build ARM64
+# Build ARM64
 CGO_ENABLED=1 \
 GOARCH=arm64 \
 GOOS=darwin \
   go build \
-    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE}" \
+    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE} -ldflags=-X=main.BuildNumber=${BUILD_NUMBER}" \
     -o ablegram_darwin_arm64 \
     .
 
-# merge to universal binary
+# Merge to universal binary
 lipo \
   -create ablegram_darwin_amd64 ablegram_darwin_arm64 \
   -o ablegram_darwin_universal
 
-# review the universal binary
+# Review the universal binary
 lipo -archs ablegram_darwin_universal
 
-# move for app packaging
+# Move for app packaging
 mv ablegram_darwin_* dist/os/darwin
 
-# prepare app structure
+# Prepare app structure
 mkdir -p dist/os/darwin/Ablegram.app/Contents/{MacOS,Resources}
 
-# place the universal binary
+# Place the universal binary
 cp dist/os/darwin/ablegram_darwin_universal dist/os/darwin/Ablegram.app/Contents/MacOS/ablegram
 
-# build and place the app icon
+# Build and place the app icon
 mkdir -p dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset
 cp assets/icon.png dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset/icon_512x512.png
 
@@ -93,20 +100,20 @@ done
 iconutil -c icns dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset -o dist/os/darwin/Ablegram.app/Contents/Resources/icon.icns
 rm -rf dist/os/darwin/Ablegram.app/Contents/Resources/icon.iconset
 
-# build and place the plist
+# Build and place the plist
 export APP_ID APP_VERSION BUILD_DATE
 envsubst '${APP_ID} ${APP_VERSION} ${BUILD_DATE}' < os/macOS/plist-template.xml > dist/os/darwin/Ablegram.app/Contents/Info.plist
 
-# remove extended attributes
+# Remove extended attributes
 xattr -cr dist/os/darwin/Ablegram.app
 
-# review extended attributes
+# Review extended attributes
 xattr -lr dist/os/darwin/Ablegram.app
 
-# sign the app
+# Sign the app
 codesign --force --options runtime --timestamp --sign "${SIGN_CERT}" -i "${APP_ID}" dist/os/darwin/Ablegram.app
 
-# verify the signature
+# Verify the signature
 codesign --verify --verbose dist/os/darwin/Ablegram.app
 
 # Package a signed dmg

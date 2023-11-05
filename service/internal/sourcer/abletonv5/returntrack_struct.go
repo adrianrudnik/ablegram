@@ -3,15 +3,15 @@ package abletonv5
 type ReturnTrackDocument struct {
 	*HasBase
 	*HasFileReference
-	*HasName
+	*HasTrackUserNames
 	*HasColor
 }
 
 func NewReturnTrackDocument() *ReturnTrackDocument {
 	return &ReturnTrackDocument{
-		HasBase:          &HasBase{T: AbletonReturnTrack},
-		HasFileReference: &HasFileReference{},
-		HasName:          &HasName{},
-		HasColor:         &HasColor{},
+		HasBase:           NewHasBase(AbletonReturnTrack),
+		HasFileReference:  NewHasFileReference(),
+		HasTrackUserNames: NewHasTrackUserNames(),
+		HasColor:          NewHasColor(),
 	}
 }

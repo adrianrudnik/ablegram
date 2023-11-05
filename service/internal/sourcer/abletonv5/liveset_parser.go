@@ -16,7 +16,7 @@ import (
 
 var versionNumberRegex = regexp.MustCompile(`^(\d+\.)?(\d+\.)?(\d+)`)
 
-func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.DocumentToIndexMsg {
+func ParseLiveSet(stat *stats.Statistics, path string, data *XmlRoot) *pipeline.DocumentToIndexMsg {
 	// Extract the tags for live sets
 	tags := tagger.NewTagger()
 	tags.AddSystemTag("type:ableton-live-set")
@@ -64,8 +64,8 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.
 		tags.AddSystemTag("ableton-live-set:tracks:has-midi-audio")
 	}
 
-	if strings.HasPrefix(data.Creator, "Ableton Live ") {
-		rawVersion := strings.TrimPrefix(data.Creator, "Ableton Live ")
+	if strings.HasPrefix(data.Creator, "XmlRoot Live ") {
+		rawVersion := strings.TrimPrefix(data.Creator, "XmlRoot Live ")
 
 		tags.AddSystemTag(fmt.Sprintf("ableton:version:%s", rawVersion))
 
@@ -90,7 +90,7 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.
 		if math.Trunc(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value) == data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value {
 			tags.AddSystemTag(fmt.Sprintf("ableton-live-set:tempo:%d", int(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
 		} else {
-			// Otherwise it's a weird file where the tempo is a fraction, like in some Ableton delivered ALS files.
+			// Otherwise it's a weird file where the tempo is a fraction, like in some XmlRoot delivered ALS files.
 			// We just add both rounded values to the tags
 			tags.AddSystemTag(fmt.Sprintf("ableton-live-set:tempo:%d", int(math.Floor(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
 			tags.AddSystemTag(fmt.Sprintf("ableton-live-set:tempo:%d", int(math.Ceil(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
@@ -98,7 +98,6 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.
 	}
 
 	// Extract some details about the file itself
-
 	fstat, err := times.Stat(path)
 	if err == nil {
 		// Handle the basic modification time
@@ -142,15 +141,14 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.
 	}
 
 	doc := NewLiveSetDocument()
+	doc.LoadDisplayName([]string{filepath.Base(path)})
+	doc.LoadFileReference(path, tags)
+	doc.LoadUserInfoText(data.LiveSet.Annotation.Value, tags)
 
-	parseFileReference(doc.HasFileReference, path)
-
-	doc.DisplayName = filepath.Base(path)
 	doc.MajorVersion = data.MajorVersion
 	doc.MinorVersion = data.MinorVersion
 	doc.Creator = data.Creator
 	doc.Revision = data.Revision
-	doc.Annotation = parseAnnotation(tags, data.LiveSet.Annotation.Value)
 
 	doc.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
 	doc.ScaleName = data.LiveSet.ScaleInformation.Name.Value
@@ -162,7 +160,7 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.
 	doc.MidiTrackCount = len(data.LiveSet.Tracks.MidiTracks)
 	doc.AudioTrackCount = len(data.LiveSet.Tracks.AudioTracks)
 
-	doc.Tags = tags.GetAllAndClear()
+	doc.EngraveTags(tags)
 
 	stat.IncrementCounter(AbletonLiveSet)
 

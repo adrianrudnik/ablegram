@@ -7,4 +7,6 @@ const (
 	AbletonReturnTrack = "AbletonReturnTrack"
 	AbletonGroupTrack  = "AbletonGroupTrack"
 	AbletonClip        = "AbletonClip"
+	AbletonMixer       = "AbletonMixer"
+	AbletonDeviceChain = "AbletonDeviceChain"
 )

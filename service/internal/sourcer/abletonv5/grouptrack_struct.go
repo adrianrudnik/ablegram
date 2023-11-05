@@ -3,15 +3,15 @@ package abletonv5
 type GroupTrackDocument struct {
 	*HasBase
 	*HasFileReference
-	*HasName
+	*HasTrackUserNames
 	*HasColor
 }
 
 func NewGroupTrackDocument() *GroupTrackDocument {
 	return &GroupTrackDocument{
-		HasBase:          &HasBase{T: AbletonGroupTrack},
-		HasFileReference: &HasFileReference{},
-		HasName:          &HasName{},
-		HasColor:         &HasColor{},
+		HasBase:           NewHasBase(AbletonGroupTrack),
+		HasFileReference:  NewHasFileReference(),
+		HasTrackUserNames: NewHasTrackUserNames(),
+		HasColor:          NewHasColor(),
 	}
 }

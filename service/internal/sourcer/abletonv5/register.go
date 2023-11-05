@@ -1,12 +1,17 @@
 package abletonv5
 
-import "github.com/blevesearch/bleve/v2/mapping"
+import (
+	"github.com/blevesearch/bleve/v2/mapping"
+	"sync/atomic"
+)
+
+var idGenerator atomic.Uint64
 
 func RegisterToIndex(idx *mapping.IndexMappingImpl) {
-	idx.AddDocumentMapping("LiveSet", buildLiveSetMapping())
-	idx.AddDocumentMapping("AudioTrack", buildAudioTrackMapping())
-	idx.AddDocumentMapping("MidiTrack", buildMidiTrackMapping())
-	idx.AddDocumentMapping("ReturnTrack", buildReturnTrackMapping())
-	idx.AddDocumentMapping("GroupTrack", buildGroupTrackMapping())
+	idx.AddDocumentMapping("XmlLiveSet", buildLiveSetMapping())
+	idx.AddDocumentMapping("XmlAudioTrack", buildAudioTrackMapping())
+	idx.AddDocumentMapping("XmlMidiTrack", buildMidiTrackMapping())
+	idx.AddDocumentMapping("XmlReturnTrack", buildReturnTrackMapping())
+	idx.AddDocumentMapping("XmlGroupTrack", buildGroupTrackMapping())
 	idx.AddDocumentMapping("Clip", buildClipMapping())
 }

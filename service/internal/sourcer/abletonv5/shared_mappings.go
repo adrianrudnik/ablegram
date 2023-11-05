@@ -49,19 +49,33 @@ func createFileReferenceMappings(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("filename", mapping.NewKeywordFieldMapping())
 }
 
-func createNameReferenceMappings(im *mapping.DocumentMapping) {
+func createUserNameMapping(im *mapping.DocumentMapping) {
+	im.AddFieldMappingsAt("userName", mapping.NewKeywordFieldMapping())
+}
+
+func createAnnotationMapping(im *mapping.DocumentMapping) {
+	im.AddFieldMappingsAt("annotation", mapping.NewTextFieldMapping())
+}
+
+func createFullNameMapping(im *mapping.DocumentMapping) {
+	createUserNameMapping(im)
+	createAnnotationMapping(im)
+
 	im.AddFieldMappingsAt("displayName", NewFulltextTextFieldMapping(true))
 	im.AddFieldMappingsAt("effectiveName", NewFulltextTextFieldMapping(false))
-	im.AddFieldMappingsAt("userName", NewFulltextTextFieldMapping(false))
 	im.AddFieldMappingsAt("memorizedFirstClipName", NewFulltextTextFieldMapping(false))
-	im.AddFieldMappingsAt("annotation", NewFulltextTextFieldMapping(true))
 }
 
 func createSharedTrackMappings(im *mapping.DocumentMapping) {
 	createBaseMappings(im)
 	createFileReferenceMappings(im)
-	createNameReferenceMappings(im)
+	createFullNameMapping(im)
 
-	im.AddFieldMappingsAt("color", mapping.NewNumericFieldMapping())
+	createColorMapping(im)
+
 	im.AddFieldMappingsAt("frozen", mapping.NewBooleanFieldMapping())
+}
+
+func createColorMapping(im *mapping.DocumentMapping) {
+	im.AddFieldMappingsAt("color", mapping.NewNumericFieldMapping())
 }

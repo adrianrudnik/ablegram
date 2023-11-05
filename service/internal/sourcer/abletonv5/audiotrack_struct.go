@@ -3,7 +3,7 @@ package abletonv5
 type AudioTrackDocument struct {
 	*HasBase
 	*HasFileReference
-	*HasName
+	*HasTrackUserNames
 	*HasColor
 
 	Frozen bool `json:"frozen,omitempty"`
@@ -11,9 +11,9 @@ type AudioTrackDocument struct {
 
 func NewAudioTrackDocument() *AudioTrackDocument {
 	return &AudioTrackDocument{
-		HasBase:          &HasBase{T: AbletonAudioTrack},
-		HasFileReference: &HasFileReference{},
-		HasName:          &HasName{},
-		HasColor:         &HasColor{},
+		HasBase:           NewHasBase(AbletonAudioTrack),
+		HasFileReference:  NewHasFileReference(),
+		HasTrackUserNames: NewHasTrackUserNames(),
+		HasColor:          NewHasColor(),
 	}
 }

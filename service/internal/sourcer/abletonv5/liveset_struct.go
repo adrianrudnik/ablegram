@@ -3,13 +3,13 @@ package abletonv5
 type LiveSetDocument struct {
 	*HasBase
 	*HasFileReference
+	*HasUserInfoText
 
 	DisplayName  string `json:"displayName,omitempty"`
 	MajorVersion string `json:"majorVersion,omitempty"`
 	MinorVersion string `json:"minorVersion,omitempty"`
 	Creator      string `json:"creator,omitempty"`
 	Revision     string `json:"revision,omitempty"`
-	Annotation   string `json:"annotation,omitempty"`
 
 	Scale         string `json:"scale,omitempty"`
 	ScaleName     string `json:"scaleName,omitempty"`
@@ -26,7 +26,7 @@ type LiveSetDocument struct {
 
 func NewLiveSetDocument() *LiveSetDocument {
 	return &LiveSetDocument{
-		HasBase:          &HasBase{T: AbletonLiveSet},
-		HasFileReference: &HasFileReference{},
+		HasBase:          NewHasBase(AbletonLiveSet),
+		HasFileReference: NewHasFileReference(),
 	}
 }

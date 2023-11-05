@@ -17,7 +17,7 @@ func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToInde
 		return nil, err
 	}
 
-	var data abletonv5.Ableton
+	var data abletonv5.XmlRoot
 
 	err = xml.Unmarshal(rawContent, &data)
 	if err != nil {
@@ -25,13 +25,15 @@ func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToInde
 	}
 
 	// Create a slice to hold all documents that we out of the XML information
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 50)
+	docs := make([]*pipeline.DocumentToIndexMsg, 0, 200)
 
 	docs = append(docs, abletonv5.ParseLiveSet(stat, path, &data))
 	docs = append(docs, abletonv5.ParseMidiTracks(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseAudioTracks(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseReturnTracks(stat, path, &data)...)
-	docs = append(docs, abletonv5.ParseGroupTrack(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseGroupTracks(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseMixerDocuments(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseDeviceChains(stat, path, &data)...)
 
 	return docs, nil
 }

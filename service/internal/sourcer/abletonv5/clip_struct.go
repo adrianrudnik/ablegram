@@ -7,7 +7,7 @@ type ClipDocument struct {
 
 func NewClipDocument() *ClipDocument {
 	return &ClipDocument{
-		HasBase:          &HasBase{T: "AbletonClip"},
-		HasFileReference: &HasFileReference{},
+		HasBase:          NewHasBase(AbletonClip),
+		HasFileReference: NewHasFileReference(),
 	}
 }

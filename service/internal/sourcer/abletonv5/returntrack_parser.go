@@ -6,7 +6,6 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/util"
-	"path/filepath"
 )
 
 func ParseReturnTracks(stat *stats.Statistics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
@@ -26,9 +25,7 @@ func ParseReturnTracks(stat *stats.Statistics, path string, data *Ableton) []*pi
 
 		doc := NewReturnTrackDocument()
 
-		doc.PathAbsolute = path
-		doc.PathFolder = filepath.Dir(path)
-		doc.Filename = filepath.Base(path)
+		parseFileReference(doc.HasFileReference, path)
 
 		doc.DisplayName = util.Namelize(displayName)
 		doc.EffectiveName = returnTrack.Name.EffectiveName.Value

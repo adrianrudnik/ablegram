@@ -6,7 +6,6 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/util"
-	"path/filepath"
 )
 
 func ParseAudioTracks(stat *stats.Statistics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
@@ -25,10 +24,7 @@ func ParseAudioTracks(stat *stats.Statistics, path string, data *Ableton) []*pip
 		}
 
 		doc := NewAudioTrackDocument()
-
-		doc.PathAbsolute = path
-		doc.PathFolder = filepath.Dir(path)
-		doc.Filename = filepath.Base(path)
+		parseFileReference(doc.HasFileReference, path)
 
 		doc.DisplayName = util.Namelize(displayName)
 		doc.EffectiveName = audioTrack.Name.EffectiveName.Value

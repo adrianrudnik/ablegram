@@ -141,31 +141,30 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.
 		}
 	}
 
-	liveSet := NewLiveSetDocument()
-	liveSet.Tags = tags.GetAllAndClear()
+	doc := NewLiveSetDocument()
 
-	liveSet.PathAbsolute = path
-	liveSet.PathFolder = filepath.Dir(path)
-	liveSet.Filename = filepath.Base(path)
+	parseFileReference(doc.HasFileReference, path)
 
-	liveSet.DisplayName = filepath.Base(path)
-	liveSet.MajorVersion = data.MajorVersion
-	liveSet.MinorVersion = data.MinorVersion
-	liveSet.Creator = data.Creator
-	liveSet.Revision = data.Revision
-	liveSet.Annotation = parseAnnotation(tags, data.LiveSet.Annotation.Value)
+	doc.DisplayName = filepath.Base(path)
+	doc.MajorVersion = data.MajorVersion
+	doc.MinorVersion = data.MinorVersion
+	doc.Creator = data.Creator
+	doc.Revision = data.Revision
+	doc.Annotation = parseAnnotation(tags, data.LiveSet.Annotation.Value)
 
-	liveSet.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
-	liveSet.ScaleName = data.LiveSet.ScaleInformation.Name.Value
-	liveSet.Scale = fmt.Sprintf("%s %s", liveSet.ScaleRootNote, liveSet.ScaleName)
+	doc.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
+	doc.ScaleName = data.LiveSet.ScaleInformation.Name.Value
+	doc.Scale = fmt.Sprintf("%s %s", doc.ScaleRootNote, doc.ScaleName)
 
-	liveSet.InKey = data.LiveSet.InKey.Value
-	liveSet.Tempo = int64(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
+	doc.InKey = data.LiveSet.InKey.Value
+	doc.Tempo = int64(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))
 
-	liveSet.MidiTrackCount = len(data.LiveSet.Tracks.MidiTracks)
-	liveSet.AudioTrackCount = len(data.LiveSet.Tracks.AudioTracks)
+	doc.MidiTrackCount = len(data.LiveSet.Tracks.MidiTracks)
+	doc.AudioTrackCount = len(data.LiveSet.Tracks.AudioTracks)
+
+	doc.Tags = tags.GetAllAndClear()
 
 	stat.IncrementCounter(AbletonLiveSet)
 
-	return pipeline.NewDocumentToIndexMsg(tagger.IdHash(path), liveSet)
+	return pipeline.NewDocumentToIndexMsg(tagger.IdHash(path), doc)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/util"
+	"path/filepath"
 )
 
 // parseAnnotation parses the given annotation field, applies default tags and returns the annotation value.
@@ -23,4 +24,10 @@ func parseAnnotation(t *tagger.Tagger, v string) string {
 func parseColor(t *tagger.Tagger, v int16) int16 {
 	t.AddSystemTag(fmt.Sprintf("color:ableton:%d", v))
 	return v
+}
+
+func parseFileReference(v *HasFileReference, path string) {
+	v.PathAbsolute = path
+	v.PathFolder = filepath.Dir(path)
+	v.Filename = filepath.Base(path)
 }

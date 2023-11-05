@@ -1,12 +1,8 @@
 package abletonv5
 
 type LiveSetDocument struct {
-	T    string   `json:"type"`
-	Tags []string `json:"tags,omitempty"`
-
-	PathAbsolute string `json:"pathAbsolute,omitempty"`
-	PathFolder   string `json:"pathFolder,omitempty"`
-	Filename     string `json:"filename,omitempty"`
+	*HasBase
+	*HasFileReference
 
 	DisplayName  string `json:"displayName,omitempty"`
 	MajorVersion string `json:"majorVersion,omitempty"`
@@ -30,10 +26,7 @@ type LiveSetDocument struct {
 
 func NewLiveSetDocument() *LiveSetDocument {
 	return &LiveSetDocument{
-		T: "LiveSet",
+		HasBase:          &HasBase{T: AbletonLiveSet},
+		HasFileReference: &HasFileReference{},
 	}
-}
-
-func (d *LiveSetDocument) Type() string {
-	return d.T
 }

@@ -20,13 +20,13 @@ func NewWorker(search *Search, docChan <-chan *pipeline.DocumentToIndexMsg, broa
 	}
 }
 
-func (p *Worker) Run(progress *stats.ProcessProgress, m *stats.Metrics) {
+func (p *Worker) Run(progress *stats.ProcessProgress, m *stats.Statistics) {
 	Logger.Info().Msg("Starting index batch worker")
 
 	go p.doWork(progress, m)
 }
 
-func (p *Worker) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
+func (p *Worker) doWork(progress *stats.ProcessProgress, stat *stats.Statistics) {
 	for {
 		select {
 		case msg := <-p.docChan:
@@ -47,7 +47,7 @@ func (p *Worker) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
 				continue
 			}
 
-			m.SetIndexDocuments(docCount)
+			stat.SetCounter(IndexDocument, docCount)
 
 			continue
 		}

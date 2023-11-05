@@ -1,78 +1,46 @@
 package stats
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/samber/lo"
 	"sync/atomic"
 	"time"
 )
 
-type Metrics struct {
-	validFiles      atomic.Uint64
-	invalidFiles    atomic.Uint64
-	liveSets        atomic.Uint64
-	indexDocuments  atomic.Uint64
-	midiTracks      atomic.Uint64
-	audioTracks     atomic.Uint64
-	returnTracks    atomic.Uint64
+type Statistics struct {
+	config          *config.Config
 	pushHistorySize atomic.Uint64
+	counter         *Counter
 
-	triggerUpdate func()
+	TriggerUpdate func()
 }
 
-func NewMetrics(broadcastChan chan<- interface{}) *Metrics {
-	m := &Metrics{}
+func NewStatistics(conf *config.Config, pushChan chan<- interface{}) *Statistics {
+	m := &Statistics{
+		config:  conf,
+		counter: NewMetric(),
+	}
 
-	m.triggerUpdate, _ = lo.NewDebounce(50*time.Millisecond, func() {
-		broadcastChan <- m.collect()
+	// Create a debounced trigger that broadcasts the current statistics
+	// towards the frontend
+	m.TriggerUpdate, _ = lo.NewDebounce(50*time.Millisecond, func() {
+		pushChan <- pusher.NewMetricUpdatePush(m.CollectCounters())
 	})
 
 	return m
 }
 
-func (s *Metrics) collect() *pusher.MetricUpdatePush {
-	return pusher.NewMetricUpdatePush(map[string]uint64{
-		"files_valid":   s.validFiles.Load(),
-		"files_invalid": s.invalidFiles.Load(),
-		"live_sets":     s.liveSets.Load(),
-		"index_docs":    s.indexDocuments.Load(),
-		"midi_tracks":   s.midiTracks.Load(),
-		"audio_tracks":  s.audioTracks.Load(),
-		"return_tracks": s.returnTracks.Load(),
-	})
+func (s *Statistics) IncrementCounter(name string) {
+	s.counter.Increment(name, 1)
+	s.TriggerUpdate()
 }
 
-func (s *Metrics) CountValidFile() {
-	s.validFiles.Add(1)
-	s.triggerUpdate()
+func (s *Statistics) SetCounter(name string, value uint64) {
+	s.counter.Set(name, value)
+	s.TriggerUpdate()
 }
 
-func (s *Metrics) CountInvalidFile() {
-	s.invalidFiles.Add(1)
-	s.triggerUpdate()
-}
-
-func (s *Metrics) CountLiveSet() {
-	s.liveSets.Add(1)
-	s.triggerUpdate()
-}
-
-func (s *Metrics) SetIndexDocuments(count uint64) {
-	s.indexDocuments.Store(count)
-	s.triggerUpdate()
-}
-
-func (s *Metrics) CountMidiTrack() {
-	s.midiTracks.Add(1)
-	s.triggerUpdate()
-}
-
-func (s *Metrics) CountAudioTrack() {
-	s.audioTracks.Add(1)
-	s.triggerUpdate()
-}
-
-func (s *Metrics) CountReturnTrack() {
-	s.returnTracks.Add(1)
-	s.triggerUpdate()
+func (s *Statistics) CollectCounters() map[string]uint64 {
+	return s.counter.Snapshot()
 }

@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func ParseReturnTracks(stat *stats.Statistics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
+func ParseGroupTrack(stat *stats.Statistics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, returnTrack := range data.LiveSet.Tracks.ReturnTracks {
@@ -42,7 +42,7 @@ func ParseReturnTracks(stat *stats.Statistics, path string, data *Ableton) []*pi
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(id, doc))
 
-		stat.IncrementCounter(AbletonReturnTrack)
+		stat.IncrementCounter(AbletonGroupTrack)
 	}
 
 	return docs

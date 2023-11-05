@@ -9,39 +9,39 @@ import (
 )
 
 type WorkerPool struct {
-	config           *config.ParserConfig
+	config           *config.Config
 	workerCount      int
 	inputPathsChan   <-chan *pipeline2.FilesForProcessorMsg
 	outputResultChan chan<- *pipeline2.DocumentToIndexMsg
 	pushChan         chan<- interface{}
 }
 
-func NewWorkerPool(c *config.ParserConfig, pathChan <-chan *pipeline2.FilesForProcessorMsg, resultChan chan<- *pipeline2.DocumentToIndexMsg, pushChan chan<- interface{}) *WorkerPool {
+func NewWorkerPool(conf *config.Config, pathChan <-chan *pipeline2.FilesForProcessorMsg, resultChan chan<- *pipeline2.DocumentToIndexMsg, pushChan chan<- interface{}) *WorkerPool {
 	return &WorkerPool{
-		config:           c,
+		config:           conf,
 		inputPathsChan:   pathChan,
 		outputResultChan: resultChan,
 		pushChan:         pushChan,
 	}
 }
 
-func (p *WorkerPool) Run(progress *stats.ProcessProgress, m *stats.Metrics) {
+func (p *WorkerPool) Run(progress *stats.ProcessProgress, stat *stats.Statistics) {
 	Logger.Info().Int("count", p.workerCount).Msg("Starting parser workers")
 
-	for i := 0; i < p.config.WorkerCount; i++ {
-		go p.doWork(progress, m)
+	for i := 0; i < p.config.ParserConfig.WorkerCount; i++ {
+		go p.doWork(progress, stat)
 	}
 }
 
-func (p *WorkerPool) doWork(progress *stats.ProcessProgress, m *stats.Metrics) {
+func (p *WorkerPool) doWork(progress *stats.ProcessProgress, m *stats.Statistics) {
 	for msg := range p.inputPathsChan {
 		// Add possible delay, for debugging or to simulate a slower system
-		if p.config.WorkerDelayInMs > 0 {
-			time.Sleep(time.Duration(p.config.WorkerDelayInMs) * time.Millisecond)
+		if p.config.ParserConfig.WorkerDelayInMs > 0 {
+			time.Sleep(time.Duration(p.config.ParserConfig.WorkerDelayInMs) * time.Millisecond)
 		}
 
 		progress.Add()
-		docs, err := ParseAls(msg.AbsPath, m)
+		docs, err := ParseAls(m, msg.AbsPath)
 
 		progress.Done()
 		if err != nil {

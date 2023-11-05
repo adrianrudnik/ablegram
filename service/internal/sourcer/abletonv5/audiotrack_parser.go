@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func ParseAudioTracks(m *stats.Metrics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
+func ParseAudioTracks(stat *stats.Statistics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, audioTrack := range data.LiveSet.Tracks.AudioTracks {
@@ -43,7 +43,7 @@ func ParseAudioTracks(m *stats.Metrics, path string, data *Ableton) []*pipeline.
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(id, doc))
 
-		m.CountAudioTrack()
+		stat.IncrementCounter(AbletonAudioTrack)
 	}
 
 	return docs

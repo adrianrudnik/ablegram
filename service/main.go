@@ -82,7 +82,7 @@ func main() {
 
 	// ProcessProgress is responsible in holding the current progress and
 	// notifying the frontend about it
-	stats.Logger = log.With().Str("module", "stats").Logger()
+	stats.Logger = log.With().Str("modulex", "stats").Logger()
 	progress := stats.NewProcessProgress(pusherPipeline.Chan)
 
 	// Kick of the webservice
@@ -94,8 +94,8 @@ func main() {
 		// Set the logger for the UI helper
 		ui.Logger = log.With().Str("module", "ui").Logger()
 
-		// Metrics is responsible in keeping and communicating key metrics for the frontend
-		appMetrics := stats.NewMetrics(pusherPipeline.Chan)
+		// Statistics is responsible in keeping and communicating key metrics for the frontend
+		appMetrics := stats.NewStatistics(appConfig, pusherPipeline.Chan)
 
 		// Start the frontend push worker
 		webservice.Logger = log.With().Str("module", "webservice").Logger()
@@ -109,7 +109,7 @@ func main() {
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
-		parserWorkers := parser.NewWorkerPool(&appConfig.ParserConfig, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
+		parserWorkers := parser.NewWorkerPool(appConfig, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
 		go parserWorkers.Run(progress, appMetrics)
 
 		// Create the indexerWorker

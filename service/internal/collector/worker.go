@@ -23,30 +23,30 @@ func NewWorkerPool(workerCount int, filesChan chan<- *pipeline.FilesForProcessor
 	}
 }
 
-func (wp *WorkerPool) Run(c *config.Config, p *stats.ProcessProgress) {
+func (wp *WorkerPool) Run(conf *config.Config, p *stats.ProcessProgress) {
 	Logger.Info().
 		Int("count", wp.workerCount).
-		Strs("paths", c.Collector.SearchablePaths).
+		Strs("paths", conf.Collector.SearchablePaths).
 		Msg("Starting collector workers")
 
 	// Spool up workers first
 	for i := 0; i < wp.workerCount; i++ {
-		go wp.doWork(c, p)
+		go wp.doWork(conf, p)
 	}
 
 	// Pipe in paths next
-	for _, path := range c.Collector.SearchablePaths {
+	for _, path := range conf.Collector.SearchablePaths {
 		wp.inPathChan <- path
 	}
 }
 
-func (wp *WorkerPool) doWork(c *config.Config, p *stats.ProcessProgress) {
+func (wp *WorkerPool) doWork(conf *config.Config, p *stats.ProcessProgress) {
 	for {
 		select {
 		case path := <-wp.inPathChan:
 			p.Add()
 
-			err := Collect(c, path, wp.outFilesChan, wp.pushChan)
+			err := Collect(conf, path, wp.outFilesChan, wp.pushChan)
 			if err != nil {
 				Logger.Warn().Err(err).Str("path", path).Msg("Failed to collect files")
 			}

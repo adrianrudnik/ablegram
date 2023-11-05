@@ -16,7 +16,7 @@ import (
 
 var versionNumberRegex = regexp.MustCompile(`^(\d+\.)?(\d+\.)?(\d+)`)
 
-func ParseLiveSet(m *stats.Metrics, path string, data *Ableton) *pipeline.DocumentToIndexMsg {
+func ParseLiveSet(stat *stats.Statistics, path string, data *Ableton) *pipeline.DocumentToIndexMsg {
 	// Extract the tags for live sets
 	tags := tagger.NewTagger()
 	tags.AddSystemTag("type:ableton-live-set")
@@ -165,7 +165,7 @@ func ParseLiveSet(m *stats.Metrics, path string, data *Ableton) *pipeline.Docume
 	liveSet.MidiTrackCount = len(data.LiveSet.Tracks.MidiTracks)
 	liveSet.AudioTrackCount = len(data.LiveSet.Tracks.AudioTracks)
 
-	m.CountLiveSet()
+	stat.IncrementCounter(AbletonLiveSet)
 
 	return pipeline.NewDocumentToIndexMsg(tagger.IdHash(path), liveSet)
 }

@@ -7,5 +7,6 @@ func RegisterToIndex(idx *mapping.IndexMappingImpl) {
 	idx.AddDocumentMapping("AudioTrack", buildAudioTrackMapping())
 	idx.AddDocumentMapping("MidiTrack", buildMidiTrackMapping())
 	idx.AddDocumentMapping("ReturnTrack", buildReturnTrackMapping())
+	idx.AddDocumentMapping("GroupTrack", buildGroupTrackMapping())
 	idx.AddDocumentMapping("Clip", buildClipMapping())
 }

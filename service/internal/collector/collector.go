@@ -29,10 +29,10 @@ type Collection struct {
 	files []string
 }
 
-func Collect(c *config.Config, path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+func Collect(conf *config.Config, path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
 	allowedExtensions := []string{".als"}
 
-	err := findFilesByExtension(c, path, allowedExtensions, filesChan, broadcastChan)
+	err := findFilesByExtension(conf, path, allowedExtensions, filesChan, broadcastChan)
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func Collect(c *config.Config, path string, filesChan chan<- *pipeline.FilesForP
 	return nil
 }
 
-func findFilesByExtension(c *config.Config, root string, extensions []string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+func findFilesByExtension(conf *config.Config, root string, extensions []string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
 
 	folders := make([]string, 0, 1000000)
 
@@ -58,13 +58,13 @@ func findFilesByExtension(c *config.Config, root string, extensions []string, fi
 		}
 
 		// Exclude folders beginning with a dot
-		if c.Collector.ExcludeSystemFolders && d.IsDir() && strings.HasPrefix(d.Name(), ".") {
+		if conf.Collector.ExcludeSystemFolders && d.IsDir() && strings.HasPrefix(d.Name(), ".") {
 			Logger.Debug().Str("path", s).Msg("Skipping dot folder")
 			return filepath.SkipDir
 		}
 
 		// Exclude paths by prefix
-		if c.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludePaths, func(f string) bool {
+		if conf.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludePaths, func(f string) bool {
 			return strings.HasPrefix(s, f)
 		}) != -1 {
 			Logger.Debug().Str("path", s).Msg("Skipping excluded path")
@@ -72,7 +72,7 @@ func findFilesByExtension(c *config.Config, root string, extensions []string, fi
 		}
 
 		// Exclude folders by name
-		if c.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludeFolders, func(s string) bool {
+		if conf.Collector.ExcludeSystemFolders && d.IsDir() && slices.IndexFunc(excludeFolders, func(s string) bool {
 			return s == filepath.Base(d.Name())
 		}) != -1 {
 			Logger.Debug().Str("path", s).Msg("Skipping excluded folder")
@@ -99,7 +99,7 @@ func findFilesByExtension(c *config.Config, root string, extensions []string, fi
 		return nil
 	})
 
-	if c.Log.ScannedFolders {
+	if conf.Log.ScannedFolders {
 		scanLogPath := config.GetRelativeFilePath(".scanned-folders.log")
 		lines := strings.Join([]string(folders), "\n")
 		err := os.WriteFile(scanLogPath, []byte(lines), 0666)

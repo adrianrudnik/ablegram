@@ -11,7 +11,7 @@ import (
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-func parseAlsV5(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, error) {
+func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToIndexMsg, error) {
 	rawContent, err := extractGzip(path)
 	if err != nil {
 		return nil, err
@@ -27,23 +27,25 @@ func parseAlsV5(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, 
 	// Create a slice to hold all documents that we out of the XML information
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 50)
 
-	docs = append(docs, abletonv5.ParseLiveSet(m, path, &data))
-	docs = append(docs, abletonv5.ParseMidiTracks(m, path, &data)...)
-	docs = append(docs, abletonv5.ParseAudioTracks(m, path, &data)...)
-	docs = append(docs, abletonv5.ParseReturnTracks(m, path, &data)...)
+	docs = append(docs, abletonv5.ParseLiveSet(stat, path, &data))
+	docs = append(docs, abletonv5.ParseMidiTracks(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseAudioTracks(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseReturnTracks(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseGroupTrack(stat, path, &data)...)
 
 	return docs, nil
 }
 
-func ParseAls(path string, m *stats.Metrics) ([]*pipeline.DocumentToIndexMsg, error) {
+func ParseAls(stat *stats.Statistics, path string) ([]*pipeline.DocumentToIndexMsg, error) {
 	Logger.Debug().Str("path", path).Msg("Start processing")
 
-	r, err := parseAlsV5(path, m)
+	r, err := parseAlsV5(stat, path)
 	if err != nil {
-		go m.CountInvalidFile()
+		stat.IncrementCounter(stats.FileInvalid)
 		return nil, err
 	}
 
-	m.CountValidFile()
+	stat.IncrementCounter(stats.FileValid)
+
 	return r, nil
 }

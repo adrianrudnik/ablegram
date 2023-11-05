@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func ParseMidiTracks(m *stats.Metrics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
+func ParseMidiTracks(stat *stats.Statistics, path string, data *Ableton) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, midiTrack := range data.LiveSet.Tracks.MidiTracks {
@@ -43,7 +43,7 @@ func ParseMidiTracks(m *stats.Metrics, path string, data *Ableton) []*pipeline.D
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(id, doc))
 
-		m.CountMidiTrack()
+		stat.IncrementCounter(AbletonMidiTrack)
 	}
 
 	return docs

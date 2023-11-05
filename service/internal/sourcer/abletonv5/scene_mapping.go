@@ -5,12 +5,14 @@ import (
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
-func buildMixerMapping() *mapping.DocumentMapping {
+func buildSceneMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
-	createFileReferenceMappings(m)
+	createBaseMappings(m)
 	createUserNameMapping(m)
+	createColorMapping(m)
 	createUserInfoTextMapping(m)
+	createTempoWithToggle(m)
 
 	return m
 }

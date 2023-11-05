@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/util"
+	"math"
 	"path/filepath"
 )
 
@@ -92,7 +93,7 @@ type HasTrackUserNames struct {
 func NewHasTrackUserNames() *HasTrackUserNames {
 	return &HasTrackUserNames{
 		HasUserName:     NewHasUserName(),
-		HasUserInfoText: NewHasUserInfo(),
+		HasUserInfoText: NewHasUserInfoText(),
 	}
 }
 
@@ -140,6 +141,42 @@ func (a *HasUserInfoText) LoadUserInfoText(v string, t *tagger.Tagger) {
 	}
 }
 
-func NewHasUserInfo() *HasUserInfoText {
+func NewHasUserInfoText() *HasUserInfoText {
 	return &HasUserInfoText{}
+}
+
+type HasTempo struct {
+	Tempo float64 `json:"tempo,omitempty"`
+}
+
+type HasTempoWithToggle struct {
+	Tempo        float64 `json:"tempo,omitempty"`
+	TempoEnabled bool    `json:"tempoEnabled,omitempty"`
+}
+
+func NewHasTempoWithToggle() *HasTempoWithToggle {
+	return &HasTempoWithToggle{
+		Tempo:        0,
+		TempoEnabled: false,
+	}
+}
+
+func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggle, tags *tagger.Tagger) {
+	t.Tempo = v.Tempo.Value
+	t.TempoEnabled = v.TempoEnabled.Value
+
+	if (v.Tempo.Value > 0) && v.TempoEnabled.Value {
+		if math.Trunc(v.Tempo.Value) == v.Tempo.Value {
+			// If we have a rounded tempo, we just need to add one tag
+			tags.AddSystemTag(fmt.Sprintf("beat:tempo:%d", int(math.Round(v.Tempo.Value))))
+		} else {
+			// Otherwise it's a weird file where the tempo is a fraction, like in some XmlRoot delivered ALS files.
+			// We just add both rounded values to the tags
+			tags.AddSystemTag(fmt.Sprintf("beat:tempo:%d", int(math.Floor(v.Tempo.Value))))
+			tags.AddSystemTag(fmt.Sprintf("beat:tempo:%d", int(math.Ceil(v.Tempo.Value))))
+		}
+		tags.AddSystemTag("tempo:has-tempo")
+	} else {
+		tags.AddSystemTag("tempo:no-tempo")
+	}
 }

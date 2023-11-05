@@ -1,12 +1,14 @@
 package abletonv5
 
 const (
-	AbletonLiveSet     = "AbletonLiveSet"
-	AbletonMidiTrack   = "AbletonMidiTrack"
-	AbletonAudioTrack  = "AbletonAudioTrack"
-	AbletonReturnTrack = "AbletonReturnTrack"
-	AbletonGroupTrack  = "AbletonGroupTrack"
-	AbletonClip        = "AbletonClip"
-	AbletonMixer       = "AbletonMixer"
-	AbletonDeviceChain = "AbletonDeviceChain"
+	AbletonLiveSet      = "AbletonLiveSet"
+	AbletonMidiTrack    = "AbletonMidiTrack"
+	AbletonAudioTrack   = "AbletonAudioTrack"
+	AbletonReturnTrack  = "AbletonReturnTrack"
+	AbletonGroupTrack   = "AbletonGroupTrack"
+	AbletonPreHearTrack = "AbletonPreHearTrack"
+	AbletonClip         = "AbletonClip"
+	AbletonMixer        = "AbletonMixer"
+	AbletonDeviceChain  = "AbletonDeviceChain"
+	AbletonScene        = "AbletonScene"
 )

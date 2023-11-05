@@ -28,6 +28,10 @@ func ParseDeviceChains(stat *stats.Statistics, path string, data *XmlRoot) []*pi
 		found = append(found, returnTrack.DeviceChain)
 	}
 
+	for _, preHearTrack := range data.LiveSet.Tracks.PreHearTrack {
+		found = append(found, preHearTrack.DeviceChain)
+	}
+
 	for _, dc := range found {
 		tags := tagger.NewTagger()
 		tags.AddSystemTag("type:ableton-device-chain")

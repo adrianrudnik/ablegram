@@ -8,10 +8,14 @@ import (
 var idGenerator atomic.Uint64
 
 func RegisterToIndex(idx *mapping.IndexMappingImpl) {
-	idx.AddDocumentMapping("XmlLiveSet", buildLiveSetMapping())
-	idx.AddDocumentMapping("XmlAudioTrack", buildAudioTrackMapping())
-	idx.AddDocumentMapping("XmlMidiTrack", buildMidiTrackMapping())
-	idx.AddDocumentMapping("XmlReturnTrack", buildReturnTrackMapping())
-	idx.AddDocumentMapping("XmlGroupTrack", buildGroupTrackMapping())
-	idx.AddDocumentMapping("Clip", buildClipMapping())
+	idx.AddDocumentMapping(AbletonLiveSet, buildLiveSetMapping())
+	idx.AddDocumentMapping(AbletonMidiTrack, buildMidiTrackMapping())
+	idx.AddDocumentMapping(AbletonAudioTrack, buildAudioTrackMapping())
+	idx.AddDocumentMapping(AbletonReturnTrack, buildReturnTrackMapping())
+	idx.AddDocumentMapping(AbletonGroupTrack, buildGroupTrackMapping())
+	idx.AddDocumentMapping(AbletonPreHearTrack, buildPreHearTrackMapping())
+	idx.AddDocumentMapping(AbletonClip, buildClipMapping())
+	idx.AddDocumentMapping(AbletonMixer, buildMixerMapping())
+	idx.AddDocumentMapping(AbletonDeviceChain, buildDeviceChainMapping())
+	idx.AddDocumentMapping(AbletonScene, buildSceneMapping())
 }

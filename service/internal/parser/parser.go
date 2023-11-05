@@ -32,8 +32,10 @@ func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToInde
 	docs = append(docs, abletonv5.ParseAudioTracks(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseReturnTracks(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseGroupTracks(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParsePreHearTracks(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseMixerDocuments(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseDeviceChains(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseScenes(stat, path, &data)...)
 
 	return docs, nil
 }

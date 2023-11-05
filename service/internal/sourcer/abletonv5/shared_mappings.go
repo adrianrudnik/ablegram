@@ -53,13 +53,13 @@ func createUserNameMapping(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("userName", mapping.NewKeywordFieldMapping())
 }
 
-func createAnnotationMapping(im *mapping.DocumentMapping) {
+func createUserInfoTextMapping(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("annotation", mapping.NewTextFieldMapping())
 }
 
 func createFullNameMapping(im *mapping.DocumentMapping) {
 	createUserNameMapping(im)
-	createAnnotationMapping(im)
+	createUserInfoTextMapping(im)
 
 	im.AddFieldMappingsAt("displayName", NewFulltextTextFieldMapping(true))
 	im.AddFieldMappingsAt("effectiveName", NewFulltextTextFieldMapping(false))
@@ -70,12 +70,18 @@ func createSharedTrackMappings(im *mapping.DocumentMapping) {
 	createBaseMappings(im)
 	createFileReferenceMappings(im)
 	createFullNameMapping(im)
-
 	createColorMapping(im)
+}
 
+func createFrozenMapping(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("frozen", mapping.NewBooleanFieldMapping())
 }
 
 func createColorMapping(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("color", mapping.NewNumericFieldMapping())
+}
+
+func createTempoWithToggle(im *mapping.DocumentMapping) {
+	im.AddFieldMappingsAt("tempo", mapping.NewNumericFieldMapping())
+	im.AddFieldMappingsAt("tempoEnabled", mapping.NewBooleanFieldMapping())
 }

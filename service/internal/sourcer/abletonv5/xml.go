@@ -19,6 +19,7 @@ type XmlRoot struct {
 type XmlLiveSet struct {
 	XMLName          xml.Name            `xml:"LiveSet"`
 	Tracks           XmlTracks           `xml:"Tracks"`
+	Scenes           []XmlScene          `xml:"Scenes"`
 	ScaleInformation XmlScaleInformation `xml:"ScaleInformation"`
 	InKey            XmlBooleanValue     `xml:"InKey"`
 	MasterTrack      XmlMasterTrack      `xml:"MasterTrack"`
@@ -26,10 +27,11 @@ type XmlLiveSet struct {
 }
 
 type XmlTracks struct {
-	MidiTracks   []XmlMidiTrack   `xml:"MidiTrack"`
-	AudioTracks  []XmlAudioTrack  `xml:"AudioTrack"`
-	ReturnTracks []XmlReturnTrack `xml:"ReturnTrack"`
-	GroupTracks  []XmlGroupTrack  `xml:"GroupTrack"`
+	MidiTracks   []XmlMidiTrack    `xml:"MidiTrack"`
+	AudioTracks  []XmlAudioTrack   `xml:"AudioTrack"`
+	ReturnTracks []XmlReturnTrack  `xml:"ReturnTrack"`
+	GroupTracks  []XmlGroupTrack   `xml:"GroupTrack"`
+	PreHearTrack []XmlPreHearTrack `xml:"PreHearTrack"`
 }
 
 type XmlMidiTrack struct {
@@ -61,13 +63,20 @@ type XmlReturnTrack struct {
 type XmlGroupTrack struct {
 	Id          int64          `xml:"Id,attr"`
 	Name        XmlFullName    `xml:"Name"`
-	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
 	Color       XmlColorValue  `xml:"Color"`
+	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
+}
+
+type XmlPreHearTrack struct {
+	Id          int64          `xml:"Id,attr"`
+	Name        XmlFullName    `xml:"Name"`
+	Color       XmlColorValue  `xml:"Color"`
+	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
 }
 
 type XmlFullName struct {
-	*XmlUserName
-	*XmlAnnotation
+	XmlUserName
+	XmlAnnotation
 
 	EffectiveName          XmlStringValue
 	MemorizedFirstClipName XmlStringValue
@@ -78,7 +87,7 @@ type XmlUserName struct {
 }
 
 type XmlAnnotation struct {
-	Annotation XmlStringValue
+	Annotation XmlStringValue `name:"Annotation"`
 }
 
 type XmlScaleInformation struct {
@@ -114,19 +123,32 @@ func (dl *XmlDeviceList) GetCount() uint64 {
 }
 
 type XmlReverbDevice struct {
-	*XmlUserName
-	*XmlAnnotation
+	XmlUserName
+	XmlAnnotation
 }
 
 type XmlDelayDevice struct {
-	*XmlUserName
-	*XmlAnnotation
+	XmlUserName
+	XmlAnnotation
 }
 
 type XmlMixer struct {
-	*XmlUserName
-	*XmlAnnotation
+	XmlUserName
+	XmlAnnotation
 	Tempo XmlTempo `xml:"Tempo"`
+}
+
+type XmlScene struct {
+	Id XmlIntValue `xml:"Id"`
+	XmlAnnotation
+	XmlTempoWithToggle
+	Name  XmlStringValue `xml:"Name"`
+	Color XmlColorValue  `xml:"Color"`
+}
+
+type XmlTempoWithToggle struct {
+	Tempo        XmlIntValue     `xml:"Tempo"`
+	TempoEnabled XmlBooleanValue `xml:"TempoEnabled"`
 }
 
 type XmlTempo struct {
@@ -138,7 +160,7 @@ type XmlStringValue struct {
 }
 
 type XmlIntValue struct {
-	Value int64 `xml:"Value,attr"`
+	Value float64 `xml:"Value,attr"`
 }
 
 type XmlFloatValue struct {

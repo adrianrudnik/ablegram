@@ -12,6 +12,6 @@ func NewMixerDocument() *MixerDocument {
 		HasBase:          NewHasBase(AbletonMixer),
 		HasFileReference: NewHasFileReference(),
 		HasUserName:      NewHasUserName(),
-		HasUserInfoText:  NewHasUserInfo(),
+		HasUserInfoText:  NewHasUserInfoText(),
 	}
 }

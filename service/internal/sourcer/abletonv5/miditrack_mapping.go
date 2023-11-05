@@ -9,6 +9,7 @@ func buildMidiTrackMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createSharedTrackMappings(m)
+	createFrozenMapping(m)
 
 	return m
 }

@@ -5,12 +5,10 @@ import (
 	"github.com/blevesearch/bleve/v2/mapping"
 )
 
-func buildMixerMapping() *mapping.DocumentMapping {
+func buildPreHearTrackMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
-	createFileReferenceMappings(m)
-	createUserNameMapping(m)
-	createUserInfoTextMapping(m)
+	createSharedTrackMappings(m)
 
 	return m
 }

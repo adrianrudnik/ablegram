@@ -9,6 +9,7 @@ import (
 	"github.com/djherbis/times"
 	"github.com/duaneking/gozodiacs"
 	"math"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -136,30 +137,45 @@ func tagLiveSetTracks(data *XmlRoot, tags *tagger.Tagger) {
 }
 
 func tagLiveSetPath(path string, tags *tagger.Tagger) {
-	simplePath := strings.ToLower(filepath.ToSlash(path))
+	// Determine the overall location of the file
+	homeDir, err := os.UserHomeDir()
+	if err == nil {
+		if strings.HasPrefix(path, homeDir) {
+			tags.Add("file:location=inside-user-home")
+		} else {
+			tags.Add("file:location=outside-user-home")
+		}
+	}
+
+	// Backups can be caught by a path pattern like
+	// ".../samples/Backup/MIDI Effect Arpeggiator [2023-11-06 163730].als"
+	found, err := regexp.MatchString(`Backup[/\\](.*)\[\d{4}-\d{2}-\d{2} \d{6}]`, path)
+	if err == nil && found {
+		tags.Add("file:location=ableton-backup")
+	}
+
+	if util.PathContainsFolder(path, "Trash") || util.PathContainsFolder(path, "$Recycle.Bin") {
+		tags.Add("file:location=trash")
+	}
+
+	if util.PathContainsFolder(path, "pCloudDrive") {
+		tags.Add("file:location=p-cloud")
+	}
 
 	if util.PathContainsFolder(path, "Live Recordings") {
 		tags.Add("file:location=ableton-live-recording")
 	}
 
-	if util.PathContainsFolder(path, "Trash") || util.PathContainsFolder(path, "$Recycle.Bin") {
-		tags.Add("file:location=trash")
-	} else if util.PathContainsFolder(path, "Factory Packs") {
-		tags.Add("file:location=factory-pack")
-	} else if util.PathContainsFolder(path, "Cloud Manager") {
-		tags.Add("file:location=cloud-manager")
-	} else if util.PathContainsFolder(path, "User Library") {
-		tags.Add("file:location=user-library")
-	} else if strings.Contains(simplePath, "/dropbox") {
-		tags.Add("file:location=dropbox")
-	} else if strings.Contains(simplePath, "/onedrive") {
-		tags.Add("file:location=onedrive")
-	} else if strings.Contains(simplePath, "/google drive") {
-		tags.Add("file:location=google-drive")
-	} else if strings.Contains(simplePath, "/pCloudDrive") {
-		tags.Add("file:location=pcloud")
-	} else {
-		tags.Add("file:location=elsewhere")
+	if util.PathContainsFolder(path, "Factory Packs") {
+		tags.Add("file:location=ableton-factory-pack")
+	}
+
+	if util.PathContainsFolder(path, "Cloud Manager") {
+		tags.Add("file:location=ableton-cloud-manager")
+	}
+
+	if util.PathContainsFolder(path, "User Library") {
+		tags.Add("file:location=ableton-user-library")
 	}
 }
 

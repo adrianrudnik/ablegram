@@ -73,9 +73,9 @@ func (u *HasUserName) LoadUserName(v string, t *tagger.Tagger) {
 
 	if t != nil {
 		if !empty {
-			t.Add("info:has-user-name")
+			t.Add("user:name=true")
 		} else {
-			t.Add("info:no-user-name")
+			t.Add("user:name=false")
 		}
 	}
 }
@@ -134,9 +134,9 @@ func (a *HasUserInfoText) LoadUserInfoText(v string, t *tagger.Tagger) {
 
 	if t != nil {
 		if !empty {
-			t.Add("info:has-user-memo")
+			t.Add("user:memo=true")
 		} else {
-			t.Add("info:no-user-memo")
+			t.Add("user:memo=false")
 		}
 	}
 }
@@ -168,15 +168,12 @@ func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggle, tags *ta
 	if (v.Tempo.Value > 0) && v.TempoEnabled.Value {
 		if math.Trunc(v.Tempo.Value) == v.Tempo.Value {
 			// If we have a rounded tempo, we just need to add one tag
-			tags.Add(fmt.Sprintf("beat:tempo:%d", int(math.Round(v.Tempo.Value))))
+			tags.Add(fmt.Sprintf("bpm:%d", int(math.Round(v.Tempo.Value))))
 		} else {
 			// Otherwise it's a weird file where the tempo is a fraction, like in some XmlRoot delivered ALS files.
 			// We just add both rounded values to the tags
-			tags.Add(fmt.Sprintf("beat:tempo:%d", int(math.Floor(v.Tempo.Value))))
-			tags.Add(fmt.Sprintf("beat:tempo:%d", int(math.Ceil(v.Tempo.Value))))
+			tags.Add(fmt.Sprintf("bpm:%d", int(math.Floor(v.Tempo.Value))))
+			tags.Add(fmt.Sprintf("bpm:%d", int(math.Ceil(v.Tempo.Value))))
 		}
-		tags.Add("tempo:has-tempo")
-	} else {
-		tags.Add("tempo:no-tempo")
 	}
 }

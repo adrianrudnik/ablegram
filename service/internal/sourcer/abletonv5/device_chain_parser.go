@@ -13,6 +13,11 @@ func ParseTrackDeviceChains(stat *stats.Statistics, path string, data *XmlRoot) 
 		tags := tagger.NewTagger()
 		tags.Add("type:ableton-device-chain")
 
+		// Consider a device chain empty if no devices are present
+		if dc.DeviceChain.Devices.GetCount() == 0 {
+			continue
+		}
+
 		doc := NewDeviceChainDocument()
 		doc.LoadDisplayName([]string{AbletonDeviceChain})
 		doc.LoadFileReference(path, tags)

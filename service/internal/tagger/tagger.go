@@ -31,9 +31,6 @@ func (t *Tagger) Add(tag string) {
 	}
 
 	t.tags = append(t.tags, fmt.Sprintf("%s", tag))
-
-	collectBaseTag(tag)
-	collectDetailedTag(tag)
 }
 
 func (t *Tagger) GetAll() []string {
@@ -43,8 +40,17 @@ func (t *Tagger) GetAll() []string {
 	return v
 }
 
-func (t *Tagger) GetAllAndClear() []string {
+// Engrave the tags to the global tag counters, creates a final slice and clears the current tagger
+func (t *Tagger) Engrave() []string {
 	v := t.GetAll()
+
+	// Collect the tags to the global tag counters
+	for _, tag := range v {
+		collectBaseTag(tag)
+		collectDetailedTag(tag)
+	}
+
+	// Empty the current one
 	t.tags = make([]string, 0, 20)
 
 	return v

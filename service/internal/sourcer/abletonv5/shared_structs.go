@@ -32,7 +32,7 @@ func (b *HasBase) GetAutoId() string {
 }
 
 func (b *HasBase) EngraveTags(t *tagger.Tagger) {
-	b.Tags = t.GetAllAndClear()
+	b.Tags = t.Engrave()
 }
 
 func NewHasBase(t string) HasBase {

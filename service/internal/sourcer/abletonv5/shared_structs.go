@@ -46,7 +46,7 @@ type HasFileReference struct {
 	Filename     string `json:"filename,omitempty"`
 }
 
-func (r HasFileReference) LoadFileReference(path string, t *tagger.Tagger) {
+func (r *HasFileReference) LoadFileReference(path string, t *tagger.Tagger) {
 	r.PathAbsolute = path
 	r.PathFolder = filepath.Dir(path)
 	r.Filename = filepath.Base(path)
@@ -64,7 +64,7 @@ func NewHasUserName() HasUserName {
 	return HasUserName{}
 }
 
-func (u HasUserName) LoadUserName(v string, t *tagger.Tagger) {
+func (u *HasUserName) LoadUserName(v string, t *tagger.Tagger) {
 	m, empty := util.EvaluateUserInput(v)
 
 	if !empty {
@@ -73,9 +73,9 @@ func (u HasUserName) LoadUserName(v string, t *tagger.Tagger) {
 
 	if t != nil {
 		if !empty {
-			t.AddSystemTag("info:has-user-name")
+			t.Add("info:has-user-name")
 		} else {
-			t.AddSystemTag("info:no-user-name")
+			t.Add("info:no-user-name")
 		}
 	}
 }
@@ -97,7 +97,7 @@ func NewHasTrackUserNames() HasTrackUserNames {
 	}
 }
 
-func (f HasTrackUserNames) LoadTrackUserNames(v *XmlFullName, t *tagger.Tagger) {
+func (f *HasTrackUserNames) LoadTrackUserNames(v *XmlFullName, t *tagger.Tagger) {
 	f.LoadUserName(v.UserName.Value, t)
 	f.LoadUserInfoText(v.Annotation.Value, t)
 
@@ -114,10 +114,10 @@ func NewHasColor() HasColor {
 	return HasColor{}
 }
 
-func (c HasColor) LoadColor(v int16, t *tagger.Tagger) {
+func (c *HasColor) LoadColor(v int16, t *tagger.Tagger) {
 	c.Color = v
 
-	t.AddSystemTag(fmt.Sprintf("color:ableton:%d", v))
+	t.Add(fmt.Sprintf("color:ableton=%d", v))
 }
 
 // HasUserInfoText represents an element that can be annotated by the user, also known as "Info Text".
@@ -125,7 +125,7 @@ type HasUserInfoText struct {
 	Annotation string `json:"annotation,omitempty"`
 }
 
-func (a HasUserInfoText) LoadUserInfoText(v string, t *tagger.Tagger) {
+func (a *HasUserInfoText) LoadUserInfoText(v string, t *tagger.Tagger) {
 	m, empty := util.EvaluateUserInput(v)
 
 	if !empty {
@@ -134,9 +134,9 @@ func (a HasUserInfoText) LoadUserInfoText(v string, t *tagger.Tagger) {
 
 	if t != nil {
 		if !empty {
-			t.AddSystemTag("info:has-user-memo")
+			t.Add("info:has-user-memo")
 		} else {
-			t.AddSystemTag("info:no-user-memo")
+			t.Add("info:no-user-memo")
 		}
 	}
 }
@@ -161,22 +161,22 @@ func NewHasTempoWithToggle() HasTempoWithToggle {
 	}
 }
 
-func (t HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggle, tags *tagger.Tagger) {
+func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggle, tags *tagger.Tagger) {
 	t.Tempo = v.Tempo.Value
 	t.TempoEnabled = v.TempoEnabled.Value
 
 	if (v.Tempo.Value > 0) && v.TempoEnabled.Value {
 		if math.Trunc(v.Tempo.Value) == v.Tempo.Value {
 			// If we have a rounded tempo, we just need to add one tag
-			tags.AddSystemTag(fmt.Sprintf("beat:tempo:%d", int(math.Round(v.Tempo.Value))))
+			tags.Add(fmt.Sprintf("beat:tempo:%d", int(math.Round(v.Tempo.Value))))
 		} else {
 			// Otherwise it's a weird file where the tempo is a fraction, like in some XmlRoot delivered ALS files.
 			// We just add both rounded values to the tags
-			tags.AddSystemTag(fmt.Sprintf("beat:tempo:%d", int(math.Floor(v.Tempo.Value))))
-			tags.AddSystemTag(fmt.Sprintf("beat:tempo:%d", int(math.Ceil(v.Tempo.Value))))
+			tags.Add(fmt.Sprintf("beat:tempo:%d", int(math.Floor(v.Tempo.Value))))
+			tags.Add(fmt.Sprintf("beat:tempo:%d", int(math.Ceil(v.Tempo.Value))))
 		}
-		tags.AddSystemTag("tempo:has-tempo")
+		tags.Add("tempo:has-tempo")
 	} else {
-		tags.AddSystemTag("tempo:no-tempo")
+		tags.Add("tempo:no-tempo")
 	}
 }

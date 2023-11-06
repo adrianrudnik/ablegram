@@ -30,7 +30,7 @@ func ParseMixerDocuments(stat *stats.Statistics, path string, data *XmlRoot) []*
 
 	for _, mx := range found {
 		tags := tagger.NewTagger()
-		tags.AddSystemTag("type:ableton-mixer")
+		tags.Add("type:ableton-mixer")
 
 		doc := NewMixerDocument()
 		doc.LoadDisplayName([]string{AbletonMixer})

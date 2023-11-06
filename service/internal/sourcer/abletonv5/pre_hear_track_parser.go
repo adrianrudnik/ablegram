@@ -11,7 +11,7 @@ func ParsePreHearTracks(stat *stats.Statistics, path string, data *XmlRoot) []*p
 
 	for _, returnTrack := range data.LiveSet.Tracks.PreHearTrack {
 		tags := tagger.NewTagger()
-		tags.AddSystemTag("type:ableton-pre-hear-track")
+		tags.Add("type:ableton-pre-hear-track")
 
 		doc := NewPreHearTrackDocument()
 		doc.LoadDisplayName([]string{

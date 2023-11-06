@@ -11,4 +11,8 @@ const (
 	AbletonMixer        = "AbletonMixer"
 	AbletonDeviceChain  = "AbletonDeviceChain"
 	AbletonScene        = "AbletonScene"
+
+	// Devices
+
+	AbletonMidiArpeggiatorDevice = "AbletonMidiArpeggiatorDevice"
 )

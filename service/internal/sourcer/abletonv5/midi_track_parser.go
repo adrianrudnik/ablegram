@@ -11,7 +11,7 @@ func ParseMidiTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pipe
 
 	for _, midiTrack := range data.LiveSet.Tracks.MidiTracks {
 		tags := tagger.NewTagger()
-		tags.AddSystemTag("type:ableton-midi-track")
+		tags.Add("type:ableton-midi-track")
 
 		doc := NewMidiTrackDocument()
 		doc.LoadDisplayName([]string{

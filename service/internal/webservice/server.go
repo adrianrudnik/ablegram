@@ -4,6 +4,7 @@ import (
 	"embed"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
+	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
 	"github.com/gin-contrib/cors"
@@ -118,6 +119,14 @@ func Serve(conf *config.Config, indexer *indexer.Search, pushChan *PushChannel, 
 func registerApiRoutes(rg *gin.RouterGroup) {
 	rg.GET("/status", func(c *gin.Context) {
 		c.String(200, "pong")
+	})
+
+	rg.GET("/tags", func(c *gin.Context) {
+		if c.Query("verbose") != "" {
+			c.JSON(200, tagger.GetDetailedTags())
+		} else {
+			c.JSON(200, tagger.GetBaseTags())
+		}
 	})
 
 	rg.POST("/open", func(c *gin.Context) {

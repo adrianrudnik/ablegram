@@ -11,7 +11,7 @@ func ParseAudioTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pip
 
 	for _, audioTrack := range data.LiveSet.Tracks.AudioTracks {
 		tags := tagger.NewTagger()
-		tags.AddSystemTag("type:ableton-audio-track")
+		tags.Add("type:ableton-audio-track")
 
 		doc := NewAudioTrackDocument()
 		doc.LoadDisplayName([]string{

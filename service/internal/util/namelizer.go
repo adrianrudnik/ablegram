@@ -7,7 +7,11 @@ import (
 
 func Namelize(parts []string) string {
 	if len(parts) == 0 {
-		return "[empty]"
+		return ""
+	}
+
+	if len(parts) == 1 {
+		return parts[0]
 	}
 
 	parts = lo.Uniq(parts)

@@ -16,62 +16,8 @@ type XmlRoot struct {
 	LiveSet XmlLiveSet `xml:"LiveSet"`
 }
 
-type XmlLiveSet struct {
-	XMLName          xml.Name            `xml:"LiveSet"`
-	Tracks           XmlTracks           `xml:"Tracks"`
-	Scenes           []XmlScene          `xml:"Scenes"`
-	ScaleInformation XmlScaleInformation `xml:"ScaleInformation"`
-	InKey            XmlBooleanValue     `xml:"InKey"`
-	MasterTrack      XmlMasterTrack      `xml:"MasterTrack"`
-	Annotation       XmlStringValue      `xml:"Annotation"`
-}
-
-type XmlTracks struct {
-	MidiTracks   []XmlMidiTrack    `xml:"MidiTrack"`
-	AudioTracks  []XmlAudioTrack   `xml:"AudioTrack"`
-	ReturnTracks []XmlReturnTrack  `xml:"ReturnTrack"`
-	GroupTracks  []XmlGroupTrack   `xml:"GroupTrack"`
-	PreHearTrack []XmlPreHearTrack `xml:"PreHearTrack"`
-}
-
-type XmlMidiTrack struct {
-	Id     int64           `xml:"Id,attr"`
-	Name   XmlFullName     `xml:"Name"`
-	Color  XmlColorValue   `xml:"Color"`
-	Frozen XmlBooleanValue `xml:"Freeze"`
-
-	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
-}
-
-type XmlAudioTrack struct {
-	Id     int64           `xml:"Id,attr"`
-	Name   XmlFullName     `xml:"Name"`
-	Color  XmlColorValue   `xml:"Color"`
-	Frozen XmlBooleanValue `xml:"Freeze"`
-
-	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
-}
-
-type XmlReturnTrack struct {
-	Id    int64         `xml:"Id,attr"`
-	Name  XmlFullName   `xml:"Name"`
-	Color XmlColorValue `xml:"Color"`
-
-	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
-}
-
-type XmlGroupTrack struct {
-	Id          int64          `xml:"Id,attr"`
-	Name        XmlFullName    `xml:"Name"`
-	Color       XmlColorValue  `xml:"Color"`
-	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
-}
-
-type XmlPreHearTrack struct {
-	Id          int64          `xml:"Id,attr"`
-	Name        XmlFullName    `xml:"Name"`
-	Color       XmlColorValue  `xml:"Color"`
-	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
+type XmlId struct {
+	Id int64 `xml:"Id,attr"`
 }
 
 type XmlFullName struct {
@@ -88,62 +34,6 @@ type XmlUserName struct {
 
 type XmlAnnotation struct {
 	Annotation XmlStringValue `name:"Annotation"`
-}
-
-type XmlScaleInformation struct {
-	RootNote XmlIntValue    `xml:"RootNote"`
-	Name     XmlStringValue `xml:"Name"`
-}
-
-func (s *XmlScaleInformation) HumanizeRootNote() string {
-	switch s.RootNote.Value {
-	case 0:
-		return "c"
-	}
-
-	return "unknown"
-}
-
-type XmlMasterTrack struct {
-	DeviceChain XmlDeviceChain `xml:"DeviceChain"`
-}
-
-type XmlDeviceChain struct {
-	Mixer   XmlMixer      `xml:"Mixer"`
-	Devices XmlDeviceList `xml:"Devices"`
-}
-
-type XmlDeviceList struct {
-	Reverb []XmlReverbDevice `xml:"Reverb"`
-	Delay  []XmlDelayDevice  `xml:"Delay"`
-}
-
-func (dl *XmlDeviceList) GetCount() uint64 {
-	return uint64(len(dl.Reverb) + len(dl.Delay))
-}
-
-type XmlReverbDevice struct {
-	XmlUserName
-	XmlAnnotation
-}
-
-type XmlDelayDevice struct {
-	XmlUserName
-	XmlAnnotation
-}
-
-type XmlMixer struct {
-	XmlUserName
-	XmlAnnotation
-	Tempo XmlTempo `xml:"Tempo"`
-}
-
-type XmlScene struct {
-	Id XmlIntValue `xml:"Id"`
-	XmlAnnotation
-	XmlTempoWithToggle
-	Name  XmlStringValue `xml:"Name"`
-	Color XmlColorValue  `xml:"Color"`
 }
 
 type XmlTempoWithToggle struct {

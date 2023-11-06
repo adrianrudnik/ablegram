@@ -56,7 +56,7 @@ func NewSearch() *Search {
 
 	indexMapping.DefaultAnalyzer = en.AnalyzerName
 
-	abletonv5.RegisterToIndex(indexMapping)
+	abletonv5.RegisterDocumentMappings(indexMapping)
 
 	Logger.Info().Msg("Index documents mapped")
 

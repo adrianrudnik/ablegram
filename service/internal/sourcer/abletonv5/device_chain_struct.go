@@ -4,7 +4,7 @@ type DeviceChainDocument struct {
 	HasBase
 	HasFileReference
 
-	DeviceCount uint64 `json:"device_count"`
+	DeviceCount int `json:"device_count"`
 }
 
 func NewDeviceChainDocument() *DeviceChainDocument {

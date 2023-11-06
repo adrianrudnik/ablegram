@@ -6,27 +6,27 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseGroupTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseReturnTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
-	for _, groupTrack := range data.LiveSet.Tracks.GroupTracks {
+	for _, returnTrack := range data.LiveSet.Tracks.ReturnTracks {
 		tags := tagger.NewTagger()
-		tags.AddSystemTag("type:ableton-group-track")
+		tags.Add("type:ableton-return-track")
 
 		doc := NewReturnTrackDocument()
 		doc.LoadDisplayName([]string{
-			groupTrack.Name.UserName.Value,
-			groupTrack.Name.EffectiveName.Value,
+			returnTrack.Name.UserName.Value,
+			returnTrack.Name.EffectiveName.Value,
 		})
 		doc.LoadFileReference(path, tags)
-		doc.LoadTrackUserNames(&groupTrack.Name, tags)
-		doc.LoadColor(groupTrack.Color.Value, tags)
+		doc.LoadTrackUserNames(&returnTrack.Name, tags)
+		doc.LoadColor(returnTrack.Color.Value, tags)
 
 		doc.EngraveTags(tags)
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 
-		stat.IncrementCounter(AbletonGroupTrack)
+		stat.IncrementCounter(AbletonReturnTrack)
 	}
 
 	return docs

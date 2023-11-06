@@ -12,7 +12,7 @@ func ParseScenes(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline
 
 	for _, scene := range data.LiveSet.Scenes {
 		tags := tagger.NewTagger()
-		tags.AddSystemTag("type:ableton-scene")
+		tags.Add("type:ableton-scene")
 
 		doc := NewSceneDocument()
 		doc.LoadDisplayName([]string{

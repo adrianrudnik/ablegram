@@ -1,10 +1,10 @@
 package abletonv5
 
 type AudioTrackDocument struct {
-	*HasBase
-	*HasFileReference
-	*HasTrackUserNames
-	*HasColor
+	HasBase
+	HasFileReference
+	HasTrackUserNames
+	HasColor
 
 	Frozen bool `json:"frozen,omitempty"`
 }

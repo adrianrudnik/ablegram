@@ -1,10 +1,10 @@
 package abletonv5
 
 type GroupTrackDocument struct {
-	*HasBase
-	*HasFileReference
-	*HasTrackUserNames
-	*HasColor
+	HasBase
+	HasFileReference
+	HasTrackUserNames
+	HasColor
 }
 
 func NewGroupTrackDocument() *GroupTrackDocument {

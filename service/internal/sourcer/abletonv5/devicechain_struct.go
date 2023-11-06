@@ -1,8 +1,8 @@
 package abletonv5
 
 type DeviceChainDocument struct {
-	*HasBase
-	*HasFileReference
+	HasBase
+	HasFileReference
 
 	DeviceCount uint64 `json:"device_count"`
 }

@@ -1,8 +1,8 @@
 package abletonv5
 
 type ClipDocument struct {
-	*HasBase
-	*HasFileReference
+	HasBase
+	HasFileReference
 }
 
 func NewClipDocument() *ClipDocument {

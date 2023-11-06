@@ -1,10 +1,10 @@
 package abletonv5
 
 type MixerDocument struct {
-	*HasBase
-	*HasFileReference
-	*HasUserName
-	*HasUserInfoText
+	HasBase
+	HasFileReference
+	HasUserName
+	HasUserInfoText
 }
 
 func NewMixerDocument() *MixerDocument {

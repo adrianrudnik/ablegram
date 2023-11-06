@@ -1,10 +1,10 @@
 package abletonv5
 
 type ReturnTrackDocument struct {
-	*HasBase
-	*HasFileReference
-	*HasTrackUserNames
-	*HasColor
+	HasBase
+	HasFileReference
+	HasTrackUserNames
+	HasColor
 }
 
 func NewReturnTrackDocument() *ReturnTrackDocument {

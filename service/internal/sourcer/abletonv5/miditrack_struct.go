@@ -1,10 +1,10 @@
 package abletonv5
 
 type MidiTrackDocument struct {
-	*HasBase
-	*HasFileReference
-	*HasTrackUserNames
-	*HasColor
+	HasBase
+	HasFileReference
+	HasTrackUserNames
+	HasColor
 
 	Frozen bool `json:"frozen,omitempty"`
 }

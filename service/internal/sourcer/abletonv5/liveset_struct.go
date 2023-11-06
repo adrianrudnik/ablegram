@@ -1,9 +1,9 @@
 package abletonv5
 
 type LiveSetDocument struct {
-	*HasBase
-	*HasFileReference
-	*HasUserInfoText
+	HasBase
+	HasFileReference
+	HasUserInfoText
 
 	DisplayName  string `json:"displayName,omitempty"`
 	MajorVersion string `json:"majorVersion,omitempty"`
@@ -20,8 +20,6 @@ type LiveSetDocument struct {
 
 	MidiTrackCount  int `json:"midiTrackCount,omitempty"`
 	AudioTrackCount int `json:"audioTrackCount,omitempty"`
-
-	ScaleInformation string ``
 }
 
 func NewLiveSetDocument() *LiveSetDocument {

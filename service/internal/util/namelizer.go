@@ -6,6 +6,10 @@ import (
 )
 
 func Namelize(parts []string) string {
+	parts = lo.Filter(parts, func(x string, index int) bool {
+		return x != ""
+	})
+
 	if len(parts) == 0 {
 		return ""
 	}

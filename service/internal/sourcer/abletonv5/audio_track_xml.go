@@ -1,10 +1,10 @@
 package abletonv5
 
 type XmlAudioTrack struct {
-	Id     int64           `xml:"Id,attr"`
-	Name   XmlFullName     `xml:"Name"`
-	Color  XmlColorValue   `xml:"Color"`
-	Frozen XmlBooleanValue `xml:"Freeze"`
+	XmlIdNode
+	XmlTrackNameNode
+	XmlColorNode
+	XmlIsFrozenNode
 
 	DeviceChain XmlTrackDeviceChain `xml:"DeviceChain"`
 }

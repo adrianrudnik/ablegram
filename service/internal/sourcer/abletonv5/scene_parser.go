@@ -20,7 +20,7 @@ func ParseScenes(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline
 			scene.Name.Value,
 		})
 		doc.LoadUserInfoText(scene.Annotation.Value, tags)
-		doc.LoadTempoWithToggle(&scene.XmlTempoWithToggle, tags)
+		doc.LoadTempoWithToggle(&scene.XmlTempoWithToggleNode, tags)
 		doc.LoadFileReference(path, tags)
 		doc.LoadColor(scene.Color.Value, tags)
 

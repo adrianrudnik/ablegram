@@ -97,12 +97,12 @@ func NewHasTrackUserNames() HasTrackUserNames {
 	}
 }
 
-func (f *HasTrackUserNames) LoadTrackUserNames(v *XmlFullName, t *tagger.Tagger) {
-	f.LoadUserName(v.UserName.Value, t)
-	f.LoadUserInfoText(v.Annotation.Value, t)
+func (f *HasTrackUserNames) LoadTrackUserNames(v *XmlTrackNameNode, t *tagger.Tagger) {
+	f.LoadUserName(v.Name.UserName.Value, t)
+	f.LoadUserInfoText(v.Name.Annotation.Value, t)
 
-	f.EffectiveName = v.EffectiveName.Value
-	f.MemorizedFirstClipName = v.MemorizedFirstClipName.Value
+	f.EffectiveName = v.Name.EffectiveName.Value
+	f.MemorizedFirstClipName = v.Name.MemorizedFirstClipName.Value
 }
 
 // HasColor represents an element that can be colored by the user.
@@ -161,7 +161,7 @@ func NewHasTempoWithToggle() HasTempoWithToggle {
 	}
 }
 
-func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggle, tags *tagger.Tagger) {
+func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggleNode, tags *tagger.Tagger) {
 	t.Tempo = v.Tempo.Value
 	t.TempoEnabled = v.TempoEnabled.Value
 
@@ -175,5 +175,59 @@ func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggle, tags *ta
 			tags.Add(fmt.Sprintf("bpm:%d", int(math.Floor(v.Tempo.Value))))
 			tags.Add(fmt.Sprintf("bpm:%d", int(math.Ceil(v.Tempo.Value))))
 		}
+	}
+}
+
+type HasDeviceIsExpanded struct {
+	IsExpanded bool `json:"isExpanded,omitempty"`
+}
+
+func NewHasDeviceIsExpanded() HasDeviceIsExpanded {
+	return HasDeviceIsExpanded{IsExpanded: false}
+}
+
+func (h *HasDeviceIsExpanded) LoadDeviceIsExpanded(v bool, tags *tagger.Tagger) {
+	h.IsExpanded = v
+
+	if v {
+		tags.Add("ableton-device:expanded=true")
+	} else {
+		tags.Add("ableton-device:expanded=false")
+	}
+}
+
+type HasDeviceIsFolded struct {
+	IsFolded bool `json:"isFolded,omitempty"`
+}
+
+func NewHasDeviceIsFolded() HasDeviceIsFolded {
+	return HasDeviceIsFolded{IsFolded: false}
+}
+
+func (h *HasDeviceIsFolded) LoadDeviceIsFolded(v bool, tags *tagger.Tagger) {
+	h.IsFolded = v
+
+	if v {
+		tags.Add("ableton-device:folded=true")
+	} else {
+		tags.Add("ableton-device:folded=false")
+	}
+}
+
+type HasTrackIsFrozen struct {
+	IsFrozen bool `json:"isFrozen,omitempty"`
+}
+
+func NewHasTrackIsFrozen() HasTrackIsFrozen {
+	return HasTrackIsFrozen{IsFrozen: false}
+}
+
+func (h *HasTrackIsFrozen) LoadTrackIsFrozen(v bool, tags *tagger.Tagger) {
+	h.IsFrozen = v
+
+	if v {
+		tags.Add("ableton-track:frozen=true")
+	} else {
+		tags.Add("ableton-track:frozen=false")
 	}
 }

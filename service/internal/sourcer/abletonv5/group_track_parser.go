@@ -19,7 +19,7 @@ func ParseGroupTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pip
 			groupTrack.Name.EffectiveName.Value,
 		})
 		doc.LoadFileReference(path, tags)
-		doc.LoadTrackUserNames(&groupTrack.Name, tags)
+		doc.LoadTrackUserNames(&groupTrack.XmlTrackNameNode, tags)
 		doc.LoadColor(groupTrack.Color.Value, tags)
 
 		doc.EngraveTags(tags)

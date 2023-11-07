@@ -4,9 +4,8 @@ type AudioTrackDocument struct {
 	HasBase
 	HasFileReference
 	HasTrackUserNames
+	HasTrackIsFrozen
 	HasColor
-
-	Frozen bool `json:"frozen,omitempty"`
 }
 
 func NewAudioTrackDocument() *AudioTrackDocument {
@@ -14,6 +13,7 @@ func NewAudioTrackDocument() *AudioTrackDocument {
 		HasBase:           NewHasBase(AbletonAudioTrack),
 		HasFileReference:  NewHasFileReference(),
 		HasTrackUserNames: NewHasTrackUserNames(),
+		HasTrackIsFrozen:  NewHasTrackIsFrozen(),
 		HasColor:          NewHasColor(),
 	}
 }

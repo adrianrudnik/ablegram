@@ -1,8 +1,9 @@
 package abletonv5
 
 type XmlGroupTrack struct {
-	Id          int64               `xml:"Id,attr"`
-	Name        XmlFullName         `xml:"Name"`
+	XmlIdNode
+	XmlTrackNameNode
+
 	Color       XmlColorValue       `xml:"Color"`
 	DeviceChain XmlTrackDeviceChain `xml:"DeviceChain"`
 }

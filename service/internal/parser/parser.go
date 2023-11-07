@@ -40,6 +40,7 @@ func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToInde
 	// Devices
 
 	docs = append(docs, abletonv5.ParseMidiArpeggiatorDevice(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseMidiChordDevice(stat, path, &data)...)
 
 	return docs, nil
 }

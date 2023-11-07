@@ -1,7 +1,7 @@
 package abletonv5
 
 type XmlMixer struct {
-	XmlUserName
-	XmlAnnotation
+	XmlUserNameNode
+	XmlAnnotationNode
 	Tempo XmlTempo `xml:"Tempo"`
 }

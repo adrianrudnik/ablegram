@@ -16,27 +16,31 @@ type XmlRoot struct {
 	LiveSet XmlLiveSet `xml:"LiveSet"`
 }
 
-type XmlId struct {
+type XmlIdNode struct {
 	Id int64 `xml:"Id,attr"`
 }
 
-type XmlFullName struct {
-	XmlUserName
-	XmlAnnotation
-
-	EffectiveName          XmlStringValue
-	MemorizedFirstClipName XmlStringValue
+type XmlTrackNameNode struct {
+	Name XmlTrackNameValue `xml:"Name"`
 }
 
-type XmlUserName struct {
-	UserName XmlStringValue
+type XmlTrackNameValue struct {
+	XmlUserNameNode
+	XmlAnnotationNode
+
+	EffectiveName          XmlStringValue `xml:"EffectiveName"`
+	MemorizedFirstClipName XmlStringValue `xml:"MemorizedFirstClipName"`
 }
 
-type XmlAnnotation struct {
-	Annotation XmlStringValue `name:"Annotation"`
+type XmlUserNameNode struct {
+	UserName XmlStringValue `xml:"UserName"`
 }
 
-type XmlTempoWithToggle struct {
+type XmlAnnotationNode struct {
+	Annotation XmlStringValue `xml:"Annotation"`
+}
+
+type XmlTempoWithToggleNode struct {
 	Tempo        XmlIntValue     `xml:"Tempo"`
 	TempoEnabled XmlBooleanValue `xml:"TempoEnabled"`
 }
@@ -67,4 +71,20 @@ type XmlColorValue struct {
 
 type XmlRootNoteValue struct {
 	Value int64 `xml:"Value,attr"`
+}
+
+type XmlIsFoldedValue struct {
+	IsFolded XmlBooleanValue `xml:"IsFolded"`
+}
+
+type XmlIsExpandedValue struct {
+	IsExpanded XmlBooleanValue `xml:"IsExpanded"`
+}
+
+type XmlColorNode struct {
+	Color XmlColorValue `xml:"Color"`
+}
+
+type XmlIsFrozenNode struct {
+	IsFrozen XmlBooleanValue `xml:"Freeze"`
 }

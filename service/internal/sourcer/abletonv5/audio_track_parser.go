@@ -19,10 +19,9 @@ func ParseAudioTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pip
 			audioTrack.Name.EffectiveName.Value,
 		})
 		doc.LoadFileReference(path, tags)
-		doc.LoadTrackUserNames(&audioTrack.Name, tags)
+		doc.LoadTrackUserNames(&audioTrack.XmlTrackNameNode, tags)
+		doc.LoadTrackIsFrozen(audioTrack.IsFrozen.Value, tags)
 		doc.LoadColor(audioTrack.Color.Value, tags)
-
-		doc.Frozen = audioTrack.Frozen.Value
 
 		doc.EngraveTags(tags)
 

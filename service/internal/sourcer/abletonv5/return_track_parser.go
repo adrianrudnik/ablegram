@@ -19,7 +19,7 @@ func ParseReturnTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pi
 			returnTrack.Name.EffectiveName.Value,
 		})
 		doc.LoadFileReference(path, tags)
-		doc.LoadTrackUserNames(&returnTrack.Name, tags)
+		doc.LoadTrackUserNames(&returnTrack.XmlTrackNameNode, tags)
 		doc.LoadColor(returnTrack.Color.Value, tags)
 
 		doc.EngraveTags(tags)

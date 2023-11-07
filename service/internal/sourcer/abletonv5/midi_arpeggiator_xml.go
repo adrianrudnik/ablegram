@@ -1,7 +1,7 @@
 package abletonv5
 
 type XmlMidiArpeggiatorDevice struct {
-	XmlId
-	XmlUserName
-	XmlAnnotation
+	XmlIdNode
+	XmlUserNameNode
+	XmlAnnotationNode
 }

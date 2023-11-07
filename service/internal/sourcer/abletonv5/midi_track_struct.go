@@ -4,9 +4,8 @@ type MidiTrackDocument struct {
 	HasBase
 	HasFileReference
 	HasTrackUserNames
+	HasTrackIsFrozen
 	HasColor
-
-	Frozen bool `json:"frozen,omitempty"`
 }
 
 func NewMidiTrackDocument() *MidiTrackDocument {
@@ -14,6 +13,7 @@ func NewMidiTrackDocument() *MidiTrackDocument {
 		HasBase:           NewHasBase(AbletonMidiTrack),
 		HasFileReference:  NewHasFileReference(),
 		HasTrackUserNames: NewHasTrackUserNames(),
+		HasTrackIsFrozen:  NewHasTrackIsFrozen(),
 		HasColor:          NewHasColor(),
 	}
 }

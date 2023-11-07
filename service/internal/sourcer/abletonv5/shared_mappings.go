@@ -85,3 +85,11 @@ func createTempoWithToggle(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("tempo", mapping.NewNumericFieldMapping())
 	im.AddFieldMappingsAt("tempoEnabled", mapping.NewBooleanFieldMapping())
 }
+
+func createIsExpandedMapping(im *mapping.DocumentMapping) {
+	im.AddFieldMappingsAt("isExpanded", mapping.NewBooleanFieldMapping())
+}
+
+func createIsFoldedMapping(im *mapping.DocumentMapping) {
+	im.AddFieldMappingsAt("isFolded", mapping.NewBooleanFieldMapping())
+}

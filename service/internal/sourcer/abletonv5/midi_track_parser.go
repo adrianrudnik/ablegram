@@ -19,10 +19,9 @@ func ParseMidiTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pipe
 			midiTrack.Name.EffectiveName.Value,
 		})
 		doc.LoadFileReference(path, tags)
-		doc.LoadTrackUserNames(&midiTrack.Name, tags)
+		doc.LoadTrackUserNames(&midiTrack.XmlTrackNameNode, tags)
+		doc.LoadTrackIsFrozen(midiTrack.IsFrozen.Value, tags)
 		doc.LoadColor(midiTrack.Color.Value, tags)
-
-		doc.Frozen = midiTrack.Frozen.Value
 
 		doc.EngraveTags(tags)
 

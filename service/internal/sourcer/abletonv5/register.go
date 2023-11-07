@@ -24,4 +24,6 @@ func RegisterDocumentMappings(idx *mapping.IndexMappingImpl) {
 
 	idx.AddDocumentMapping(AbletonMidiArpeggiatorDevice, buildMidiArpeggiatorDeviceMapping())
 	idx.AddDocumentMapping(AbletonMidiChordDevice, buildMidiChordDeviceMapping())
+	idx.AddDocumentMapping(AbletonMidiPitcherDevice, buildMidiPitcherDeviceMapping())
+	idx.AddDocumentMapping(AbletonMidiVelocityDevice, buildMidiVelocityDeviceMapping())
 }

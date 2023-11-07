@@ -25,7 +25,7 @@ func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToInde
 	}
 
 	// Create a slice to hold all documents that we out of the XML information
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 200)
+	docs := make([]*pipeline.DocumentToIndexMsg, 0, 500)
 
 	docs = append(docs, abletonv5.ParseLiveSet(stat, path, &data))
 	docs = append(docs, abletonv5.ParseMidiTracks(stat, path, &data)...)
@@ -42,6 +42,8 @@ func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToInde
 
 	docs = append(docs, abletonv5.ParseMidiArpeggiatorDevice(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseMidiChordDevice(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseMidiPitcherDevice(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseMidiVelocityDevice(stat, path, &data)...)
 
 	return docs, nil
 }

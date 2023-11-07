@@ -20,6 +20,7 @@ func ParseMidiChordDevice(stat *stats.Statistics, path string, data *XmlRoot) []
 	for _, device := range hits {
 		tags := tagger.NewTagger()
 		tags.Add("type:ableton-midi-chord-device")
+		tags.Add("ableton-device:midi-chord")
 
 		doc := NewMidiChordDeviceDocument()
 		doc.LoadDisplayName([]string{

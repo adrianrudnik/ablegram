@@ -18,6 +18,8 @@ type XmlDeviceList struct {
 	Delay           []XmlDelayDevice           `xml:"Delay"`
 	MidiArpeggiator []XmlMidiArpeggiatorDevice `xml:"MidiArpeggiator"`
 	MidiChord       []XmlMidiChordDevice       `xml:"MidiChord"`
+	MidiPitcher     []XmlMidiPitcherDevice     `xml:"MidiPitcher"`
+	MidiVelocity    []XmlMidiVelocityDevice    `xml:"MidiVelocity"`
 }
 
 func (dl *XmlDeviceList) GetCount() int {

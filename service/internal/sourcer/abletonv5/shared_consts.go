@@ -17,4 +17,6 @@ const (
 
 	AbletonMidiArpeggiatorDevice = "AbletonMidiArpeggiatorDevice"
 	AbletonMidiChordDevice       = "AbletonMidiChordDevice"
+	AbletonMidiPitcherDevice     = "AbletonMidiPitcherDevice"
+	AbletonMidiVelocityDevice    = "AbletonMidiVelocityDevice"
 )

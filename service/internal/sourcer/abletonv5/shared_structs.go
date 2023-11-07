@@ -265,5 +265,7 @@ func NewHasTimeSignature() HasTimeSignature {
 func (h *HasTimeSignature) LoadTimeSignature(v *XmlRemoteableTimeSignature, tags *tagger.Tagger) {
 	h.TimeSignature = fmt.Sprintf("%d/%d", v.Numerator.Value, v.Denominator.Value)
 
-	tags.Add(fmt.Sprintf("time-signature=%s", h.TimeSignature))
+	tags.Add(fmt.Sprintf("time-signature:name=%s", h.TimeSignature))
+	tags.Add(fmt.Sprintf("time-signature:numerator=%d", v.Numerator.Value))
+	tags.Add(fmt.Sprintf("time-signature:denominator=%d", v.Denominator.Value))
 }

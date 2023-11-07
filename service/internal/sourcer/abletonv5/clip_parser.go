@@ -26,6 +26,23 @@ func ParseClips(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.
 				doc.LoadTimeSignature(&slots.MidiClip.TimeSignature, tags)
 				doc.LoadScaleInformation(&slots.MidiClip.ScaleInformation, tags)
 
+				// Parse midi notes
+				hasProbability := false
+				for _, note := range slots.MidiClip.Notes.KeyTracks {
+					// Add the used notes
+					tags.Add("note=" + note.MidiKey.HumanReadable())
+
+					for _, midiNote := range note.Notes {
+						if midiNote.Probability < 1 {
+							hasProbability = true
+						}
+					}
+				}
+
+				if hasProbability {
+					tags.Add("ableton:feature:probability=true")
+				}
+
 				doc.EngraveTags(tags)
 
 				docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))

@@ -93,3 +93,8 @@ func createIsExpandedMapping(im *mapping.DocumentMapping) {
 func createIsFoldedMapping(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("isFolded", mapping.NewBooleanFieldMapping())
 }
+
+func createScaleInformationMapping(im *mapping.DocumentMapping) {
+	// @todo complete
+	// im.AddFieldMappingsAt("scaleInformation", mapping.NewTextFieldMapping())
+}

@@ -36,6 +36,7 @@ func parseAlsV5(stat *stats.Statistics, path string) ([]*pipeline.DocumentToInde
 	docs = append(docs, abletonv5.ParseMixerDocuments(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseTrackDeviceChains(stat, path, &data)...)
 	docs = append(docs, abletonv5.ParseScenes(stat, path, &data)...)
+	docs = append(docs, abletonv5.ParseClips(stat, path, &data)...)
 
 	// Devices
 

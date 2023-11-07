@@ -231,3 +231,11 @@ func (h *HasTrackIsFrozen) LoadTrackIsFrozen(v bool, tags *tagger.Tagger) {
 		tags.Add("ableton-track:frozen=false")
 	}
 }
+
+// @todo complete
+type HasScaleInformation struct {
+}
+
+func NewHasScaleInformation() HasScaleInformation {
+	return HasScaleInformation{}
+}

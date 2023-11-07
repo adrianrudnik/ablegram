@@ -2,8 +2,9 @@ package abletonv5
 
 // XmlTrackDeviceChain is a struct that represents the XML structure of a track's device chain.
 type XmlTrackDeviceChain struct {
-	Mixer       XmlMixer             `xml:"Mixer"`
-	DeviceChain XmlActualDeviceChain `xml:"DeviceChain"`
+	Mixer         XmlMixer             `xml:"Mixer"`
+	MainSequencer XmlMainSequencerNode `xml:"MainSequencer"`
+	DeviceChain   XmlActualDeviceChain `xml:"DeviceChain"`
 }
 
 // XmlActualDeviceChain is a struct that represents the XML structure of a track's actual device chain.

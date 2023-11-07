@@ -3,13 +3,13 @@ package abletonv5
 import "encoding/xml"
 
 type XmlLiveSet struct {
-	XMLName          xml.Name            `xml:"LiveSet"`
-	Tracks           XmlTracks           `xml:"Tracks"`
-	Scenes           []XmlScene          `xml:"Scenes"`
-	ScaleInformation XmlScaleInformation `xml:"ScaleInformation"`
-	InKey            XmlBooleanValue     `xml:"InKey"`
-	MasterTrack      XmlMasterTrack      `xml:"MasterTrack"`
-	Annotation       XmlStringValue      `xml:"Annotation"`
+	XMLName          xml.Name                 `xml:"LiveSet"`
+	Tracks           XmlTracks                `xml:"Tracks"`
+	Scenes           []XmlScene               `xml:"Scenes"`
+	ScaleInformation XmlScaleInformationValue `xml:"ScaleInformation"`
+	InKey            XmlBooleanValue          `xml:"InKey"`
+	MasterTrack      XmlMasterTrack           `xml:"MasterTrack"`
+	Annotation       XmlStringValue           `xml:"Annotation"`
 }
 
 type XmlTracks struct {
@@ -18,20 +18,6 @@ type XmlTracks struct {
 	ReturnTracks []XmlReturnTrack  `xml:"ReturnTrack"`
 	GroupTracks  []XmlGroupTrack   `xml:"GroupTrack"`
 	PreHearTrack []XmlPreHearTrack `xml:"PreHearTrack"`
-}
-
-type XmlScaleInformation struct {
-	RootNote XmlIntValue    `xml:"RootNote"`
-	Name     XmlStringValue `xml:"Name"`
-}
-
-func (s *XmlScaleInformation) HumanizeRootNote() string {
-	switch s.RootNote.Value {
-	case 0:
-		return "c"
-	}
-
-	return "unknown"
 }
 
 func (l *XmlLiveSet) GetAllTrackDeviceChains() []XmlTrackDeviceChain {

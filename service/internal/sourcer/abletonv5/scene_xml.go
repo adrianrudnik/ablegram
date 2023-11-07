@@ -2,9 +2,8 @@ package abletonv5
 
 type XmlScene struct {
 	XmlIdNode
+	XmlNameNode
 	XmlAnnotationNode
 	XmlTempoWithToggleNode
-
-	Name  XmlStringValue `xml:"Name"`
-	Color XmlColorValue  `xml:"Color"`
+	XmlColorNode
 }

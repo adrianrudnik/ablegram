@@ -26,6 +26,7 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *XmlRoot) *pipeline.
 	doc.LoadDisplayName([]string{filepath.Base(path)})
 	doc.LoadFileReference(path, tags)
 	doc.LoadUserInfoText(data.LiveSet.Annotation.Value, tags)
+	doc.LoadScaleInformation(&data.LiveSet.ScaleInformation, tags)
 
 	doc.MajorVersion = data.MajorVersion
 	doc.MinorVersion = data.MinorVersion

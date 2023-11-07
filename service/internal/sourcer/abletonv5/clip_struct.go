@@ -7,6 +7,7 @@ type MidiClipDocument struct {
 	HasUserInfoText
 	HasColor
 	HasScaleInformation
+	HasTimeSignature
 }
 
 func NewMidiClipDocument() *MidiClipDocument {
@@ -17,6 +18,7 @@ func NewMidiClipDocument() *MidiClipDocument {
 		HasUserInfoText:     NewHasUserInfoText(),
 		HasColor:            NewHasColor(),
 		HasScaleInformation: NewHasScaleInformation(),
+		HasTimeSignature:    NewHasTimeSignature(),
 	}
 }
 

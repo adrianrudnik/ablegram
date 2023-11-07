@@ -9,6 +9,7 @@ func buildLiveSetMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createSharedTrackMappings(m)
+	createScaleInformationMapping(m)
 
 	return m
 }

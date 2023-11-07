@@ -22,6 +22,7 @@ type XmlMidiClip struct {
 	XmlAnnotationNode
 	XmlColorNode
 	XmlScaleInformationNode
+	XmlRemoteableTimeSignatureNode
 }
 
 type XmlAudioClip struct {

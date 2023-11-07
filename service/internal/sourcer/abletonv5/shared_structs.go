@@ -232,10 +232,38 @@ func (h *HasTrackIsFrozen) LoadTrackIsFrozen(v bool, tags *tagger.Tagger) {
 	}
 }
 
-// @todo complete
 type HasScaleInformation struct {
+	ScaleRootNote string `json:"scaleRootNote,omitempty"`
+	ScaleName     string `json:"scaleName,omitempty"`
 }
 
 func NewHasScaleInformation() HasScaleInformation {
 	return HasScaleInformation{}
+}
+
+func (h *HasScaleInformation) LoadScaleInformation(v *XmlScaleInformationValue, tags *tagger.Tagger) {
+	h.ScaleRootNote = v.HumanizeRootNote()
+	h.ScaleName = v.HumanizeName()
+
+	if h.ScaleRootNote != "" {
+		tags.Add(fmt.Sprintf("scale:root-note=%s", h.ScaleRootNote))
+	}
+
+	if h.ScaleName != "" {
+		tags.Add(fmt.Sprintf("scale:name=%s", h.ScaleName))
+	}
+}
+
+type HasTimeSignature struct {
+	TimeSignature string `json:"timeSignature,omitempty"`
+}
+
+func NewHasTimeSignature() HasTimeSignature {
+	return HasTimeSignature{}
+}
+
+func (h *HasTimeSignature) LoadTimeSignature(v *XmlRemoteableTimeSignature, tags *tagger.Tagger) {
+	h.TimeSignature = fmt.Sprintf("%d/%d", v.Numerator.Value, v.Denominator.Value)
+
+	tags.Add(fmt.Sprintf("time-signature=%s", h.TimeSignature))
 }

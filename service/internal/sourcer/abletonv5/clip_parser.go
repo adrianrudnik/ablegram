@@ -23,7 +23,8 @@ func ParseClips(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.
 				doc.LoadUserInfoText(slots.MidiClip.Annotation.Value, tags)
 				doc.LoadFileReference(path, tags)
 				doc.LoadColor(slots.MidiClip.Color.Value, tags)
-				// @todo LoadScaleInformation
+				doc.LoadTimeSignature(&slots.MidiClip.TimeSignature, tags)
+				doc.LoadScaleInformation(&slots.MidiClip.ScaleInformation, tags)
 
 				doc.EngraveTags(tags)
 

@@ -14,6 +14,7 @@ func buildMidiClipMapping() *mapping.DocumentMapping {
 	createUserInfoTextMapping(m)
 	createColorMapping(m)
 	createScaleInformationMapping(m)
+	createTimeSignatureMapping(m)
 
 	return m
 }

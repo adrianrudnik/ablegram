@@ -5,6 +5,6 @@ type XmlTempoNode struct {
 }
 
 type XmlTempoWithToggleNode struct {
-	Tempo        XmlIntValue     `xml:"Tempo"`
+	Tempo        XmlFloatValue   `xml:"Tempo"`
 	TempoEnabled XmlBooleanValue `xml:"TempoEnabled"`
 }

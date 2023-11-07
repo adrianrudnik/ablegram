@@ -5,7 +5,7 @@ type XmlStringValue struct {
 }
 
 type XmlIntValue struct {
-	Value float64 `xml:"Value,attr"`
+	Value int64 `xml:"Value,attr"`
 }
 
 type XmlFloatValue struct {

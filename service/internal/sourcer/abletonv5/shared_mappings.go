@@ -98,3 +98,7 @@ func createScaleInformationMapping(im *mapping.DocumentMapping) {
 	// @todo complete
 	// im.AddFieldMappingsAt("scaleInformation", mapping.NewTextFieldMapping())
 }
+
+func createTimeSignatureMapping(im *mapping.DocumentMapping) {
+	im.AddFieldMappingsAt("timeSignature", mapping.NewKeywordFieldMapping())
+}

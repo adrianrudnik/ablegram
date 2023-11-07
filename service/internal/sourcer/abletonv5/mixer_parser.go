@@ -37,6 +37,8 @@ func ParseMixerDocuments(stat *stats.Statistics, path string, data *XmlRoot) []*
 		doc.LoadFileReference(path, tags)
 		doc.LoadUserInfoText(mx.Annotation.Value, tags)
 		doc.LoadUserName(mx.UserName.Value, tags)
+		doc.LoadDeviceIsFolded(mx.IsFolded.Value, tags)
+		doc.LoadDeviceIsExpanded(mx.IsExpanded.Value, tags)
 
 		doc.EngraveTags(tags)
 

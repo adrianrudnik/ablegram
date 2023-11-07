@@ -16,6 +16,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/webservice"
 	"github.com/gin-gonic/gin"
@@ -80,10 +81,16 @@ func main() {
 	filesPipeline := pipeline.NewFilesForProcessor()
 	resultsPipeline := pipeline.NewDocumentsToIndex()
 
-	// ProcessProgress is responsible in holding the current progress and
+	// ProcessProgress is responsible in holding the current appProgress and
 	// notifying the frontend about it
-	stats.Logger = log.With().Str("modulex", "stats").Logger()
-	progress := stats.NewProcessProgress(pusherPipeline.Chan)
+	stats.Logger = log.With().Str("module", "stats").Logger()
+	appProgress := stats.NewProcessProgress(pusherPipeline.Chan)
+
+	// TagCollector is responsible for collecting all tags and pushing them to the frontend
+	// if the collector is wired to a push channel
+	tagger.Logger = log.With().Str("module", "tagger").Logger()
+	appTags := tagger.NewTagCollector(appConfig)
+	appTags.WirePusher(pusherPipeline.Chan)
 
 	// Kick of the webservice
 	go func() {
@@ -95,7 +102,7 @@ func main() {
 		ui.Logger = log.With().Str("module", "ui").Logger()
 
 		// Statistics is responsible in keeping and communicating key metrics for the frontend
-		appMetrics := stats.NewStatistics(appConfig, pusherPipeline.Chan)
+		appStats := stats.NewStatistics(appConfig, pusherPipeline.Chan)
 
 		// Start the frontend push worker
 		webservice.Logger = log.With().Str("module", "webservice").Logger()
@@ -105,18 +112,18 @@ func main() {
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
 		collectorWorkers := collector.NewWorkerPool(10, filesPipeline.Chan, pusherPipeline.Chan)
-		go collectorWorkers.Run(appConfig, progress)
+		go collectorWorkers.Run(appConfig, appProgress)
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
-		parserWorkers := parser.NewWorkerPool(appConfig, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
-		go parserWorkers.Run(progress, appMetrics)
+		parserWorkers := parser.NewWorkerPool(appConfig, appTags, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
+		go parserWorkers.Run(appProgress, appStats)
 
 		// Create the indexerWorker
 		indexer.Logger = log.With().Str("module", "indexer").Logger()
 		search := indexer.NewSearch()
 		indexerWorker := indexer.NewWorker(search, resultsPipeline.Chan, pusherPipeline.Chan)
-		go indexerWorker.Run(progress, appMetrics)
+		go indexerWorker.Run(appProgress, appStats)
 
 		// Try to open the default browser on the given OS
 		go func() {
@@ -130,7 +137,13 @@ func main() {
 
 		for _, port := range appConfig.Webservice.TryPorts {
 			appConfig.Webservice.ChosenPort = port
-			err := webservice.Serve(appConfig, search, appPusher, fmt.Sprintf(":%d", port))
+			err := webservice.Serve(
+				appConfig,
+				search,
+				appTags,
+				appPusher,
+				fmt.Sprintf(":%d", port),
+			)
 			if err != nil && strings.Contains(err.Error(), "bind: permission denied") {
 				log.Warn().Err(err).Int("port", port).Msg("Could not start webservice, trying other port")
 				continue
@@ -172,7 +185,7 @@ func main() {
 		startBtn.Importance = widget.HighImportance
 
 		uiUpdater := ui.NewUiUpdater(statusTxt, progressBar)
-		go uiUpdater.Run(progress)
+		go uiUpdater.Run(appProgress)
 
 		content := container.New(layout.NewPaddedLayout(), container.New(layout.NewVBoxLayout(), logo, statusTxt, progressBar, startBtn, quitBtn))
 

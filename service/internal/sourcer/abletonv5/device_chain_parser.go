@@ -6,12 +6,17 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseTrackDeviceChains(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseTrackDeviceChains(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, dc := range data.LiveSet.GetAllTrackDeviceChains() {
-		tags := tagger.NewTagger()
-		tags.Add("type:ableton-device-chain")
+		tb := tc.NewBucket()
+		tb.Add("type:ableton-device-chain")
 
 		// Consider a device chain empty if no devices are present
 		if dc.DeviceChain.Devices.GetCount() == 0 {
@@ -20,11 +25,11 @@ func ParseTrackDeviceChains(stat *stats.Statistics, path string, data *XmlRoot) 
 
 		doc := NewDeviceChainDocument()
 		doc.LoadDisplayName([]string{AbletonDeviceChain})
-		doc.LoadFileReference(path, tags)
+		doc.LoadFileReference(path, tb)
 
 		doc.DeviceCount = dc.DeviceChain.Devices.GetCount()
 
-		doc.EngraveTags(tags)
+		doc.EngraveTags(tb)
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 

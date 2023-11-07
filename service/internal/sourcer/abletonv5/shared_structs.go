@@ -31,7 +31,7 @@ func (b *HasBase) GetAutoId() string {
 	return fmt.Sprintf("%x", md5.Sum([]byte(typedId)))
 }
 
-func (b *HasBase) EngraveTags(t *tagger.Tagger) {
+func (b *HasBase) EngraveTags(t *tagger.TagBucket) {
 	b.Tags = t.Engrave()
 }
 
@@ -46,7 +46,7 @@ type HasFileReference struct {
 	Filename     string `json:"filename,omitempty"`
 }
 
-func (r *HasFileReference) LoadFileReference(path string, t *tagger.Tagger) {
+func (r *HasFileReference) LoadFileReference(path string, t *tagger.TagBucket) {
 	r.PathAbsolute = path
 	r.PathFolder = filepath.Dir(path)
 	r.Filename = filepath.Base(path)
@@ -64,7 +64,7 @@ func NewHasUserName() HasUserName {
 	return HasUserName{}
 }
 
-func (u *HasUserName) LoadUserName(v string, t *tagger.Tagger) {
+func (u *HasUserName) LoadUserName(v string, t *tagger.TagBucket) {
 	m, empty := util.EvaluateUserInput(v)
 
 	if !empty {
@@ -97,7 +97,7 @@ func NewHasTrackUserNames() HasTrackUserNames {
 	}
 }
 
-func (f *HasTrackUserNames) LoadTrackUserNames(v *XmlTrackNameNode, t *tagger.Tagger) {
+func (f *HasTrackUserNames) LoadTrackUserNames(v *XmlTrackNameNode, t *tagger.TagBucket) {
 	f.LoadUserName(v.Name.UserName.Value, t)
 	f.LoadUserInfoText(v.Name.Annotation.Value, t)
 
@@ -114,7 +114,7 @@ func NewHasColor() HasColor {
 	return HasColor{}
 }
 
-func (c *HasColor) LoadColor(v int16, t *tagger.Tagger) {
+func (c *HasColor) LoadColor(v int16, t *tagger.TagBucket) {
 	c.Color = v
 
 	t.Add(fmt.Sprintf("color:ableton=%d", v))
@@ -125,7 +125,7 @@ type HasUserInfoText struct {
 	Annotation string `json:"annotation,omitempty"`
 }
 
-func (a *HasUserInfoText) LoadUserInfoText(v string, t *tagger.Tagger) {
+func (a *HasUserInfoText) LoadUserInfoText(v string, t *tagger.TagBucket) {
 	m, empty := util.EvaluateUserInput(v)
 
 	if !empty {
@@ -161,7 +161,7 @@ func NewHasTempoWithToggle() HasTempoWithToggle {
 	}
 }
 
-func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggleNode, tags *tagger.Tagger) {
+func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggleNode, tags *tagger.TagBucket) {
 	t.Tempo = v.Tempo.Value
 	t.TempoEnabled = v.TempoEnabled.Value
 
@@ -186,7 +186,7 @@ func NewHasDeviceIsExpanded() HasDeviceIsExpanded {
 	return HasDeviceIsExpanded{IsExpanded: false}
 }
 
-func (h *HasDeviceIsExpanded) LoadDeviceIsExpanded(v bool, tags *tagger.Tagger) {
+func (h *HasDeviceIsExpanded) LoadDeviceIsExpanded(v bool, tags *tagger.TagBucket) {
 	h.IsExpanded = v
 
 	if v {
@@ -204,7 +204,7 @@ func NewHasDeviceIsFolded() HasDeviceIsFolded {
 	return HasDeviceIsFolded{IsFolded: false}
 }
 
-func (h *HasDeviceIsFolded) LoadDeviceIsFolded(v bool, tags *tagger.Tagger) {
+func (h *HasDeviceIsFolded) LoadDeviceIsFolded(v bool, tags *tagger.TagBucket) {
 	h.IsFolded = v
 
 	if v {
@@ -222,7 +222,7 @@ func NewHasTrackIsFrozen() HasTrackIsFrozen {
 	return HasTrackIsFrozen{IsFrozen: false}
 }
 
-func (h *HasTrackIsFrozen) LoadTrackIsFrozen(v bool, tags *tagger.Tagger) {
+func (h *HasTrackIsFrozen) LoadTrackIsFrozen(v bool, tags *tagger.TagBucket) {
 	h.IsFrozen = v
 
 	if v {
@@ -241,7 +241,7 @@ func NewHasScaleInformation() HasScaleInformation {
 	return HasScaleInformation{}
 }
 
-func (h *HasScaleInformation) LoadScaleInformation(v *XmlScaleInformationValue, tags *tagger.Tagger) {
+func (h *HasScaleInformation) LoadScaleInformation(v *XmlScaleInformationValue, tags *tagger.TagBucket) {
 	h.ScaleRootNote = v.HumanizeRootNote()
 	h.ScaleName = v.HumanizeName()
 
@@ -262,7 +262,7 @@ func NewHasTimeSignature() HasTimeSignature {
 	return HasTimeSignature{}
 }
 
-func (h *HasTimeSignature) LoadTimeSignature(v *XmlRemoteableTimeSignature, tags *tagger.Tagger) {
+func (h *HasTimeSignature) LoadTimeSignature(v *XmlRemoteableTimeSignature, tags *tagger.TagBucket) {
 	h.TimeSignature = fmt.Sprintf("%d/%d", v.Numerator.Value, v.Denominator.Value)
 
 	tags.Add(fmt.Sprintf("time-signature:name=%s", h.TimeSignature))

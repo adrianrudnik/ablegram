@@ -7,32 +7,37 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseClips(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseClips(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, chain := range data.LiveSet.GetAllTrackDeviceChains() {
 		for _, slots := range chain.MainSequencer.ClipSlotList.ClipSlots {
 			if slots.MidiClip != nil {
-				tags := tagger.NewTagger()
-				tags.Add("type:ableton-midi-clip")
+				tb := tc.NewBucket()
+				tb.Add("type:ableton-midi-clip")
 
 				doc := NewMidiClipDocument()
 				doc.LoadDisplayName([]string{
 					slots.MidiClip.Name.Value,
 				})
-				doc.LoadUserName(slots.MidiClip.Name.Value, tags)
-				doc.LoadUserInfoText(slots.MidiClip.Annotation.Value, tags)
-				doc.LoadFileReference(path, tags)
-				doc.LoadColor(slots.MidiClip.Color.Value, tags)
-				doc.LoadTimeSignature(&slots.MidiClip.TimeSignature, tags)
-				doc.LoadScaleInformation(&slots.MidiClip.ScaleInformation, tags)
+				doc.LoadUserName(slots.MidiClip.Name.Value, tb)
+				doc.LoadUserInfoText(slots.MidiClip.Annotation.Value, tb)
+				doc.LoadFileReference(path, tb)
+				doc.LoadColor(slots.MidiClip.Color.Value, tb)
+				doc.LoadTimeSignature(&slots.MidiClip.TimeSignature, tb)
+				doc.LoadScaleInformation(&slots.MidiClip.ScaleInformation, tb)
 
 				// Parse midi notes
 				hasProbability := false
 				for _, note := range slots.MidiClip.Notes.KeyTracks {
 					// Add the used notes
-					tags.Add(fmt.Sprintf("note=%s", note.MidiKey.HumanReadable()))
-					tags.Add(fmt.Sprintf("midi:key=%d", note.MidiKey.Value))
+					tb.Add(fmt.Sprintf("note=%s", note.MidiKey.HumanReadable()))
+					tb.Add(fmt.Sprintf("midi:key=%d", note.MidiKey.Value))
 
 					for _, midiNote := range note.Notes {
 						if midiNote.Probability < 1 {
@@ -42,10 +47,10 @@ func ParseClips(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.
 				}
 
 				if hasProbability {
-					tags.Add("ableton:feature:probability=true")
+					tb.Add("ableton:feature:probability=true")
 				}
 
-				doc.EngraveTags(tags)
+				doc.EngraveTags(tb)
 
 				docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 
@@ -53,18 +58,18 @@ func ParseClips(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.
 			}
 
 			if slots.AudioClip != nil {
-				tags := tagger.NewTagger()
-				tags.Add("type:ableton-midi-clip")
+				tb := tc.NewBucket()
+				tb.Add("type:ableton-midi-clip")
 
 				doc := NewAudioClipDocument()
 				doc.LoadDisplayName([]string{
 					slots.AudioClip.Name.Value,
 				})
-				doc.LoadUserName(slots.AudioClip.Name.Value, tags)
-				doc.LoadUserInfoText(slots.AudioClip.Annotation.Value, tags)
-				doc.LoadFileReference(path, tags)
+				doc.LoadUserName(slots.AudioClip.Name.Value, tb)
+				doc.LoadUserInfoText(slots.AudioClip.Annotation.Value, tb)
+				doc.LoadFileReference(path, tb)
 
-				doc.EngraveTags(tags)
+				doc.EngraveTags(tb)
 
 				docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 

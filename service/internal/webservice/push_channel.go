@@ -117,6 +117,12 @@ func (c *PushChannel) StartHistoryCompactor() {
 			return ok
 		})
 
+		// Only keep the newest tag update
+		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pusher.TagUpdatePush)
+			return ok
+		})
+
 		// Only keep the newest metrics update
 		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
 			_, ok := v.(*pusher.MetricUpdatePush)

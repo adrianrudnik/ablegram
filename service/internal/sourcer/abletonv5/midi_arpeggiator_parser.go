@@ -6,7 +6,12 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseMidiArpeggiatorDevice(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseMidiArpeggiatorDevice(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) []*pipeline.DocumentToIndexMsg {
 	hits := make([]XmlMidiArpeggiatorDevice, 0, 100)
 
 	// Find all MidiArpeggiator devices, in all known device chains
@@ -19,18 +24,18 @@ func ParseMidiArpeggiatorDevice(stat *stats.Statistics, path string, data *XmlRo
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, device := range hits {
-		tags := tagger.NewTagger()
-		tags.Add("type:ableton-midi-arpeggiator-device")
-		tags.Add("ableton-device:midi-arpeggiator")
+		tb := tc.NewBucket()
+		tb.Add("type:ableton-midi-arpeggiator-device")
+		tb.Add("ableton-device:midi-arpeggiator")
 
 		doc := NewMidiArpeggiatorDeviceDocument()
 		doc.LoadDisplayName([]string{
 			device.UserName.Value,
 		})
-		doc.LoadFileReference(path, tags)
-		doc.LoadUserInfoText(device.Annotation.Value, tags)
+		doc.LoadFileReference(path, tb)
+		doc.LoadUserInfoText(device.Annotation.Value, tb)
 
-		doc.EngraveTags(tags)
+		doc.EngraveTags(tb)
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 

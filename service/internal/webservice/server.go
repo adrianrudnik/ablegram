@@ -31,7 +31,13 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func Serve(conf *config.Config, indexer *indexer.Search, pushChan *PushChannel, bindAddr string) error {
+func Serve(
+	conf *config.Config,
+	indexer *indexer.Search,
+	tc *tagger.TagCollector,
+	pushChan *PushChannel,
+	bindAddr string,
+) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -77,6 +83,7 @@ func Serve(conf *config.Config, indexer *indexer.Search, pushChan *PushChannel, 
 
 	api := r.Group("/api")
 	registerApiRoutes(api)
+	registerTagRoutes(api, tc)
 
 	search := r.Group("/search")
 	registerBleveRoutes(search, indexer)
@@ -116,17 +123,19 @@ func Serve(conf *config.Config, indexer *indexer.Search, pushChan *PushChannel, 
 	return nil
 }
 
+func registerTagRoutes(rg *gin.RouterGroup, tc *tagger.TagCollector) {
+	rg.GET("/tags", func(c *gin.Context) {
+		if c.Query("verbose") != "" {
+			c.JSON(200, tc.GetDetailedTags())
+		} else {
+			c.JSON(200, tc.GetBaseTags())
+		}
+	})
+}
+
 func registerApiRoutes(rg *gin.RouterGroup) {
 	rg.GET("/status", func(c *gin.Context) {
 		c.String(200, "pong")
-	})
-
-	rg.GET("/tags", func(c *gin.Context) {
-		if c.Query("verbose") != "" {
-			c.JSON(200, tagger.GetDetailedTags())
-		} else {
-			c.JSON(200, tagger.GetBaseTags())
-		}
 	})
 
 	rg.POST("/open", func(c *gin.Context) {

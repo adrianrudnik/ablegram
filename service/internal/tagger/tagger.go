@@ -5,26 +5,21 @@ import (
 	"github.com/samber/lo"
 	"slices"
 	"strings"
-	"sync"
 )
 
-var baseTags = make(map[string]uint64, 500)
-var baseMutex sync.RWMutex
-
-var detailedTags = make(map[string]uint64, 2000)
-var detailedMutex sync.RWMutex
-
-type Tagger struct {
-	tags []string
+type TagBucket struct {
+	collector *TagCollector
+	tags      []string
 }
 
-func NewTagger() *Tagger {
-	return &Tagger{
-		tags: make([]string, 0, 20),
+func NewTagBucket(collector *TagCollector) *TagBucket {
+	return &TagBucket{
+		collector: collector,
+		tags:      make([]string, 0, 20),
 	}
 }
 
-func (t *Tagger) Add(tag string) {
+func (t *TagBucket) Add(tag string) {
 	tag = strings.TrimSpace(tag)
 	if tag == "" {
 		return
@@ -33,7 +28,7 @@ func (t *Tagger) Add(tag string) {
 	t.tags = append(t.tags, fmt.Sprintf("%s", tag))
 }
 
-func (t *Tagger) GetAll() []string {
+func (t *TagBucket) GetAll() []string {
 	v := lo.Uniq(t.tags)
 	slices.Sort(v)
 
@@ -41,64 +36,17 @@ func (t *Tagger) GetAll() []string {
 }
 
 // Engrave the tags to the global tag counters, creates a final slice and clears the current tagger
-func (t *Tagger) Engrave() []string {
+func (t *TagBucket) Engrave() []string {
 	v := t.GetAll()
 
 	// Collect the tags to the global tag counters
 	for _, tag := range v {
-		collectBaseTag(tag)
-		collectDetailedTag(tag)
+		t.collector.collectBaseTag(tag)
+		t.collector.collectDetailedTag(tag)
 	}
 
 	// Empty the current one
 	t.tags = make([]string, 0, 20)
 
 	return v
-}
-
-func collectBaseTag(t string) {
-	baseMutex.Lock()
-	defer baseMutex.Unlock()
-
-	// Extract a variant of the tag without a value and increment the baseTags counter
-	if strings.Contains(t, "=") {
-		parts := strings.Split(t, "=")
-
-		if _, ok := baseTags[parts[0]]; ok {
-			t = parts[0]
-		} else {
-			t = parts[0]
-		}
-	}
-
-	if _, ok := baseTags[t]; ok {
-		baseTags[t]++
-	} else {
-		baseTags[t] = 1
-	}
-}
-
-func collectDetailedTag(t string) {
-	detailedMutex.Lock()
-	defer detailedMutex.Unlock()
-
-	if _, ok := detailedTags[t]; ok {
-		detailedTags[t]++
-	} else {
-		detailedTags[t] = 1
-	}
-}
-
-func GetBaseTags() map[string]uint64 {
-	baseMutex.RLock()
-	defer baseMutex.RUnlock()
-
-	return baseTags
-}
-
-func GetDetailedTags() map[string]uint64 {
-	detailedMutex.RLock()
-	defer detailedMutex.RUnlock()
-
-	return detailedTags
 }

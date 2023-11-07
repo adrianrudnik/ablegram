@@ -7,24 +7,29 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseScenes(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseScenes(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, scene := range data.LiveSet.Scenes {
-		tags := tagger.NewTagger()
-		tags.Add("type:ableton-scene")
+		tb := tc.NewBucket()
+		tb.Add("type:ableton-scene")
 
 		doc := NewSceneDocument()
 		doc.LoadDisplayName([]string{
 			fmt.Sprintf("%d", scene.Id),
 			scene.Name.Value,
 		})
-		doc.LoadUserInfoText(scene.Annotation.Value, tags)
-		doc.LoadTempoWithToggle(&scene.XmlTempoWithToggleNode, tags)
-		doc.LoadFileReference(path, tags)
-		doc.LoadColor(scene.Color.Value, tags)
+		doc.LoadUserInfoText(scene.Annotation.Value, tb)
+		doc.LoadTempoWithToggle(&scene.XmlTempoWithToggleNode, tb)
+		doc.LoadFileReference(path, tb)
+		doc.LoadColor(scene.Color.Value, tb)
 
-		doc.EngraveTags(tags)
+		doc.EngraveTags(tb)
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 

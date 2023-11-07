@@ -6,7 +6,12 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseMixerDocuments(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseMixerDocuments(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	found := make([]XmlMixer, 0, 100)
@@ -29,18 +34,18 @@ func ParseMixerDocuments(stat *stats.Statistics, path string, data *XmlRoot) []*
 	}
 
 	for _, mx := range found {
-		tags := tagger.NewTagger()
-		tags.Add("type:ableton-mixer")
+		tb := tc.NewBucket()
+		tb.Add("type:ableton-mixer")
 
 		doc := NewMixerDocument()
 		doc.LoadDisplayName([]string{AbletonMixer})
-		doc.LoadFileReference(path, tags)
-		doc.LoadUserInfoText(mx.Annotation.Value, tags)
-		doc.LoadUserName(mx.UserName.Value, tags)
-		doc.LoadDeviceIsFolded(mx.IsFolded.Value, tags)
-		doc.LoadDeviceIsExpanded(mx.IsExpanded.Value, tags)
+		doc.LoadFileReference(path, tb)
+		doc.LoadUserInfoText(mx.Annotation.Value, tb)
+		doc.LoadUserName(mx.UserName.Value, tb)
+		doc.LoadDeviceIsFolded(mx.IsFolded.Value, tb)
+		doc.LoadDeviceIsExpanded(mx.IsExpanded.Value, tb)
 
-		doc.EngraveTags(tags)
+		doc.EngraveTags(tb)
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 

@@ -17,16 +17,21 @@ import (
 
 var versionNumberRegex = regexp.MustCompile(`^(\d+\.)?(\d+\.)?(\d+)`)
 
-func ParseLiveSet(stat *stats.Statistics, path string, data *XmlRoot) *pipeline.DocumentToIndexMsg {
-	// Extract the tags for live sets
-	tags := tagger.NewTagger()
-	tags.Add("type:ableton-live-set")
+func ParseLiveSet(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) *pipeline.DocumentToIndexMsg {
+	// Extract the tb for live sets
+	tb := tc.NewBucket()
+	tb.Add("type:ableton-live-set")
 
 	doc := NewLiveSetDocument()
 	doc.LoadDisplayName([]string{filepath.Base(path)})
-	doc.LoadFileReference(path, tags)
-	doc.LoadUserInfoText(data.LiveSet.Annotation.Value, tags)
-	doc.LoadScaleInformation(&data.LiveSet.ScaleInformation, tags)
+	doc.LoadFileReference(path, tb)
+	doc.LoadUserInfoText(data.LiveSet.Annotation.Value, tb)
+	doc.LoadScaleInformation(&data.LiveSet.ScaleInformation, tb)
 
 	doc.MajorVersion = data.MajorVersion
 	doc.MinorVersion = data.MinorVersion
@@ -43,20 +48,20 @@ func ParseLiveSet(stat *stats.Statistics, path string, data *XmlRoot) *pipeline.
 	doc.MidiTrackCount = len(data.LiveSet.Tracks.MidiTracks)
 	doc.AudioTrackCount = len(data.LiveSet.Tracks.AudioTracks)
 
-	tagLiveSetPath(path, tags)
-	tagLiveSetFile(path, tags)
-	tagLiveSetTracks(data, tags)
-	tagLiveSetVersion(data, tags)
-	tagLiveSetTempo(data, tags)
+	tagLiveSetPath(path, tb)
+	tagLiveSetFile(path, tb)
+	tagLiveSetTracks(data, tb)
+	tagLiveSetVersion(data, tb)
+	tagLiveSetTempo(data, tb)
 
-	doc.EngraveTags(tags)
+	doc.EngraveTags(tb)
 
 	stat.IncrementCounter(AbletonLiveSet)
 
 	return pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc)
 }
 
-func tagLiveSetFile(path string, tags *tagger.Tagger) {
+func tagLiveSetFile(path string, tb *tagger.TagBucket) {
 	// Extract some details about the file itself
 	fstat, err := times.Stat(path)
 	if err == nil {
@@ -64,87 +69,87 @@ func tagLiveSetFile(path string, tags *tagger.Tagger) {
 		year, month, _ := fstat.ModTime().Date()
 
 		// Simple scalars
-		tags.Add(fmt.Sprintf("file:mtime-year=%d", year))
-		tags.Add(fmt.Sprintf("file:mtime-weekday=%d", fstat.ModTime().Weekday()))
+		tb.Add(fmt.Sprintf("file:mtime-year=%d", year))
+		tb.Add(fmt.Sprintf("file:mtime-weekday=%d", fstat.ModTime().Weekday()))
 
 		// Month based breakdowns
-		tags.Add(fmt.Sprintf("file:mtime-month=%d", month))
-		tags.Add(fmt.Sprintf("file:mtime-quarter=%d", (month+2)/3))
+		tb.Add(fmt.Sprintf("file:mtime-month=%d", month))
+		tb.Add(fmt.Sprintf("file:mtime-quarter=%d", (month+2)/3))
 
 		// Week number is a bit more complex, a week can span years, but for now we just want the week number.
 		_, wno := fstat.ModTime().ISOWeek()
-		tags.Add(fmt.Sprintf("file:mtime-weekno=%d", wno))
+		tb.Add(fmt.Sprintf("file:mtime-weekno=%d", wno))
 
 		// Do the same for the creation time, if possible
 		if fstat.HasBirthTime() {
 			year, month, _ := fstat.BirthTime().Date()
 
 			// Simple scalars
-			tags.Add(fmt.Sprintf("file:btime-year=%d", year))
-			tags.Add(fmt.Sprintf("file:btime-weekday=%d", fstat.ModTime().Weekday()))
+			tb.Add(fmt.Sprintf("file:btime-year=%d", year))
+			tb.Add(fmt.Sprintf("file:btime-weekday=%d", fstat.ModTime().Weekday()))
 
 			// Month based breakdowns
-			tags.Add(fmt.Sprintf("file:btime-month=%d", month))
-			tags.Add(fmt.Sprintf("file:btime-quarter=%d", (month+2)/3))
+			tb.Add(fmt.Sprintf("file:btime-month=%d", month))
+			tb.Add(fmt.Sprintf("file:btime-quarter=%d", (month+2)/3))
 
 			// Week number is a bit more complex, a week can span years, but for now we just want the week number.
 			_, wno := fstat.ModTime().ISOWeek()
-			tags.Add(fmt.Sprintf("file:btime-weekno=%d", wno))
+			tb.Add(fmt.Sprintf("file:btime-weekno=%d", wno))
 
 			// Lets add some zodiac signs
 			for _, zodiac := range gozodiacs.GetWesternZodiacsForDate(fstat.BirthTime()) {
-				tags.Add(fmt.Sprintf("file:zodiac-western=%s", strings.ToLower(zodiac.String())))
+				tb.Add(fmt.Sprintf("file:zodiac-western=%s", strings.ToLower(zodiac.String())))
 			}
 
-			tags.Add(fmt.Sprintf("file:zodiac-chinese=%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(fstat.BirthTime()).String())))
+			tb.Add(fmt.Sprintf("file:zodiac-chinese=%s", strings.ToLower(gozodiacs.GetChineseZodiacSign(fstat.BirthTime()).String())))
 		}
 	}
 }
 
-func tagLiveSetTempo(data *XmlRoot, tags *tagger.Tagger) {
+func tagLiveSetTempo(data *XmlRoot, tb *tagger.TagBucket) {
 	// @todo how to handle multi tempo files, i.e. through tempo automation?
 	if data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value > 0 {
 		// If we have a rounded tempo, we just need to add one tag
 		if math.Trunc(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value) == data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value {
-			tags.Add(fmt.Sprintf("bpm=%d", int(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+			tb.Add(fmt.Sprintf("bpm=%d", int(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
 		} else {
 			// Otherwise it's a weird file where the tempo is a fraction, like in some XmlRoot delivered ALS files.
-			// We just add both rounded values to the tags
-			tags.Add(fmt.Sprintf("bpm=%d", int(math.Floor(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
-			tags.Add(fmt.Sprintf("bpm=%d", int(math.Ceil(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+			// We just add both rounded values to the tb
+			tb.Add(fmt.Sprintf("bpm=%d", int(math.Floor(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
+			tb.Add(fmt.Sprintf("bpm=%d", int(math.Ceil(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))))
 		}
 	}
 }
 
-func tagLiveSetTracks(data *XmlRoot, tags *tagger.Tagger) {
+func tagLiveSetTracks(data *XmlRoot, tb *tagger.TagBucket) {
 	// Overall track specifics
-	tags.Add(fmt.Sprintf("ableton-live-set:tracks:count=%d", len(data.LiveSet.Tracks.AudioTracks)+len(data.LiveSet.Tracks.MidiTracks)))
+	tb.Add(fmt.Sprintf("ableton-live-set:tracks:count=%d", len(data.LiveSet.Tracks.AudioTracks)+len(data.LiveSet.Tracks.MidiTracks)))
 
 	// Audio track specifics
-	tags.Add(fmt.Sprintf("ableton-live-set:audio-tracks:count=%d", len(data.LiveSet.Tracks.AudioTracks)))
+	tb.Add(fmt.Sprintf("ableton-live-set:audio-tracks:count=%d", len(data.LiveSet.Tracks.AudioTracks)))
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 {
-		tags.Add("ableton-live-set:audio-tracks:present=true")
+		tb.Add("ableton-live-set:audio-tracks:present=true")
 	} else {
-		tags.Add("ableton-live-set:audio-tracks:present=false")
+		tb.Add("ableton-live-set:audio-tracks:present=false")
 	}
 
 	// Midi track specifics
-	tags.Add(fmt.Sprintf("ableton-live-set:midi-tracks:count=%d", len(data.LiveSet.Tracks.MidiTracks)))
+	tb.Add(fmt.Sprintf("ableton-live-set:midi-tracks:count=%d", len(data.LiveSet.Tracks.MidiTracks)))
 	if len(data.LiveSet.Tracks.MidiTracks) > 0 {
-		tags.Add("ableton-live-set:midi-tracks:present=true")
+		tb.Add("ableton-live-set:midi-tracks:present=true")
 	} else {
-		tags.Add("ableton-live-set:midi-tracks:present=false")
+		tb.Add("ableton-live-set:midi-tracks:present=false")
 	}
 }
 
-func tagLiveSetPath(path string, tags *tagger.Tagger) {
+func tagLiveSetPath(path string, tb *tagger.TagBucket) {
 	// Determine the overall location of the file
 	homeDir, err := os.UserHomeDir()
 	if err == nil {
 		if strings.HasPrefix(path, homeDir) {
-			tags.Add("file:location=inside-user-home")
+			tb.Add("file:location=inside-user-home")
 		} else {
-			tags.Add("file:location=outside-user-home")
+			tb.Add("file:location=outside-user-home")
 		}
 	}
 
@@ -152,53 +157,53 @@ func tagLiveSetPath(path string, tags *tagger.Tagger) {
 	// ".../samples/Backup/MIDI Effect Arpeggiator [2023-11-06 163730].als"
 	found, err := regexp.MatchString(`Backup[/\\](.*)\[\d{4}-\d{2}-\d{2} \d{6}]`, path)
 	if err == nil && found {
-		tags.Add("file:location=ableton-backup")
+		tb.Add("file:location=ableton-backup")
 	}
 
 	if util.PathContainsFolder(path, "Trash") || util.PathContainsFolder(path, "$Recycle.Bin") {
-		tags.Add("file:location=trash")
+		tb.Add("file:location=trash")
 	}
 
 	if util.PathContainsFolder(path, "pCloudDrive") {
-		tags.Add("file:location=p-cloud")
+		tb.Add("file:location=p-cloud")
 	}
 
 	if util.PathContainsFolder(path, "Live Recordings") {
-		tags.Add("file:location=ableton-live-recording")
+		tb.Add("file:location=ableton-live-recording")
 	}
 
 	if util.PathContainsFolder(path, "Factory Packs") {
-		tags.Add("file:location=ableton-factory-pack")
+		tb.Add("file:location=ableton-factory-pack")
 	}
 
 	if util.PathContainsFolder(path, "Cloud Manager") {
-		tags.Add("file:location=ableton-cloud-manager")
+		tb.Add("file:location=ableton-cloud-manager")
 	}
 
 	if util.PathContainsFolder(path, "User Library") {
-		tags.Add("file:location=ableton-user-library")
+		tb.Add("file:location=ableton-user-library")
 	}
 }
 
-func tagLiveSetVersion(data *XmlRoot, tags *tagger.Tagger) {
+func tagLiveSetVersion(data *XmlRoot, tb *tagger.TagBucket) {
 	// Extract software version
 	if strings.HasPrefix(data.Creator, "Ableton Live ") {
 		rawVersion := strings.TrimPrefix(data.Creator, "Ableton Live ")
 
-		tags.Add(fmt.Sprintf("ableton:version=%s", rawVersion))
+		tb.Add(fmt.Sprintf("ableton:version=%s", rawVersion))
 
 		if versionNumberRegex.MatchString(rawVersion) {
 			verParts := strings.Split(versionNumberRegex.FindString(rawVersion), ".")
 
 			// Major version tag
-			tags.Add(fmt.Sprintf("ableton:version=%s", strings.Join(verParts[:1], ".")))
+			tb.Add(fmt.Sprintf("ableton:version=%s", strings.Join(verParts[:1], ".")))
 
 			// Minor version tag
-			tags.Add(fmt.Sprintf("ableton:version=%s", strings.Join(verParts[:2], ".")))
+			tb.Add(fmt.Sprintf("ableton:version=%s", strings.Join(verParts[:2], ".")))
 
 			// Patch version tag, just to be sure, so that "11.1.5d1" also shows up.
 			if len(verParts) == 3 {
-				tags.Add(fmt.Sprintf("ableton:version=%s", strings.Join(verParts[:3], ".")))
+				tb.Add(fmt.Sprintf("ableton:version=%s", strings.Join(verParts[:3], ".")))
 			}
 		}
 	}

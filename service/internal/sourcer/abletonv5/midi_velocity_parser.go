@@ -6,7 +6,12 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseMidiVelocityDevice(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseMidiVelocityDevice(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) []*pipeline.DocumentToIndexMsg {
 	hits := make([]XmlMidiVelocityDevice, 0, 100)
 
 	// Find all MidiArpeggiator devices, in all known device chains
@@ -19,21 +24,21 @@ func ParseMidiVelocityDevice(stat *stats.Statistics, path string, data *XmlRoot)
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, device := range hits {
-		tags := tagger.NewTagger()
-		tags.Add("type:ableton-midi-velocity-device")
-		tags.Add("ableton-device:midi-velocity")
+		tb := tc.NewBucket()
+		tb.Add("type:ableton-midi-velocity-device")
+		tb.Add("ableton-device:midi-velocity")
 
 		doc := NewMidiVelocityDeviceDocument()
 		doc.LoadDisplayName([]string{
 			device.UserName.Value,
 		})
-		doc.LoadFileReference(path, tags)
-		doc.LoadUserInfoText(device.Annotation.Value, tags)
+		doc.LoadFileReference(path, tb)
+		doc.LoadUserInfoText(device.Annotation.Value, tb)
 
-		doc.LoadDeviceIsExpanded(device.IsExpanded.Value, tags)
-		doc.LoadDeviceIsFolded(device.IsFolded.Value, tags)
+		doc.LoadDeviceIsExpanded(device.IsExpanded.Value, tb)
+		doc.LoadDeviceIsFolded(device.IsFolded.Value, tb)
 
-		doc.EngraveTags(tags)
+		doc.EngraveTags(tb)
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 

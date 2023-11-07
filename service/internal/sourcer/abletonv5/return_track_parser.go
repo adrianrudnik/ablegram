@@ -6,23 +6,28 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 )
 
-func ParseReturnTracks(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.DocumentToIndexMsg {
+func ParseReturnTracks(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+	data *XmlRoot,
+) []*pipeline.DocumentToIndexMsg {
 	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
 
 	for _, returnTrack := range data.LiveSet.Tracks.ReturnTracks {
-		tags := tagger.NewTagger()
-		tags.Add("type:ableton-return-track")
+		tb := tc.NewBucket()
+		tb.Add("type:ableton-return-track")
 
 		doc := NewReturnTrackDocument()
 		doc.LoadDisplayName([]string{
 			returnTrack.Name.UserName.Value,
 			returnTrack.Name.EffectiveName.Value,
 		})
-		doc.LoadFileReference(path, tags)
-		doc.LoadTrackUserNames(&returnTrack.XmlTrackNameNode, tags)
-		doc.LoadColor(returnTrack.Color.Value, tags)
+		doc.LoadFileReference(path, tb)
+		doc.LoadTrackUserNames(&returnTrack.XmlTrackNameNode, tb)
+		doc.LoadColor(returnTrack.Color.Value, tb)
 
-		doc.EngraveTags(tags)
+		doc.EngraveTags(tb)
 
 		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
 

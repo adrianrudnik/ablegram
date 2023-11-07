@@ -1,6 +1,7 @@
 package abletonv5
 
 import (
+	"fmt"
 	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
@@ -30,7 +31,8 @@ func ParseClips(stat *stats.Statistics, path string, data *XmlRoot) []*pipeline.
 				hasProbability := false
 				for _, note := range slots.MidiClip.Notes.KeyTracks {
 					// Add the used notes
-					tags.Add("note=" + note.MidiKey.HumanReadable())
+					tags.Add(fmt.Sprintf("note=%s", note.MidiKey.HumanReadable()))
+					tags.Add(fmt.Sprintf("midi:key=%d", note.MidiKey.Value))
 
 					for _, midiNote := range note.Notes {
 						if midiNote.Probability < 1 {

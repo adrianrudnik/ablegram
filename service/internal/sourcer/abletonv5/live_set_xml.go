@@ -20,10 +20,6 @@ type XmlTracks struct {
 	PreHearTrack []XmlPreHearTrack `xml:"PreHearTrack"`
 }
 
-type XmlMasterTrack struct {
-	DeviceChain XmlActualDeviceChain `xml:"DeviceChain"`
-}
-
 type XmlScaleInformation struct {
 	RootNote XmlIntValue    `xml:"RootNote"`
 	Name     XmlStringValue `xml:"Name"`
@@ -50,10 +46,6 @@ func (l *XmlLiveSet) GetAllTrackDeviceChains() []XmlTrackDeviceChain {
 		hits = append(hits, audioTrack.DeviceChain)
 	}
 
-	for _, groupTrack := range l.Tracks.GroupTracks {
-		hits = append(hits, groupTrack.DeviceChain)
-	}
-
 	for _, returnTrack := range l.Tracks.ReturnTracks {
 		hits = append(hits, returnTrack.DeviceChain)
 	}
@@ -62,17 +54,35 @@ func (l *XmlLiveSet) GetAllTrackDeviceChains() []XmlTrackDeviceChain {
 		hits = append(hits, preHearTrack.DeviceChain)
 	}
 
+	for _, groupTrack := range l.Tracks.GroupTracks {
+		hits = append(hits, groupTrack.DeviceChain)
+	}
+
 	return hits
 }
 
 func (l *XmlLiveSet) GetAllActualDeviceChains() []XmlActualDeviceChain {
 	hits := make([]XmlActualDeviceChain, 0, 100)
 
+	hits = append(hits, l.MasterTrack.DeviceChain.DeviceChain)
+
 	for _, track := range l.Tracks.MidiTracks {
 		hits = append(hits, track.DeviceChain.DeviceChain)
 	}
 
 	for _, track := range l.Tracks.AudioTracks {
+		hits = append(hits, track.DeviceChain.DeviceChain)
+	}
+
+	for _, track := range l.Tracks.ReturnTracks {
+		hits = append(hits, track.DeviceChain.DeviceChain)
+	}
+
+	for _, track := range l.Tracks.PreHearTrack {
+		hits = append(hits, track.DeviceChain.DeviceChain)
+	}
+
+	for _, track := range l.Tracks.GroupTracks {
 		hits = append(hits, track.DeviceChain.DeviceChain)
 	}
 

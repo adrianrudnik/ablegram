@@ -4,6 +4,6 @@ type XmlMidiChordDevice struct {
 	XmlIdNode
 	XmlUserNameNode
 	XmlAnnotationNode
-	XmlIsFoldedValue
-	XmlIsExpandedValue
+	XmlIsFoldedNode
+	XmlIsExpandedNode
 }

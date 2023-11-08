@@ -20,12 +20,19 @@ func NewTagBucket(collector *TagCollector) *TagBucket {
 }
 
 func (t *TagBucket) Add(tag string) {
+	// Store the trimmed tag, with value
 	tag = strings.TrimSpace(tag)
 	if tag == "" {
 		return
 	}
 
 	t.tags = append(t.tags, fmt.Sprintf("%s", tag))
+
+	// Also store the base variant without value for "has at least one of this" queries
+	parts := strings.Split(tag, "=")
+	if len(parts) > 1 {
+		t.tags = append(t.tags, fmt.Sprintf("%s", parts[0]))
+	}
 }
 
 func (t *TagBucket) GetAll() []string {

@@ -27,6 +27,6 @@ func parseFlags(c *config.Config) {
 	c.Behaviour.ShowGui = !*noGuiFlag
 	c.Behaviour.WebserviceAutostart = !*noWebserviceFlag
 
-	c.ParserConfig.WorkerCount = *parserWorkerCount
-	c.ParserConfig.WorkerDelayInMs = *parserWorkerDelay
+	c.Parser.WorkerCount = *parserWorkerCount
+	c.Parser.WorkerDelayInMs = *parserWorkerDelay
 }

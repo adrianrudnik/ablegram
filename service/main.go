@@ -120,8 +120,8 @@ func main() {
 
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
-		collectorWorkers := collector.NewWorkerPool(10, filesToProcessChan, pushChan)
-		go collectorWorkers.Run(appConfig, appProgress)
+		collectorWorkers := collector.NewWorkerPool(appConfig, filesToProcessChan, pushChan)
+		go collectorWorkers.Run(appProgress)
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
@@ -130,8 +130,8 @@ func main() {
 
 		// Create the indexerWorker
 		indexer.Logger = log.With().Str("module", "indexer").Logger()
-		search := indexer.NewSearch()
-		indexerWorker := indexer.NewWorker(search, resultsToIndexChan, pushChan)
+		appIndexer := indexer.NewSearch()
+		indexerWorker := indexer.NewWorker(appConfig, appIndexer, resultsToIndexChan, pushChan)
 		go indexerWorker.Run(appProgress, appStats)
 
 		// Try to open the default browser on the given OS
@@ -148,7 +148,7 @@ func main() {
 			appConfig.Webservice.ChosenPort = port
 			err := webservice.Serve(
 				appConfig,
-				search,
+				appIndexer,
 				appTags,
 				appPusher,
 				fmt.Sprintf(":%d", port),

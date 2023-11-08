@@ -12,7 +12,6 @@ import (
 type WorkerPool struct {
 	config          *config.Config
 	tags            *tagger.TagCollector
-	workerCount     int
 	inFilesChan     <-chan *workload.FilePayload
 	outDocumentChan chan<- *workload.DocumentPayload
 	pushChan        chan<- interface{}
@@ -38,9 +37,11 @@ func (p *WorkerPool) Run(
 	progress *stats.ProcessProgress,
 	stat *stats.Statistics,
 ) {
-	Logger.Info().Int("count", p.workerCount).Msg("Starting parser workers")
+	Logger.Info().
+		Int("count", p.config.Parser.WorkerCount).
+		Msg("Starting parser workers")
 
-	for i := 0; i < p.config.ParserConfig.WorkerCount; i++ {
+	for i := 0; i < p.config.Parser.WorkerCount; i++ {
 		go p.doWork(progress, stat)
 	}
 }
@@ -48,20 +49,19 @@ func (p *WorkerPool) Run(
 func (p *WorkerPool) doWork(progress *stats.ProcessProgress, stat *stats.Statistics) {
 	for msg := range p.inFilesChan {
 		// Add possible delay, for debugging or to simulate a slower system
-		if p.config.ParserConfig.WorkerDelayInMs > 0 {
-			time.Sleep(time.Duration(p.config.ParserConfig.WorkerDelayInMs) * time.Millisecond)
+		if p.config.Parser.WorkerDelayInMs > 0 {
+			time.Sleep(time.Duration(p.config.Parser.WorkerDelayInMs) * time.Millisecond)
 		}
 
 		progress.Add()
 		docs, err := ParseAls(stat, p.tags, msg.AbsPath)
-
 		progress.Done()
+
 		if err != nil {
 			Logger.Warn().Err(err).Str("path", msg.AbsPath).Msg("Failed to parse file")
 
 			// Notify the UI about the failure
 			p.pushChan <- pusher.NewFileStatusPush(msg.AbsPath, "failed", err.Error())
-
 			continue
 		}
 

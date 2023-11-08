@@ -28,9 +28,11 @@ func newConfig() *Config {
 		Collector: CollectorConfig{
 			SearchablePaths:      make([]string, 0, 100),
 			ExcludeSystemFolders: true,
+			WorkerCount:          5,
+			WorkerDelayInMs:      0,
 		},
 
-		ParserConfig: ParserConfig{
+		Parser: ParserConfig{
 			WorkerCount:     5,
 			WorkerDelayInMs: 0,
 		},

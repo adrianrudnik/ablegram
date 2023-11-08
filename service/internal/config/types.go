@@ -1,12 +1,13 @@
 package config
 
 type Config struct {
-	About        About            `yaml:"about"`
-	Log          LogConfig        `yaml:"log"`
-	Behaviour    BehaviourConfig  `yaml:"behaviour"`
-	Collector    CollectorConfig  `yaml:"collector"`
-	ParserConfig ParserConfig     `yaml:"parser"`
-	Webservice   WebserviceConfig `yaml:"webservice"`
+	About      About            `yaml:"about"`
+	Log        LogConfig        `yaml:"log"`
+	Behaviour  BehaviourConfig  `yaml:"behaviour"`
+	Collector  CollectorConfig  `yaml:"collector"`
+	Parser     ParserConfig     `yaml:"parser"`
+	Indexer    IndexerConfig    `yaml:"indexer"`
+	Webservice WebserviceConfig `yaml:"webservice"`
 }
 
 type About struct {
@@ -28,12 +29,18 @@ type BehaviourConfig struct {
 }
 
 type CollectorConfig struct {
+	WorkerCount          int      `yaml:"worker_count"`
+	WorkerDelayInMs      int      `yaml:"worker_delay_in_milliseconds"`
 	SearchablePaths      []string `yaml:"searchable_paths"`
 	ExcludeSystemFolders bool     `yaml:"exclude_system_folders"`
 }
 
 type ParserConfig struct {
 	WorkerCount     int `yaml:"worker_count"`
+	WorkerDelayInMs int `yaml:"worker_delay_in_milliseconds"`
+}
+
+type IndexerConfig struct {
 	WorkerDelayInMs int `yaml:"worker_delay_in_milliseconds"`
 }
 

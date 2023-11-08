@@ -1,9 +1,9 @@
 package abletonv5
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 )
 
 func ParseMidiChordDevice(
@@ -11,7 +11,7 @@ func ParseMidiChordDevice(
 	tc *tagger.TagCollector,
 	path string,
 	data *XmlRoot,
-) []*pipeline.DocumentToIndexMsg {
+) []*workload.DocumentPayload {
 	hits := make([]XmlMidiChordDevice, 0, 100)
 
 	for _, chain := range data.LiveSet.GetAllActualDeviceChains() {
@@ -20,7 +20,7 @@ func ParseMidiChordDevice(
 		}
 	}
 
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
+	docs := make([]*workload.DocumentPayload, 0, 10)
 
 	for _, device := range hits {
 		tb := tc.NewBucket()
@@ -38,7 +38,7 @@ func ParseMidiChordDevice(
 
 		doc.EngraveTags(tb)
 
-		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
+		docs = append(docs, workload.NewDocumentPayload(doc.GetAutoId(), doc))
 
 		stat.IncrementCounter(AbletonMidiArpeggiatorDevice)
 	}

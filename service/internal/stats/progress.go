@@ -2,6 +2,7 @@ package stats
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
 	"sync/atomic"
 	"time"
@@ -13,12 +14,12 @@ import (
 // in a debounced way, so the UI can decide if the service is working (n > 0)
 // or all tasks have finished (n == 0).
 type ProcessProgress struct {
-	progressCount atomic.Int64       // Expose the counter to UI
-	pushChan      chan<- interface{} // Broadcast updates
-	pushTrigger   func()             // Triggers a debounced push broadcast
+	progressCount atomic.Int64                // Expose the counter to UI
+	pushChan      chan<- workload.PushMessage // Broadcast updates
+	pushTrigger   func()                      // Triggers a debounced push broadcast
 }
 
-func NewProcessProgress(pushChan chan<- interface{}) *ProcessProgress {
+func NewProcessProgress(pushChan chan<- workload.PushMessage) *ProcessProgress {
 	p := &ProcessProgress{
 		pushChan: pushChan,
 	}

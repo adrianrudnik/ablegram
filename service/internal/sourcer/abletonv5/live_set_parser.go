@@ -2,10 +2,10 @@ package abletonv5
 
 import (
 	"fmt"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/util"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/djherbis/times"
 	"github.com/duaneking/gozodiacs"
 	"math"
@@ -22,7 +22,7 @@ func ParseLiveSet(
 	tc *tagger.TagCollector,
 	path string,
 	data *XmlRoot,
-) *pipeline.DocumentToIndexMsg {
+) *workload.DocumentPayload {
 	// Extract the tb for live sets
 	tb := tc.NewBucket()
 	tb.Add("type:ableton-live-set")
@@ -58,7 +58,7 @@ func ParseLiveSet(
 
 	stat.IncrementCounter(AbletonLiveSet)
 
-	return pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc)
+	return workload.NewDocumentPayload(doc.GetAutoId(), doc)
 }
 
 func tagLiveSetFile(path string, tb *tagger.TagBucket) {

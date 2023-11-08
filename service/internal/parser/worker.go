@@ -2,35 +2,35 @@ package parser
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"time"
 )
 
 type WorkerPool struct {
-	config           *config.Config
-	tags             *tagger.TagCollector
-	workerCount      int
-	inputPathsChan   <-chan *pipeline.FilesForProcessorMsg
-	outputResultChan chan<- *pipeline.DocumentToIndexMsg
-	pushChan         chan<- interface{}
+	config          *config.Config
+	tags            *tagger.TagCollector
+	workerCount     int
+	inFilesChan     <-chan *workload.FilePayload
+	outDocumentChan chan<- *workload.DocumentPayload
+	pushChan        chan<- interface{}
 }
 
 func NewWorkerPool(
 	conf *config.Config,
 	tags *tagger.TagCollector,
-	pathChan <-chan *pipeline.FilesForProcessorMsg,
-	resultChan chan<- *pipeline.DocumentToIndexMsg,
+	pathChan <-chan *workload.FilePayload,
+	resultChan chan<- *workload.DocumentPayload,
 	pushChan chan<- interface{},
 ) *WorkerPool {
 	return &WorkerPool{
-		config:           conf,
-		tags:             tags,
-		inputPathsChan:   pathChan,
-		outputResultChan: resultChan,
-		pushChan:         pushChan,
+		config:          conf,
+		tags:            tags,
+		inFilesChan:     pathChan,
+		outDocumentChan: resultChan,
+		pushChan:        pushChan,
 	}
 }
 
@@ -46,7 +46,7 @@ func (p *WorkerPool) Run(
 }
 
 func (p *WorkerPool) doWork(progress *stats.ProcessProgress, stat *stats.Statistics) {
-	for msg := range p.inputPathsChan {
+	for msg := range p.inFilesChan {
 		// Add possible delay, for debugging or to simulate a slower system
 		if p.config.ParserConfig.WorkerDelayInMs > 0 {
 			time.Sleep(time.Duration(p.config.ParserConfig.WorkerDelayInMs) * time.Millisecond)
@@ -72,7 +72,7 @@ func (p *WorkerPool) doWork(progress *stats.ProcessProgress, stat *stats.Statist
 
 		// Move the result over to the indexer pipeline
 		for _, doc := range docs {
-			p.outputResultChan <- doc
+			p.outDocumentChan <- doc
 		}
 	}
 }

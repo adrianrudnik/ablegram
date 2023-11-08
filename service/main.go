@@ -13,12 +13,12 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/parser"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/webservice"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -27,6 +27,7 @@ import (
 	"time"
 )
 
+// Generate the bundled.go file containing all static assets used by the GUI
 //go:generate fyne bundle -o bundled.go assets/icon.png
 //go:generate fyne bundle -o bundled.go -append assets/logo-wide-light.static.png
 //go:generate fyne bundle -o bundled.go -append assets/logo-wide-dark.static.png
@@ -76,21 +77,29 @@ func main() {
 		Str("build-date", BuildDate).
 		Msg("App starting")
 
-	// Create some channel based pipelines to pass around the different workloads
-	pusherPipeline := pipeline.NewFrontendPush()
-	filesPipeline := pipeline.NewFilesForProcessor()
-	resultsPipeline := pipeline.NewDocumentsToIndex()
+	// Channel to push messages to the frontend
+	pushChan := make(chan workload.PushMessage, 5000)
+
+	// Channel to inject files for processing towards the process workers
+	// We go for 5k buffer, because the collector will push a lot of files into the channel
+	// as it is a simple directory walker per configured search entrypoint (i.e. folder/drive).
+	filesToProcessChan := make(chan *workload.FilePayload, 5000)
+
+	// Channel to inject parsed results to be indexed by the index workers
+	// We go for 20k buffer, as we will have at least 10 documents per parsed file
+	// but the indexer can only batch single threaded.
+	resultsToIndexChan := make(chan *workload.DocumentPayload, 50000)
 
 	// ProcessProgress is responsible in holding the current appProgress and
 	// notifying the frontend about it
 	stats.Logger = log.With().Str("module", "stats").Logger()
-	appProgress := stats.NewProcessProgress(pusherPipeline.Chan)
+	appProgress := stats.NewProcessProgress(pushChan)
 
 	// TagCollector is responsible for collecting all tags and pushing them to the frontend
 	// if the collector is wired to a push channel
 	tagger.Logger = log.With().Str("module", "tagger").Logger()
 	appTags := tagger.NewTagCollector(appConfig)
-	appTags.WirePusher(pusherPipeline.Chan)
+	appTags.WirePusher(pushChan)
 
 	// Kick of the webservice
 	go func() {
@@ -102,27 +111,27 @@ func main() {
 		ui.Logger = log.With().Str("module", "ui").Logger()
 
 		// Statistics is responsible in keeping and communicating key metrics for the frontend
-		appStats := stats.NewStatistics(appConfig, pusherPipeline.Chan)
+		appStats := stats.NewStatistics(appConfig, pushChan)
 
 		// Start the frontend push worker
 		webservice.Logger = log.With().Str("module", "webservice").Logger()
-		appPusher := webservice.NewPushChannel(pusherPipeline.Chan)
+		appPusher := webservice.NewPushChannel(pushChan)
 		go appPusher.Run()
 
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
-		collectorWorkers := collector.NewWorkerPool(10, filesPipeline.Chan, pusherPipeline.Chan)
+		collectorWorkers := collector.NewWorkerPool(10, filesToProcessChan, pushChan)
 		go collectorWorkers.Run(appConfig, appProgress)
 
 		// Parser is responsible for parsing the files into results for the indexerWorker
 		parser.Logger = log.With().Str("module", "parser").Logger()
-		parserWorkers := parser.NewWorkerPool(appConfig, appTags, filesPipeline.Chan, resultsPipeline.Chan, pusherPipeline.Chan)
+		parserWorkers := parser.NewWorkerPool(appConfig, appTags, filesToProcessChan, resultsToIndexChan, pushChan)
 		go parserWorkers.Run(appProgress, appStats)
 
 		// Create the indexerWorker
 		indexer.Logger = log.With().Str("module", "indexer").Logger()
 		search := indexer.NewSearch()
-		indexerWorker := indexer.NewWorker(search, resultsPipeline.Chan, pusherPipeline.Chan)
+		indexerWorker := indexer.NewWorker(search, resultsToIndexChan, pushChan)
 		go indexerWorker.Run(appProgress, appStats)
 
 		// Try to open the default browser on the given OS
@@ -198,7 +207,7 @@ func main() {
 		w.ShowAndRun()
 
 		// Say goodbye in the browser window, if available.
-		pusherPipeline.Chan <- pusher.NewNavigatePush("goodbye")
+		pushChan <- pusher.NewNavigatePush("goodbye")
 		time.Sleep(100 * time.Millisecond)
 	}
 }

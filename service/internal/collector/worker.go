@@ -2,19 +2,19 @@ package collector
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 )
 
 type WorkerPool struct {
 	workerCount  int
 	paths        []string
 	inPathChan   chan string
-	outFilesChan chan<- *pipeline.FilesForProcessorMsg
+	outFilesChan chan<- *workload.FilePayload
 	pushChan     chan<- interface{}
 }
 
-func NewWorkerPool(workerCount int, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) *WorkerPool {
+func NewWorkerPool(workerCount int, filesChan chan<- *workload.FilePayload, broadcastChan chan<- interface{}) *WorkerPool {
 	return &WorkerPool{
 		workerCount:  workerCount,
 		inPathChan:   make(chan string, 100),

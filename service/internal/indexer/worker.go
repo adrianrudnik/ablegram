@@ -1,18 +1,18 @@
 package indexer
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/rs/zerolog/log"
 )
 
 type Worker struct {
 	search   *Search
-	docChan  <-chan *pipeline.DocumentToIndexMsg
+	docChan  <-chan *workload.DocumentPayload
 	pushChan chan<- interface{}
 }
 
-func NewWorker(search *Search, docChan <-chan *pipeline.DocumentToIndexMsg, broadcastChan chan<- interface{}) *Worker {
+func NewWorker(search *Search, docChan <-chan *workload.DocumentPayload, broadcastChan chan<- interface{}) *Worker {
 	return &Worker{
 		search:   search,
 		docChan:  docChan,

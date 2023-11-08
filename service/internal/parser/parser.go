@@ -2,17 +2,17 @@ package parser
 
 import (
 	"encoding/xml"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/sourcer/abletonv5"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/rs/zerolog"
 	"os"
 )
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-func parseAlsV5(stat *stats.Statistics, tc *tagger.TagCollector, path string) ([]*pipeline.DocumentToIndexMsg, error) {
+func parseAlsV5(stat *stats.Statistics, tc *tagger.TagCollector, path string) ([]*workload.DocumentPayload, error) {
 	rawContent, err := extractGzip(path)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func parseAlsV5(stat *stats.Statistics, tc *tagger.TagCollector, path string) ([
 	}
 
 	// Create a slice to hold all documents that we out of the XML information
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 500)
+	docs := make([]*workload.DocumentPayload, 0, 500)
 
 	docs = append(docs, abletonv5.ParseLiveSet(stat, tc, path, &data))
 	docs = append(docs, abletonv5.ParseMidiTracks(stat, tc, path, &data)...)
@@ -53,7 +53,7 @@ func ParseAls(
 	stat *stats.Statistics,
 	tags *tagger.TagCollector,
 	path string,
-) ([]*pipeline.DocumentToIndexMsg, error) {
+) ([]*workload.DocumentPayload, error) {
 	Logger.Debug().Str("path", path).Msg("Start processing")
 
 	r, err := parseAlsV5(stat, tags, path)

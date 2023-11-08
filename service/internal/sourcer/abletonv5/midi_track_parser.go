@@ -1,9 +1,9 @@
 package abletonv5
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 )
 
 func ParseMidiTracks(
@@ -11,8 +11,8 @@ func ParseMidiTracks(
 	tc *tagger.TagCollector,
 	path string,
 	data *XmlRoot,
-) []*pipeline.DocumentToIndexMsg {
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
+) []*workload.DocumentPayload {
+	docs := make([]*workload.DocumentPayload, 0, 10)
 
 	for _, midiTrack := range data.LiveSet.Tracks.MidiTracks {
 		tb := tc.NewBucket()
@@ -30,7 +30,7 @@ func ParseMidiTracks(
 
 		doc.EngraveTags(tb)
 
-		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
+		docs = append(docs, workload.NewDocumentPayload(doc.GetAutoId(), doc))
 
 		stat.IncrementCounter(AbletonMidiTrack)
 	}

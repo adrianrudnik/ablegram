@@ -3,6 +3,7 @@ package tagger
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
 	"strings"
 	"sync"
@@ -32,7 +33,7 @@ func NewTagCollector(conf *config.Config) *TagCollector {
 	return b
 }
 
-func (c *TagCollector) WirePusher(pushChan chan<- interface{}) {
+func (c *TagCollector) WirePusher(pushChan chan<- workload.PushMessage) {
 	c.TriggerUpdate, _ = lo.NewDebounce(250*time.Millisecond, func() {
 		pushChan <- pusher.NewTagUpdatePush(c.GetDetailedTags())
 	})

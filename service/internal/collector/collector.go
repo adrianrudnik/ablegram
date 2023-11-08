@@ -2,8 +2,8 @@ package collector
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/rs/zerolog"
 	"io/fs"
 	"os"
@@ -29,7 +29,12 @@ type Collection struct {
 	files []string
 }
 
-func Collect(conf *config.Config, path string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+func Collect(
+	conf *config.Config,
+	path string,
+	filesChan chan<- *workload.FilePayload,
+	broadcastChan chan<- interface{},
+) error {
 	allowedExtensions := []string{".als"}
 
 	err := findFilesByExtension(conf, path, allowedExtensions, filesChan, broadcastChan)
@@ -44,7 +49,13 @@ func Collect(conf *config.Config, path string, filesChan chan<- *pipeline.FilesF
 	return nil
 }
 
-func findFilesByExtension(conf *config.Config, root string, extensions []string, filesChan chan<- *pipeline.FilesForProcessorMsg, broadcastChan chan<- interface{}) error {
+func findFilesByExtension(
+	conf *config.Config,
+	root string,
+	extensions []string,
+	filesChan chan<- *workload.FilePayload,
+	broadcastChan chan<- interface{},
+) error {
 
 	folders := make([]string, 0, 1000000)
 
@@ -92,7 +103,7 @@ func findFilesByExtension(conf *config.Config, root string, extensions []string,
 				broadcastChan <- pusher.NewFileStatusPush(s, "pending", "")
 
 				// Move it over to the processing pipeline
-				filesChan <- &pipeline.FilesForProcessorMsg{AbsPath: s}
+				filesChan <- workload.NewFilePayload(s)
 			}
 		}
 

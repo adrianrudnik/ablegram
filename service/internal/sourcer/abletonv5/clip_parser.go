@@ -2,9 +2,9 @@ package abletonv5
 
 import (
 	"fmt"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 )
 
 func ParseClips(
@@ -12,8 +12,8 @@ func ParseClips(
 	tc *tagger.TagCollector,
 	path string,
 	data *XmlRoot,
-) []*pipeline.DocumentToIndexMsg {
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
+) []*workload.DocumentPayload {
+	docs := make([]*workload.DocumentPayload, 0, 10)
 
 	for _, chain := range data.LiveSet.GetAllTrackDeviceChains() {
 		for _, slots := range chain.MainSequencer.ClipSlotList.ClipSlots {
@@ -52,7 +52,7 @@ func ParseClips(
 
 				doc.EngraveTags(tb)
 
-				docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
+				docs = append(docs, workload.NewDocumentPayload(doc.GetAutoId(), doc))
 
 				stat.IncrementCounter(AbletonMidiClip)
 			}
@@ -71,7 +71,7 @@ func ParseClips(
 
 				doc.EngraveTags(tb)
 
-				docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
+				docs = append(docs, workload.NewDocumentPayload(doc.GetAutoId(), doc))
 
 				stat.IncrementCounter(AbletonAudioClip)
 			}

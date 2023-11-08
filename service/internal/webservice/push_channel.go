@@ -2,6 +2,7 @@ package webservice
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
 	"sync"
 	"time"
@@ -12,18 +13,18 @@ type PushChannel struct {
 	clientsLock           sync.RWMutex
 	addClient             chan *PushClient
 	removeClient          chan *PushClient
-	broadcast             chan interface{}
-	history               []interface{}
+	broadcast             <-chan workload.PushMessage
+	history               []workload.PushMessage
 	historyLock           sync.RWMutex
 	triggerHistoryCleanup func()
 }
 
-func NewPushChannel(broadcastChan chan interface{}) *PushChannel {
+func NewPushChannel(pushChan <-chan workload.PushMessage) *PushChannel {
 	return &PushChannel{
 		clients:      make(map[*PushClient]bool),
 		addClient:    make(chan *PushClient),
 		removeClient: make(chan *PushClient),
-		broadcast:    broadcastChan,
+		broadcast:    pushChan,
 		history:      make([]interface{}, 0, 500),
 	}
 }

@@ -2,9 +2,9 @@ package abletonv5
 
 import (
 	"fmt"
-	"github.com/adrianrudnik/ablegram/internal/pipeline"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 )
 
 func ParseScenes(
@@ -12,8 +12,8 @@ func ParseScenes(
 	tc *tagger.TagCollector,
 	path string,
 	data *XmlRoot,
-) []*pipeline.DocumentToIndexMsg {
-	docs := make([]*pipeline.DocumentToIndexMsg, 0, 10)
+) []*workload.DocumentPayload {
+	docs := make([]*workload.DocumentPayload, 0, 10)
 
 	for _, scene := range data.LiveSet.Scenes {
 		tb := tc.NewBucket()
@@ -31,7 +31,7 @@ func ParseScenes(
 
 		doc.EngraveTags(tb)
 
-		docs = append(docs, pipeline.NewDocumentToIndexMsg(doc.GetAutoId(), doc))
+		docs = append(docs, workload.NewDocumentPayload(doc.GetAutoId(), doc))
 
 		stat.IncrementCounter(AbletonScene)
 	}

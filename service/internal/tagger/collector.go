@@ -44,18 +44,17 @@ func (c *TagCollector) NewBucket() *TagBucket {
 }
 
 func (c *TagCollector) collectBaseTag(t string) {
+	if strings.TrimSpace(t) == "" {
+		return
+	}
+
 	c.baseMutex.Lock()
 	defer c.baseMutex.Unlock()
 
 	// Extract a variant of the tag without a value and increment the baseTags counter
 	if strings.Contains(t, "=") {
 		parts := strings.Split(t, "=")
-
-		if _, ok := c.baseTags[parts[0]]; ok {
-			t = parts[0]
-		} else {
-			t = parts[0]
-		}
+		t = parts[0]
 	}
 
 	if _, ok := c.baseTags[t]; ok {
@@ -68,6 +67,10 @@ func (c *TagCollector) collectBaseTag(t string) {
 }
 
 func (c *TagCollector) collectDetailedTag(t string) {
+	if strings.TrimSpace(t) == "" {
+		return
+	}
+
 	c.detailedMutex.Lock()
 	defer c.detailedMutex.Unlock()
 

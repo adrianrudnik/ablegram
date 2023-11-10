@@ -5,8 +5,8 @@ type MidiPitcherDeviceDocument struct {
 	HasFileReference
 	HasUserName
 	HasUserInfoText
-	HasDeviceIsExpanded
-	HasDeviceIsFolded
+	HasIsExpandedOption
+	HasIsFoldedOption
 }
 
 func NewMidiPitcherDeviceDocument() *MidiPitcherDeviceDocument {
@@ -15,7 +15,7 @@ func NewMidiPitcherDeviceDocument() *MidiPitcherDeviceDocument {
 		HasFileReference:    NewHasFileReference(),
 		HasUserName:         NewHasUserName(),
 		HasUserInfoText:     NewHasUserInfoText(),
-		HasDeviceIsExpanded: NewHasDeviceIsExpanded(),
-		HasDeviceIsFolded:   NewHasDeviceIsFolded(),
+		HasIsExpandedOption: NewHasDeviceIsExpanded(),
+		HasIsFoldedOption:   NewHasDeviceIsFolded(),
 	}
 }

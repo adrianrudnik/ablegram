@@ -128,17 +128,17 @@ func tagLiveSetTracks(data *XmlRoot, tb *tagger.TagBucket) {
 	// Audio track specifics
 	tb.Add(fmt.Sprintf("ableton-live-set:audio-tracks:count=%d", len(data.LiveSet.Tracks.AudioTracks)))
 	if len(data.LiveSet.Tracks.AudioTracks) > 0 {
-		tb.Add("ableton-live-set:audio-tracks:present=true")
+		tb.Add("ableton-live-set:audio-tracks:available=true")
 	} else {
-		tb.Add("ableton-live-set:audio-tracks:present=false")
+		tb.Add("ableton-live-set:audio-tracks:available=false")
 	}
 
 	// Midi track specifics
 	tb.Add(fmt.Sprintf("ableton-live-set:midi-tracks:count=%d", len(data.LiveSet.Tracks.MidiTracks)))
 	if len(data.LiveSet.Tracks.MidiTracks) > 0 {
-		tb.Add("ableton-live-set:midi-tracks:present=true")
+		tb.Add("ableton-live-set:midi-tracks:available=true")
 	} else {
-		tb.Add("ableton-live-set:midi-tracks:present=false")
+		tb.Add("ableton-live-set:midi-tracks:available=false")
 	}
 }
 

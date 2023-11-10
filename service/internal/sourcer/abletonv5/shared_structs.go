@@ -178,57 +178,57 @@ func (t *HasTempoWithToggle) LoadTempoWithToggle(v *XmlTempoWithToggleNode, tags
 	}
 }
 
-type HasDeviceIsExpanded struct {
+type HasIsExpandedOption struct {
 	IsExpanded bool `json:"isExpanded,omitempty"`
 }
 
-func NewHasDeviceIsExpanded() HasDeviceIsExpanded {
-	return HasDeviceIsExpanded{IsExpanded: false}
+func NewHasDeviceIsExpanded() HasIsExpandedOption {
+	return HasIsExpandedOption{IsExpanded: false}
 }
 
-func (h *HasDeviceIsExpanded) LoadDeviceIsExpanded(v bool, tags *tagger.TagBucket) {
+func (h *HasIsExpandedOption) LoadOptionExpanded(v bool, tags *tagger.TagBucket) {
 	h.IsExpanded = v
 
 	if v {
-		tags.Add("ableton-device:expanded=true")
+		tags.Add("ableton-option:expanded=true")
 	} else {
-		tags.Add("ableton-device:expanded=false")
+		tags.Add("ableton-option:expanded=false")
 	}
 }
 
-type HasDeviceIsFolded struct {
+type HasIsFoldedOption struct {
 	IsFolded bool `json:"isFolded,omitempty"`
 }
 
-func NewHasDeviceIsFolded() HasDeviceIsFolded {
-	return HasDeviceIsFolded{IsFolded: false}
+func NewHasDeviceIsFolded() HasIsFoldedOption {
+	return HasIsFoldedOption{IsFolded: false}
 }
 
-func (h *HasDeviceIsFolded) LoadDeviceIsFolded(v bool, tags *tagger.TagBucket) {
+func (h *HasIsFoldedOption) LoadOptionFolded(v bool, tags *tagger.TagBucket) {
 	h.IsFolded = v
 
 	if v {
-		tags.Add("ableton-device:folded=true")
+		tags.Add("ableton-option:folded=true")
 	} else {
-		tags.Add("ableton-device:folded=false")
+		tags.Add("ableton-option:folded=false")
 	}
 }
 
-type HasTrackIsFrozen struct {
+type HasIsFrozenOption struct {
 	IsFrozen bool `json:"isFrozen,omitempty"`
 }
 
-func NewHasTrackIsFrozen() HasTrackIsFrozen {
-	return HasTrackIsFrozen{IsFrozen: false}
+func NewHasTrackIsFrozen() HasIsFrozenOption {
+	return HasIsFrozenOption{IsFrozen: false}
 }
 
-func (h *HasTrackIsFrozen) LoadTrackIsFrozen(v bool, tags *tagger.TagBucket) {
+func (h *HasIsFrozenOption) LoadIsFrozenOption(v bool, tags *tagger.TagBucket) {
 	h.IsFrozen = v
 
 	if v {
-		tags.Add("ableton-track:frozen=true")
+		tags.Add("ableton-option:frozen=true")
 	} else {
-		tags.Add("ableton-track:frozen=false")
+		tags.Add("ableton-option:frozen=false")
 	}
 }
 

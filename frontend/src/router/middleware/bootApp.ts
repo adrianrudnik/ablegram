@@ -17,7 +17,5 @@ export async function bootApp(
   // watcher to hydrate the tags.
   startWebsocketWatchers()
 
-  await useUiStore().preload()
-
   return next()
 }

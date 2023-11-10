@@ -5,8 +5,8 @@ type MixerDocument struct {
 	HasFileReference
 	HasUserName
 	HasUserInfoText
-	HasDeviceIsFolded
-	HasDeviceIsExpanded
+	HasIsFoldedOption
+	HasIsExpandedOption
 }
 
 func NewMixerDocument() *MixerDocument {
@@ -15,7 +15,7 @@ func NewMixerDocument() *MixerDocument {
 		HasFileReference:    NewHasFileReference(),
 		HasUserName:         NewHasUserName(),
 		HasUserInfoText:     NewHasUserInfoText(),
-		HasDeviceIsFolded:   NewHasDeviceIsFolded(),
-		HasDeviceIsExpanded: NewHasDeviceIsExpanded(),
+		HasIsFoldedOption:   NewHasDeviceIsFolded(),
+		HasIsExpandedOption: NewHasDeviceIsExpanded(),
 	}
 }

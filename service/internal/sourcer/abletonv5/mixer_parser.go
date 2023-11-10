@@ -42,8 +42,8 @@ func ParseMixerDocuments(
 		doc.LoadFileReference(path, tb)
 		doc.LoadUserInfoText(mx.Annotation.Value, tb)
 		doc.LoadUserName(mx.UserName.Value, tb)
-		doc.LoadDeviceIsFolded(mx.IsFolded.Value, tb)
-		doc.LoadDeviceIsExpanded(mx.IsExpanded.Value, tb)
+		doc.LoadOptionFolded(mx.IsFolded.Value, tb)
+		doc.LoadOptionExpanded(mx.IsExpanded.Value, tb)
 
 		doc.EngraveTags(tb)
 

@@ -36,7 +36,8 @@ func ParseClips(
 				hasProbability := false
 				for _, note := range slots.MidiClip.Notes.KeyTracks {
 					// Add the used notes
-					tb.Add(fmt.Sprintf("note=%s", note.MidiKey.HumanReadable()))
+					tb.Add(fmt.Sprintf("note=%s", note.MidiKey.HumanReadable(true)))
+					tb.Add(fmt.Sprintf("note=%s", note.MidiKey.HumanReadable(false)))
 					tb.Add(fmt.Sprintf("midi:key=%d", note.MidiKey.Value))
 
 					for _, midiNote := range note.Notes {

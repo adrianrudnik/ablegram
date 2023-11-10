@@ -4,7 +4,7 @@ type MidiTrackDocument struct {
 	HasBase
 	HasFileReference
 	HasTrackUserNames
-	HasTrackIsFrozen
+	HasIsFrozenOption
 	HasColor
 }
 
@@ -13,7 +13,7 @@ func NewMidiTrackDocument() *MidiTrackDocument {
 		HasBase:           NewHasBase(AbletonMidiTrack),
 		HasFileReference:  NewHasFileReference(),
 		HasTrackUserNames: NewHasTrackUserNames(),
-		HasTrackIsFrozen:  NewHasTrackIsFrozen(),
+		HasIsFrozenOption: NewHasTrackIsFrozen(),
 		HasColor:          NewHasColor(),
 	}
 }

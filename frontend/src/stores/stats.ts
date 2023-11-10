@@ -11,40 +11,21 @@ export const useStatStore = defineStore('stats', () => {
   // Search related
   const searchResultCount = ref(0)
 
+
+  type CounterEntry = {
+    [key: string]: number
+  }
+
   // Meta status bar
-  const validFileCount = ref(0)
-  const invalidFileCount = ref(0)
-  const liveSetCount = ref(0)
-  const indexDocumentCount = ref(0)
-  const midiTrackCount = ref(0)
-  const audioTrackCount = ref(0)
+  const counters = ref<CounterEntry>({})
 
   const inProgress = computed(() => isProcessing.value || isSearching.value)
 
   const updateMetrics = (values: { [key: string]: number }) => {
     for (const [k, v] of Object.entries(values)) {
-      switch (k) {
-        case 'files_valid':
-          validFileCount.value = v
-          break
-        case 'files_invalid':
-          invalidFileCount.value = v
-          break
-        case 'live_sets':
-          liveSetCount.value = v
-          break
-        case 'index_docs':
-          indexDocumentCount.value = v
-          break
-        case 'midi_tracks':
-          midiTrackCount.value = v
-          break
-        case 'audio_tracks':
-          audioTrackCount.value = v
-          break
+      counters.value[k] = v
       }
     }
-  }
 
   return {
     updateMetrics,
@@ -53,11 +34,6 @@ export const useStatStore = defineStore('stats', () => {
     inProgress,
     processRoutineCount,
     searchResultCount,
-    validFileCount,
-    invalidFileCount,
-    liveSetCount,
-    indexDocumentCount,
-    midiTrackCount,
-    audioTrackCount
+    counters,
   }
 })

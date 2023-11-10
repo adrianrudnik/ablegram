@@ -34,8 +34,8 @@ func ParseMidiPitcherDevice(
 		})
 		doc.LoadFileReference(path, tb)
 		doc.LoadUserInfoText(device.Annotation.Value, tb)
-		doc.LoadDeviceIsExpanded(device.IsExpanded.Value, tb)
-		doc.LoadDeviceIsFolded(device.IsFolded.Value, tb)
+		doc.LoadOptionExpanded(device.IsExpanded.Value, tb)
+		doc.LoadOptionFolded(device.IsFolded.Value, tb)
 
 		doc.EngraveTags(tb)
 

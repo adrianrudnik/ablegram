@@ -4,7 +4,7 @@ type AudioTrackDocument struct {
 	HasBase
 	HasFileReference
 	HasTrackUserNames
-	HasTrackIsFrozen
+	HasIsFrozenOption
 	HasColor
 }
 
@@ -13,7 +13,7 @@ func NewAudioTrackDocument() *AudioTrackDocument {
 		HasBase:           NewHasBase(AbletonAudioTrack),
 		HasFileReference:  NewHasFileReference(),
 		HasTrackUserNames: NewHasTrackUserNames(),
-		HasTrackIsFrozen:  NewHasTrackIsFrozen(),
+		HasIsFrozenOption: NewHasTrackIsFrozen(),
 		HasColor:          NewHasColor(),
 	}
 }

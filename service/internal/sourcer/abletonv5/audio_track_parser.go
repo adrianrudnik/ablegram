@@ -25,7 +25,7 @@ func ParseAudioTracks(
 		})
 		doc.LoadFileReference(path, tb)
 		doc.LoadTrackUserNames(&audioTrack.XmlTrackNameNode, tb)
-		doc.LoadTrackIsFrozen(audioTrack.IsFrozen.Value, tb)
+		doc.LoadIsFrozenOption(audioTrack.IsFrozen.Value, tb)
 		doc.LoadColor(audioTrack.Color.Value, tb)
 
 		doc.EngraveTags(tb)

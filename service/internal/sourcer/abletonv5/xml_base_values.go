@@ -3,6 +3,7 @@ package abletonv5
 import (
 	"fmt"
 	"math"
+	"strings"
 )
 
 type XmlStringValue struct {
@@ -29,38 +30,45 @@ type XmlMidiKey struct {
 	Value int `xml:"Value,attr"`
 }
 
-func (x *XmlMidiKey) HumanReadable() string {
+func (x *XmlMidiKey) HumanReadable(includeOctave bool) string {
 	// @see https://www.zem-college.de/midi/mc_taben.htm
 	// @see https://computermusicresource.com/midikeys.html
 	octave := int(math.Floor(float64(x.Value/12))) - 2
 	key := x.Value - ((octave + 2) * 12)
 
+	var tmpl string
 	switch key {
 	case 0:
-		return fmt.Sprintf("C%d", octave)
+		tmpl = "C%d"
 	case 1:
-		return fmt.Sprintf("C#%d", octave)
+		tmpl = "C#%d"
 	case 2:
-		return fmt.Sprintf("D%d", octave)
+		tmpl = "D%d"
 	case 3:
-		return fmt.Sprintf("D#%d", octave)
+		tmpl = "D#%d"
 	case 4:
-		return fmt.Sprintf("E%d", octave)
+		tmpl = "E%d"
 	case 5:
-		return fmt.Sprintf("F%d", octave)
+		tmpl = "F%d"
 	case 6:
-		return fmt.Sprintf("F#%d", octave)
+		tmpl = "F#%d"
 	case 7:
-		return fmt.Sprintf("G%d", octave)
+		tmpl = "G%d"
 	case 8:
-		return fmt.Sprintf("G#%d", octave)
+		tmpl = "G#%d"
 	case 9:
-		return fmt.Sprintf("A%d", octave)
+		tmpl = "A%d"
 	case 10:
-		return fmt.Sprintf("A#%d", octave)
+		tmpl = "A#%d"
 	case 11:
-		return fmt.Sprintf("B%d", octave)
+		tmpl = "B%d"
+	default:
+		tmpl = "unknown"
 	}
 
-	return "unknown"
+	if includeOctave {
+		return fmt.Sprintf(tmpl, octave)
+	} else {
+		return strings.Replace(tmpl, "%d", "", 1)
+	}
 }

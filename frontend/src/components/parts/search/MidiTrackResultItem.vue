@@ -71,7 +71,7 @@ import PropertyList from '@/components/structure/PropertyList.vue'
 import PropertyListItem from '@/components/structure/PropertyListItem.vue'
 import { useI18n } from 'vue-i18n'
 import type { MidiTrackResult } from '@/plugins/search/result/result_midi_track'
-import { resolveColorByIndex } from '@/plugins/colors'
+import { resolveAbletonColorByIndex } from '@/plugins/colors'
 
 const { t } = useI18n()
 
@@ -79,7 +79,7 @@ const props = defineProps<{
   result: MidiTrackResult
 }>()
 
-const resolvedColor = resolveColorByIndex(props.result.color)
+const resolvedColor = resolveAbletonColorByIndex(props.result.color)
 </script>
 
 <style lang="scss">

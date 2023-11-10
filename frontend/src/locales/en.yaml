@@ -110,8 +110,8 @@ metric:
   invalid_files: Invalid files | Invalid file | Invalid files
   live_sets: '@:common.label.ableton-live-set.c'
   index_docs: Data points | Data point | Data points
-  midi_tracks: '@:common.label.ableton-midi-track.c'
-  audio_tracks: '@:common.label.ableton-audio-track.c'
+  midi_tracks: '@:common.label.midi-track.c'
+  audio_tracks: '@:common.label.audio-track.c'
 
 error:
   404:
@@ -132,6 +132,17 @@ common:
   label:
     anything: Anything
     everything: Everything
+
+    true: Yes
+    false: No
+
+    frozen: Frozen
+    expanded: Expanded
+    folded: Folded
+
+    available: Available # In a sense of "it has at least one of"
+    count: Count # In a sense of "it has {count} of something"
+
     color:
       s: Color
       c: Colors | Color | Colors
@@ -140,22 +151,46 @@ common:
       s: Search results
       c: Search results | Search result | Search results
       nc: No search results | One search result | {count} search results
+    audio-track:
+      s: Audio track
+      c: Audio tracks | Audio track | Audio tracks
+      nc: No audio tracks | One audio track | {count} audio tracks
+    midi-track:
+      s: MIDI track
+      c: MIDI tracks | MIDI track | MIDI tracks
+      nc: No MIDI tracks | One MIDI track | {count} MIDI tracks
+    track:
+      s: Track
+      c: Tracks | Track | Tracks
+      nc: No tracks | One track | {count} tracks
+    ableton-device:
+      s: Device
+      c: Devices | Device | Devices
+      nc: No devices | One device | {count} devices
     ableton-live-set:
       s: Live Set
       c: Live Sets | Live Set | Live Sets
       nc: No Live Sets | One Live Set | {count} Live Sets
-    ableton-audio-track:
-      s: Audio track
-      c: Audio tracks | Audio track | Audio tracks
-      nc: No audio tracks | One audio track | {count} audio tracks
-    ableton-midi-track:
-      s: MIDI track
-      c: MIDI tracks | MIDI track | MIDI tracks
-      nc: No MIDI tracks | One MIDI track | {count} MIDI tracks
-    ableton-track:
-      s: Track
-      c: Tracks | Track | Tracks
-      nc: No tracks | One track | {count} tracks
+    ableton-midi-clip:
+      s: MIDI Clip
+      c: MIDI Clips | MIDI Clip | MIDI Clips
+      nc: No MIDI Clips | One MIDI Clip | {count} MIDI Clips
+    ableton-mixer:
+      s: Mixer
+      c: Mixers | Mixer | Mixers
+      nc: No mixers | One mixer | {count} mixers
+    ableton-return-track:
+      s: Return Track
+      c: Return Tracks | Return Track | Return Tracks
+      nc: No return tracks | One return track | {count} return tracks
+    ableton-device-chain:
+      s: Device Chain
+      c: Device Chains | Device Chain | Device Chains
+      nc: No device chains | One device chain | {count} device chains
+    ableton-group-track:
+      s: Group Track
+      c: Group Tracks | Group Track | Group Tracks
+      nc: No group tracks | One group track | {count} group tracks
     beats-per-minute:
       s: BPM
       c: BPM
@@ -176,69 +211,132 @@ common:
       s: Memo
       c: Memos | Memo | Memos
       nc: No memos | One memo | {count} memos
+    note:
+      s: Note
+      c: Notes | Note | Notes
+      nc: No notes | One note | {count} notes
+    scale:
+      s: Scale
+      c: Scales | Scale | Scales
+      nc: No scales | One scale | {count} scales
     tag:
       s: Tag
       c: Tags | Tag | Tags
       nc: No tags | One tag | {count} tags
 
-tags:
-  sys: System
+tag:
+  example: Category
+  example:topic: Detail
+  example:topic:detail: Information
+  example:topic:detail:count: Hits found
 
-  sys:example: Category
-  sys:example:topic: Detail
-  sys:example:topic:detail: Information
-  sys:example:topic:detail:count: Hits found
+  ableton: Ableton
+  ableton:version: Version
 
-  sys:ableton: Ableton
-  sys:ableton:version: Version
+  ableton:track: Track
 
-  sys:type: Type
-  sys:type:ableton-live-set: '@:common.label.ableton-live-set.s'
-  sys:type:ableton-audio-track: '@:common.label.ableton-audio-track.s'
-  sys:type:ableton-midi-track: '@:common.label.ableton-midi-track.s'
+  ableton-device: '@:common.label.ableton-device.s'
+  ableton-device:midi-chord: MIDI Chord
+  ableton-device:midi-pitcher: MIDI Pitcher
+  ableton-device:midi-arpeggiator: MIDI Arpeggiator
+  ableton-device:midi-velocity: MIDI Velocity
 
-  sys:ableton-live-set: '@:common.label.ableton-live-set.s'
-  sys:ableton-live-set:tempo: '@:common.label.beats-per-minute.s'
-  sys:ableton-live-set:tracks: Tracks
-  sys:ableton-live-set:tracks:has-audio: Has audio track
-  sys:ableton-live-set:tracks:no-audio: No audio track
-  sys:ableton-live-set:tracks:has-midi: Has MIDI track
-  sys:ableton-live-set:tracks:no-midi: No MIDI track
-  sys:ableton-live-set:tracks:has-midi-audio: Has MIDI and audio tracks
+  ableton-option: Option
+  ableton-option:folded: '@:common.label.folded'
+  ableton-option:expanded: '@:common.label.expanded'
+  ableton-option:frozen: '@:common.label.frozen'
 
-  sys:file: File
-  sys:file:location: Location
-  sys:file:location:live-recording: Live Recording
-  sys:file:location:user-library: User Library
-  sys:file:location:factory-pack: Factory Pack
-  sys:file:location:cloud-manager: Cloud Manager
-  sys:file:location:trash: Trash
-  sys:file:location:dropbox: Dropbox
-  sys:file:location:onedrive: OneDrive
-  sys:file:location:google-drive: Google Drive
-  sys:file:location:pcloud: pCloud
-  sys:file:location:elsewhere: Elsewhere
+  type: Type
+  type:ableton-live-set: '@:common.label.ableton-live-set.s'
+  type:ableton-track: '@:common.label.track.s'
+  type:ableton-audio-track: '@:common.label.audio-track.s'
+  type:ableton-midi-track: '@:common.label.midi-track.s'
+  type:ableton-midi-clip: '@:common.label.ableton-midi-clip.s'
+  type:ableton-mixer: '@:common.label.ableton-mixer.s'
+  type:ableton-return-track: '@:common.label.ableton-return-track.s'
+  type:ableton-device-chain: '@:common.label.ableton-device-chain.s'
+  type:ableton-group-track: '@:common.label.ableton-group-track.s'
+  type:ableton-midi-chord-device: MIDI Chord device
+  type:ableton-midi-pitcher-device: MIDI Pitcher device
+  type:ableton-midi-arpeggiator-device: MIDI Arpeggiator device
+  type:ableton-midi-velocity-device: MIDI Velocity device
 
-  sys:file:btime-year: Creation year
-  sys:file:btime-month: Creation month
-  sys:file:btime-quarter: Creation quarter
-  sys:file:btime-weekday: Creation weekday
-  sys:file:btime-weekno: Creation week number
-  sys:file:mtime-year: Modified year
-  sys:file:mtime-month: Modified month
-  sys:file:mtime-quarter: Modified quarter
-  sys:file:mtime-weekday: Modified weekday
-  sys:file:mtime-weekno: Modified week number
+  ableton-live-set: '@:common.label.ableton-live-set.s'
+  ableton-live-set:tracks: '@:common.label.track.c'
+  ableton-live-set:tracks:count: "@:common.label.count"
+  ableton-live-set:audio-tracks: '@:common.label.audio-track.c'
+  ableton-live-set:audio-tracks:count: "@:common.label.count"
+  ableton-live-set:audio-tracks:available: "@:common.label.available"
+  ableton-live-set:midi-tracks: '@:common.label.midi-track.c'
+  ableton-live-set:midi-tracks:count: "@:common.label.count"
+  ableton-live-set:midi-tracks:available: "@:common.label.available"
 
-  sys:file:zodiac-western: Western zodiac
-  sys:file:zodiac-chinese: Chinese zodiac
+  ableton-track: '@:common.label.track.s'
+  ableton-track:frozen: '@:common.label.frozen'
 
-  sys:info: Info
-  sys:info:has-user-memo: Has user memo
-  sys:info:no-user-memo: No user memo
+  file: File
+  file:location: Location
+  file:location=inside-user-home: User home folder
+  file:location=outside-user-home: Outside user home folder
+  file:location=ableton-backup: Ableton backup folder
+  file:location=ableton-live-recording: Ableton Live Recording
+  file:location=ableton-user-library: Ableton User Library
+  file:location=ableton-factory-pack: Ableton Factory Pack
+  file:location=ableton-cloud-manager: Ableton Cloud Manager
+  file:location=p-cloud: pCloud folder
+  file:location=trash: Trash folder
 
-  sys:color: '@:common.label.color.s'
-  sys:color:ableton: '@:common.vendor.ableton.short'
+  file:location:live-recording: Live Recording
+  file:location:user-library: User Library
+  file:location:factory-pack: Factory Pack
+  file:location:cloud-manager: Cloud Manager
+  file:location:trash: Trash
+  file:location:dropbox: Dropbox
+  file:location:onedrive: OneDrive
+  file:location:google-drive: Google Drive
+  file:location:pcloud: pCloud
+  file:location:elsewhere: Elsewhere
+
+  file:btime-year: Creation year
+  file:btime-month: Creation month
+  file:btime-quarter: Creation quarter
+  file:btime-weekday: Creation weekday
+  file:btime-weekno: Creation week number
+  file:mtime-year: Modified year
+  file:mtime-month: Modified month
+  file:mtime-quarter: Modified quarter
+  file:mtime-weekday: Modified weekday
+  file:mtime-weekno: Modified week number
+
+  file:zodiac-western: Western zodiac
+  file:zodiac-chinese: Chinese zodiac
+
+  midi: MIDI
+  midi:key: Key-Code
+
+  info: Info
+  info:has-user-memo: Has user memo
+  info:no-user-memo: No user memo
+
+  note: '@:common.label.note.s'
+
+  scale: '@:common.label.scale.s'
+  scale:name: Name
+  scale:root-note: Root note
+
+  time-signature: Time Signature
+  time-signature:name: Name
+  time-signature:denominator: Denominator
+  time-signature:numerator: Numerator
+
+  bpm: '@:common.label.beats-per-minute.s'
+  
+  user: User
+  user:memo: Memo
+  user:name: Named
+
+  color: '@:common.label.color.s'
+  color:ableton: '@:common.vendor.ableton.short'
 
 app-status:
   title: App status
@@ -279,53 +377,6 @@ file-table:
   errors:
     no-files-found: No files found.
     no-files-found-for-filter: No files found for filter "{filter}".
-
-tag-overview:
-  explain:
-    title: Tags explained
-    description: >-
-      As the files are processed, tags are derived from the content and information found.
-      They help to create meaningful search queries. Tags are made up of several components.
-      The following example describes each component:
-    about: >-
-      The categories below provide an insight into the tags identified.
-      These are available in the search to formulate search queries.
-
-  type:
-    title: Type category
-    description: >-
-      Types group the information found according to its nature. They do not describe files,
-      but the components of a single file.
-  software:
-    title: Software category
-    description: >-
-      This is the software that was used to create the file. The version numbers found are broken
-      down into exact hits or individual Semver variants.
-  location:
-    title: Location category
-    description: >-
-      Contains tags that are related to the location of the
-      file within the scanned drives and folders.
-  file:
-    title: File category
-    description: >-
-      These tags have been extracted from the processed files. They give an overview of what we know
-      about the file itself and how we might classify it.
-  live-set:
-    title: Live Set category
-    description: >-
-      Although Live Sets are very similar to a single file, they give us different data.
-      We learn more about the actual settings.
-  info:
-    title: Information category
-    description: >-
-      This category collects information that is not directly related to the other categories.
-      It tries to give more insight into small details that can be found throughout the files.
-  color:
-    title: Color category
-    description: >-
-      The software allows visual labelling using colours.
-      This category collects this information and makes it available for searching.
 
 goodbye-view:
   title: Goodbye!

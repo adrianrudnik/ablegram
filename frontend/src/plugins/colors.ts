@@ -1,4 +1,4 @@
-export const colorMap: { [key: number]: string } = {
+export const abletonColorMap: { [key: number]: string } = {
   // Taken from Ableton Track colorization
   // Column 1
   0: '#FF94A6',
@@ -99,7 +99,7 @@ export const colorMap: { [key: number]: string } = {
   69: '#3E3E3E'
 }
 
-export function resolveColorByIndex(index: number | undefined): string | null {
+export function resolveAbletonColorByIndex(index: number | undefined): string | null {
   if (index === undefined) return null
-  return colorMap[index] ?? null
+  return abletonColorMap[index] ?? null
 }

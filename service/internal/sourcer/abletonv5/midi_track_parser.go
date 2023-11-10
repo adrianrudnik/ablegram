@@ -25,7 +25,7 @@ func ParseMidiTracks(
 		})
 		doc.LoadFileReference(path, tb)
 		doc.LoadTrackUserNames(&midiTrack.XmlTrackNameNode, tb)
-		doc.LoadTrackIsFrozen(midiTrack.IsFrozen.Value, tb)
+		doc.LoadIsFrozenOption(midiTrack.IsFrozen.Value, tb)
 		doc.LoadColor(midiTrack.Color.Value, tb)
 
 		doc.EngraveTags(tb)

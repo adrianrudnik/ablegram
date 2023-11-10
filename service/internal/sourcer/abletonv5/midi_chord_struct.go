@@ -5,8 +5,8 @@ type MidiChordDeviceDocument struct {
 	HasFileReference
 	HasUserName
 	HasUserInfoText
-	HasDeviceIsExpanded
-	HasDeviceIsFolded
+	HasIsExpandedOption
+	HasIsFoldedOption
 }
 
 func NewMidiChordDeviceDocument() *MidiChordDeviceDocument {
@@ -15,7 +15,7 @@ func NewMidiChordDeviceDocument() *MidiChordDeviceDocument {
 		HasFileReference:    NewHasFileReference(),
 		HasUserName:         NewHasUserName(),
 		HasUserInfoText:     NewHasUserInfoText(),
-		HasDeviceIsExpanded: NewHasDeviceIsExpanded(),
-		HasDeviceIsFolded:   NewHasDeviceIsFolded(),
+		HasIsExpandedOption: NewHasDeviceIsExpanded(),
+		HasIsFoldedOption:   NewHasDeviceIsFolded(),
 	}
 }

@@ -11,22 +11,9 @@ export const useUiStore = defineStore('ui', () => {
     i18n.global.locale.value = n
   })
 
-  const preload = async () => {
-    try {
-      const response = await fetch('/about.json')
-      const about = await response.json()
-
-      version.value = about.version ?? '0.0.0-unknown'
-      versionCommitHash.value = about['commit-hash'] ?? 'unknown'
-    } catch (error: any) {
-      console.debug('Failed to load about.json: ' + error.toString())
-    }
-  }
-
   return {
     version,
     versionCommitHash,
-    currentLocale,
-    preload
+    currentLocale
   }
 })

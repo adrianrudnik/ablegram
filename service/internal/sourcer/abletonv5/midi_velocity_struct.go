@@ -5,8 +5,8 @@ type MidiVelocityDeviceDocument struct {
 	HasFileReference
 	HasUserName
 	HasUserInfoText
-	HasDeviceIsExpanded
-	HasDeviceIsFolded
+	HasIsExpandedOption
+	HasIsFoldedOption
 }
 
 func NewMidiVelocityDeviceDocument() *MidiVelocityDeviceDocument {
@@ -15,7 +15,7 @@ func NewMidiVelocityDeviceDocument() *MidiVelocityDeviceDocument {
 		HasFileReference:    NewHasFileReference(),
 		HasUserName:         NewHasUserName(),
 		HasUserInfoText:     NewHasUserInfoText(),
-		HasDeviceIsExpanded: NewHasDeviceIsExpanded(),
-		HasDeviceIsFolded:   NewHasDeviceIsFolded(),
+		HasIsExpandedOption: NewHasDeviceIsExpanded(),
+		HasIsFoldedOption:   NewHasDeviceIsFolded(),
 	}
 }

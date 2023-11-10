@@ -104,6 +104,10 @@ func Serve(
 		})
 	})
 
+	r.GET("/config", func(c *gin.Context) {
+		c.JSON(200, conf)
+	})
+
 	r.POST("/shutdown", func(c *gin.Context) {
 		c.Status(202)
 		c.JSON(200, gin.H{"message": "Shutting down"})

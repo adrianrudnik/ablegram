@@ -1,8 +1,8 @@
-import {defineStore} from "pinia";
-import {setupStore} from "@/stores/base";
-import {useSearchStore} from "@/stores/search";
-import i18n from "@/plugins/i18n";
-import {resolveAbletonColorByIndex} from "@/plugins/colors";
+import { defineStore } from 'pinia'
+import { setupStore } from '@/stores/base'
+import { useSearchStore } from '@/stores/search'
+import i18n from '@/plugins/i18n'
+import { resolveAbletonColorByIndex } from '@/plugins/colors'
 
 const { t, te, tm, locale } = i18n.global
 
@@ -43,7 +43,7 @@ const numericValueTags = [
   'file:btime-quarter',
   'file:btime-weekno',
   'time-signature:numerator',
-  'time-signature:denominator',
+  'time-signature:denominator'
 ]
 
 export const useTagStore = defineStore('tags', setupStore<Tag>())
@@ -73,10 +73,10 @@ export const hydrateTags = async () => {
   }
 }
 
-export function createTagFromString(raw: string, count: number): Tag | null {
-  if (!raw || raw.trim() === "") return null
+export function createTagFromString(raw: string, count: number): Tag {
+  if (!raw || raw.trim() === '') raw = 'unknown'
 
-  const {base, value} = splitValueFromTag(raw)
+  const { base, value } = splitValueFromTag(raw)
   const parts = splitPartsFromTag(base)
 
   const tag: Tag = {
@@ -86,13 +86,13 @@ export function createTagFromString(raw: string, count: number): Tag | null {
     count: count,
     value: value,
     parts: parts,
-    trans: { parts: []},
-    search: '',
+    trans: { parts: [] },
+    search: ''
   }
 
   // Parse the type, if not string and value is present
   if (tag.type !== TagValueType.StringValue && value !== undefined) {
-    switch(tag.type) {
+    switch (tag.type) {
       case TagValueType.BooleanValue:
         tag.value = value === 'true'
         break
@@ -136,13 +136,13 @@ export function createTagFromString(raw: string, count: number): Tag | null {
   return tag
 }
 
-function splitValueFromTag(tag: string): { base: string, value?: string } {
+function splitValueFromTag(tag: string): { base: string; value?: string } {
   const v = tag.split('=', 2)
   if (v.length === 2) {
-    return {base: v[0], value: v[1] }
+    return { base: v[0], value: v[1] }
   }
 
-  return {base: v[0]}
+  return { base: v[0] }
 }
 
 function splitPartsFromTag(tag: string): string[] {
@@ -162,12 +162,11 @@ function determineValueType(baseTag: string, value?: string): TagValueType {
     return TagValueType.NumericValue
   }
 
-
   if (baseTag === 'color:ableton') {
     return TagValueType.AbletonColorValue
   }
 
-  return TagValueType.StringValue;
+  return TagValueType.StringValue
 }
 
 function parseVersionNumber(v: string | undefined): number | null {
@@ -212,29 +211,28 @@ function compileTranslations(tag: Tag) {
     switch (marker) {
       case 'time-quarter':
         tag.trans.value = t('datetime.quarter.' + tag.value)
-        break;
+        break
       case 'time-weekday':
         tag.trans.value = t('datetime.weekday.' + tag.value)
-        break;
+        break
       case 'time-month':
         tag.trans.value = t('datetime.month.' + tag.value)
-        break;
+        break
     }
   }
-
 
   // Special handling for zodiac signs
   switch (tag.parts[1]) {
     case 'zodiac-western':
       tag.trans.value = t('datetime.zodiac-western.' + tag.value)
-      break;
+      break
     case 'zodiac-chinese':
       tag.trans.value = t('datetime.zodiac-chinese.' + tag.value)
-      break;
+      break
   }
 
   // Translate the parts of the tag by index
-  for(let i = 0; i < tag.parts.length; i++) {
+  for (let i = 0; i < tag.parts.length; i++) {
     tag.trans.parts[i] = t('tag.' + tag.parts.slice(0, i + 1).join(':'))
   }
 
@@ -251,9 +249,7 @@ function compileTranslations(tag: Tag) {
 }
 
 function compileSearchString(tag: Tag) {
-  tag.search = [
-      tag.parts.join(' '),
-      tag.trans.parts.join(' '),
-      (tag.trans.value ?? '')
-  ].join(' ').toLowerCase()
+  tag.search = [tag.parts.join(' '), tag.trans.parts.join(' '), tag.trans.value ?? '']
+    .join(' ')
+    .toLowerCase()
 }

@@ -11,7 +11,6 @@ export const useStatStore = defineStore('stats', () => {
   // Search related
   const searchResultCount = ref(0)
 
-
   type CounterEntry = {
     [key: string]: number
   }
@@ -24,8 +23,8 @@ export const useStatStore = defineStore('stats', () => {
   const updateMetrics = (values: { [key: string]: number }) => {
     for (const [k, v] of Object.entries(values)) {
       counters.value[k] = v
-      }
     }
+  }
 
   return {
     updateMetrics,
@@ -34,6 +33,6 @@ export const useStatStore = defineStore('stats', () => {
     inProgress,
     processRoutineCount,
     searchResultCount,
-    counters,
+    counters
   }
 })

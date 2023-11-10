@@ -1,7 +1,7 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import { websocket } from '@/websocket'
-import { useUiStore } from '@/stores/ui'
-import { startWebsocketWatchers } from '@/websocket/watchers'
+import { fetchApi } from '@/plugins/api'
+import { useConfigStore } from '@/stores/config'
 
 export async function bootApp(
   to: RouteLocationNormalized,
@@ -11,11 +11,8 @@ export async function bootApp(
   console.debug('Booting app')
   console.debug('Booting index: ' + websocket.status.value)
 
-  // We start the watchers first, so that we can react to history changes
-  // that we get force-pushed once we connect to the websocket, i.e.:
-  // processRoutineCount will go from -1 to 0, which will trigger the
-  // watcher to hydrate the tags.
-  startWebsocketWatchers()
+  // Ensure the config is loaded
+  await useConfigStore().load()
 
   return next()
 }

@@ -5,6 +5,7 @@ import SearchView from '@/views/SearchView.vue'
 import TagsView from '@/views/TagsView.vue'
 import FilesView from '@/views/FilesView.vue'
 import InfoView from '@/views/InfoView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 import GoodbyeView from '@/views/GoodbyeView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 
@@ -44,6 +45,11 @@ const router = createRouter({
           path: 'info',
           name: 'info',
           component: InfoView
+        },
+        {
+          path: 'settings',
+          name: 'settings',
+          component: SettingsView
         },
         {
           path: 'goodbye',

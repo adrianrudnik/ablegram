@@ -8,18 +8,24 @@
 
     <DescriptionList>
       <DescriptionListItem :title="t('app-status.version.label')">
-        {{ t('app-status.version.content', {version: about.version, hash: about.commit, date: about.date}) }}
+        {{
+          t('app-status.version.content', {
+            version: about.version,
+            hash: about.commit,
+            date: about.date
+          })
+        }}
       </DescriptionListItem>
 
       <DescriptionListItem :title="t('app-status.websocket.label')">
         <i v-if="websocketStatus === 'OPEN'" class="pi pi-fw pi-check-circle text-green-500"></i>
         <i v-else-if="websocketStatus === 'CONNECTING'" class="pi pi-fw pi-spin pi-spinner"></i>
         <i
-            v-else-if="websocketStatus === 'CLOSED'"
-            class="pi pi-fw pi-times-circle text-red-500"
+          v-else-if="websocketStatus === 'CLOSED'"
+          class="pi pi-fw pi-times-circle text-red-500"
         ></i>
 
-        {{ t('app-status.websocket.status.' + websocketStatus, {url: websocketUrl}) }}
+        {{ t('app-status.websocket.status.' + websocketStatus, { url: websocketUrl }) }}
       </DescriptionListItem>
     </DescriptionList>
   </div>
@@ -29,23 +35,25 @@
 import SectionHeadline from '@/components/structure/SectionHeadline.vue'
 import DescriptionList from '@/components/structure/DescriptionList.vue'
 import DescriptionListItem from '@/components/structure/DescriptionListItem.vue'
-import {useI18n} from 'vue-i18n'
-import {websocket} from '@/websocket'
-import {onMounted, ref} from "vue";
-import {fetchApi} from "@/plugins/api";
+import { useI18n } from 'vue-i18n'
+import { websocket } from '@/websocket'
+import { onMounted, ref } from 'vue'
+import { fetchApi } from '@/plugins/api'
 
 const websocketStatus = websocket.status
 const websocketUrl = import.meta.env.VITE_WEBSOCKET_URL
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 type AboutResponse = {
-  commit: string, date: string, version: string
+  commit: string
+  date: string
+  version: string
 }
 
 const about = ref<AboutResponse>()
 
 onMounted(async () => {
   about.value = await fetchApi<AboutResponse>('/about')
-});
+})
 </script>

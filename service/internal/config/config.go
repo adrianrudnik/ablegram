@@ -14,9 +14,11 @@ var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 func newConfig() *Config {
 	return &Config{
 		Log: LogConfig{
-			Level:          "info",
-			ToFiles:        false,
-			ScannedFolders: false,
+			Level:                  "info",
+			EnableRuntimeLogfile:   false,
+			EnableProcessedLogfile: false,
+			RuntimeLogfilePath:     GetRelativeFilePath(".runtime.log"),
+			ProcessLogfilePath:     GetRelativeFilePath(".processed.log"),
 		},
 
 		Behaviour: BehaviourConfig{

@@ -30,3 +30,18 @@ p {
 body {
   overflow-y: scroll;
 }
+
+/* Animations */
+.tag-list-complete-item {
+  transition: all 0.1s;
+  display: inline-block;
+  margin-right: 10px;
+}
+.tag-list-complete-enter, .list-complete-leave-to
+  /* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  //transform: translateY(30px);
+}
+.tag-list-complete-leave-active {
+  position: absolute;
+}

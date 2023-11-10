@@ -60,7 +60,7 @@ func main() {
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
 
-	if appConfig.Log.ToFiles {
+	if appConfig.Log.EnableRuntimeLogfile {
 		logPath := config.GetRelativeFilePath(".runtime.log")
 		logFile, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {

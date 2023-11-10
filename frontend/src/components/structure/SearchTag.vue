@@ -4,9 +4,14 @@
       <span class="p-1 px-2" v-for="(part, idx) in tag.parts" :key="idx">
         {{ tag.trans.parts[idx] ?? part }}
       </span>
-      <span v-if="tag.color !== undefined" :style="'background-color: ' + tag.color" class="p-1 px-2">&nbsp;</span>
+      <span
+        v-if="tag.color !== undefined"
+        :style="'background-color: ' + tag.color"
+        class="p-1 px-2"
+        >&nbsp;</span
+      >
       <span class="TagValue p-1 px-2" v-if="tag.value !== undefined">
-        {{  tag.trans.value ?? tag.value }}
+        {{ tag.trans.value ?? tag.value }}
       </span>
       <div v-if="showCount" class="TagCount p-1 px-2">
         {{ n(tag.count) }}
@@ -17,8 +22,8 @@
 
 <script setup lang="ts">
 import type { Tag } from '@/stores/tags'
-import {toRaw} from "vue";
-import {useI18n} from "vue-i18n";
+import { toRaw } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const { n } = useI18n()
 
@@ -49,7 +54,7 @@ const print = () => console.log(toRaw(props.tag))
 
   // Ensure a common border setup for all parts
   & > div > span {
-    border-color:var(--surface-900) !important;
+    border-color: var(--surface-900) !important;
     border-top-width: 2px !important;
     border-top-style: solid;
     border-bottom-width: 2px !important;
@@ -90,7 +95,7 @@ const print = () => console.log(toRaw(props.tag))
   }
 
   & > div > div.TagCount {
-    font-size: .8em;
+    font-size: 0.8em;
     color: black;
     border: 1px dashed black;
     border-left: none;

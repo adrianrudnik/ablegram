@@ -110,7 +110,7 @@ func findFilesByExtension(
 		return nil
 	})
 
-	if conf.Log.ScannedFolders {
+	if conf.Log.EnableProcessedLogfile {
 		scanLogPath := config.GetRelativeFilePath(".scanned-folders.log")
 		lines := strings.Join([]string(folders), "\n")
 		err := os.WriteFile(scanLogPath, []byte(lines), 0666)

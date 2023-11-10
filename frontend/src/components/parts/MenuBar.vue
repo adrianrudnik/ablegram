@@ -100,6 +100,11 @@ const items: MenuItem[] = [
     route: { name: 'info' }
   },
   {
+    label: t('menu.settings.label'),
+    icon: 'pi pi-fw pi-cog',
+    route: { name: 'settings' }
+  },
+  {
     label: t('menu.quit.label'),
     icon: 'pi pi-fw pi-power-off',
     command: shutdownConfirm

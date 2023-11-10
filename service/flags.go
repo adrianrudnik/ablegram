@@ -25,8 +25,8 @@ func parseFlags(c *config.Config) {
 	flag.Parse()
 
 	c.Log.Level = *logLevel
-	c.Log.ToFiles = *logToFiles
-	c.Log.ScannedFolders = *logScannedFolders
+	c.Log.EnableRuntimeLogfile = *logToFiles
+	c.Log.EnableProcessedLogfile = *logScannedFolders
 
 	c.Behaviour.BrowserAutostart = !*noBrowserFlag
 	c.Behaviour.ShowGui = !*noGuiFlag

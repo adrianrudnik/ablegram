@@ -102,6 +102,8 @@ menu:
     label: Tags
   info:
     label: About
+  settings:
+    label: Settings
   quit:
     label: Quit
 
@@ -117,6 +119,14 @@ error:
   404:
     title: 404 Not found
     back-to-search: Return to search
+
+button:
+  submit: Submit # as in submit form
+  save: Save
+  cancel: Cancel
+
+  state-loading: Loading
+  state-success: Success
 
 common:
   vendor:
@@ -263,13 +273,13 @@ tag:
 
   ableton-live-set: '@:common.label.ableton-live-set.s'
   ableton-live-set:tracks: '@:common.label.track.c'
-  ableton-live-set:tracks:count: "@:common.label.count"
+  ableton-live-set:tracks:count: '@:common.label.count'
   ableton-live-set:audio-tracks: '@:common.label.audio-track.c'
-  ableton-live-set:audio-tracks:count: "@:common.label.count"
-  ableton-live-set:audio-tracks:available: "@:common.label.available"
+  ableton-live-set:audio-tracks:count: '@:common.label.count'
+  ableton-live-set:audio-tracks:available: '@:common.label.available'
   ableton-live-set:midi-tracks: '@:common.label.midi-track.c'
-  ableton-live-set:midi-tracks:count: "@:common.label.count"
-  ableton-live-set:midi-tracks:available: "@:common.label.available"
+  ableton-live-set:midi-tracks:count: '@:common.label.count'
+  ableton-live-set:midi-tracks:available: '@:common.label.available'
 
   ableton-track: '@:common.label.track.s'
   ableton-track:frozen: '@:common.label.frozen'
@@ -330,7 +340,7 @@ tag:
   time-signature:numerator: Numerator
 
   bpm: '@:common.label.beats-per-minute.s'
-  
+
   user: User
   user:memo: Memo
   user:name: Named
@@ -458,6 +468,76 @@ search-examples:
           7: >-
             {e1} without any further information searches all manual info field entries
             (like the Ableton Info-Text) for the word {e2}, which includes e.g. the word {e3}.
+
+log-settings:
+  title: Log settings
+  description: >-
+    Here you can customize how the software handles logfiles. The default is to do not log anything to files.
+  form:
+    runtime-logfile:
+      title: Enable logging to file
+      location: >-
+        The runtime logfile will be populated at {path}
+    level:
+      info:
+        title: INFO
+        description: >-
+          The most basic information about the software's operations will be logged.
+          This helps in the most common cases.
+      debug:
+        title: DEBUG
+        description: >-
+          All information about the software's operations will be logged. This helps
+          to debug more complicated scenarios, but will huge amounts of information.
+    processed-logfile:
+      title: Log processed files and decisions
+      description: >-
+        This option will collect all paths, decisions and information about scans on your files.
+        It helps to debug why certain files get excluded, not scanned at all, or failed.
+      location: >-
+        The logfile will be populated at {path}
+
+settings-view:
+  title: Settings
+  description: >-
+    Here you can customize the behavior of the software. Don't worry, we'll keep it simple and straightforward.
+  form:
+    enable: Enable file based logging
+    level:
+      info:
+        title: INFO
+        description: >-
+          The most basic information about the software's operations will be logged.
+          This helps in the most common cases.
+      debug:
+        title: DEBUG
+        description: >-
+          All information about the software's operations will be logged. This helps
+          to debug more complicated scenarios, but will huge amounts of information.
+
+  logging:
+    title: Logfile Options
+    description: >-
+      Here, you can customize how the software handles logfiles. Don't worry, we'll keep it simple and straightforward.
+    logging-level:
+      title: Logging Level
+      info-level:
+        title: INFO
+        description: >-
+          This option allows Ablegram to record basic information about its operations.
+          It's like a journal, noting down what the software is doing. Useful for a general overview.
+      debug-level:
+        title: DEBUG
+        description: >-
+          Choose this when you want a detailed report. Debug logging is like a magnifying glass, providing
+          in-depth details of each step Ablegram takes. This is helpful for understanding the nitty-gritty or
+          if you need to troubleshoot.
+    scanned-folders:
+      title: Collect information about scanned folders
+      description: >-
+        This option will collect all paths, decisions and 
+        This option allows Ablegram to record information about the folders it scans. This is useful for
+        understanding where your files are located and how they are organized.
 
 color:
   ableton:

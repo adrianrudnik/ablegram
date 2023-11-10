@@ -1,23 +1,23 @@
 <template>
   <div class="AppLayout">
     <h1 class="text-3xl flex gap-2 font-medium">
-      <ProgressLogo/>
+      <ProgressLogo />
 
       Ablegram
     </h1>
 
-    <MenuBar class="mb-3"/>
+    <MenuBar class="mb-3" />
 
-    <RouterView/>
+    <RouterView />
   </div>
 
-  <ConfirmDialog/>
+  <ConfirmDialog />
 </template>
 
 <script setup lang="ts">
 import MenuBar from '@/components/parts/MenuBar.vue'
 import ConfirmDialog from 'primevue/confirmdialog'
-import ProgressLogo from "@/components/parts/ProgressLogo.vue";
+import ProgressLogo from '@/components/parts/ProgressLogo.vue'
 </script>
 
 <style lang="scss">

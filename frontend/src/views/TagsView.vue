@@ -1,5 +1,4 @@
 <template>
-
   <SectionHeadline :title="t('tag-overview.type.title')">
     <template #description>
       <p>{{ t('tag-overview.type.description') }}</p>
@@ -13,16 +12,22 @@
 
 <script setup lang="ts">
 import { useTagStore } from '@/stores/tags'
-import {computed, ref} from 'vue'
+import { computed, ref } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
 import SectionHeadline from '@/components/structure/SectionHeadline.vue'
-import InputText from "primevue/inputtext";
-import sortBy from 'lodash/sortBy'
+import InputText from 'primevue/inputtext'
 import { useI18n } from 'vue-i18n'
+import orderBy from 'lodash/orderBy'
 
 const { t } = useI18n()
 
 const filter = ref('')
 
-const entries = computed(() => sortBy(useTagStore().entries.filter(v => v.search.includes(filter.value.toLowerCase())), 'count:desc'))
+const entries = computed(() => {
+  if (filter.value.trim() != '') {
+    return useTagStore().entries.filter((v) => v.search.includes(filter.value.toLowerCase()))
+  } else {
+    return orderBy(useTagStore().entries, ['count'], ['desc'])
+  }
+})
 </script>

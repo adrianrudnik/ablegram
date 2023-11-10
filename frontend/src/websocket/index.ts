@@ -4,6 +4,7 @@ import { useStatStore } from '@/stores/stats'
 import type { PushMessage } from '@/websocket/messages/global'
 import { PushMessageType } from '@/websocket/messages/global'
 import router from '@/router'
+import { createTagFromString, useTagStore } from '@/stores/tags'
 
 export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
   autoReconnect: true,
@@ -17,6 +18,14 @@ export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
 
       case PushMessageType.MetricUpdate:
         useStatStore().updateMetrics(payload.values)
+        break
+
+      case PushMessageType.TagUpdate:
+        useTagStore().updateBatch(
+          Object.entries(payload.tags)
+            .map((v) => createTagFromString(v[0], v[1]))
+            .filter((v) => v !== null)
+        )
         break
 
       case PushMessageType.ProcessingStatus:

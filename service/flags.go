@@ -14,8 +14,13 @@ func parseFlags(c *config.Config) {
 	noGuiFlag := flag.Bool("no-gui", false, "Do no start the GUI.")
 	noWebserviceFlag := flag.Bool("no-webservice", false, "Do no start the webservice")
 
+	collectorWorkerCount := flag.Int("collector-worker-count", 5, "Set the number of collector workers")
+	collectorWorkerDelay := flag.Int("collector-worker-delay", 0, "Set the delay in milliseconds between collector workers tasks")
+
 	parserWorkerCount := flag.Int("parser-worker-count", 5, "Set the number of parser workers")
 	parserWorkerDelay := flag.Int("parser-worker-delay", 0, "Set the delay in milliseconds between parser workers tasks")
+
+	indexerWorkerDelay := flag.Int("indexer-worker-delay", 0, "Set the delay in milliseconds between indexer workers tasks")
 
 	flag.Parse()
 
@@ -27,6 +32,11 @@ func parseFlags(c *config.Config) {
 	c.Behaviour.ShowGui = !*noGuiFlag
 	c.Behaviour.WebserviceAutostart = !*noWebserviceFlag
 
+	c.Collector.WorkerCount = *collectorWorkerCount
+	c.Collector.WorkerDelayInMs = *collectorWorkerDelay
+
 	c.Parser.WorkerCount = *parserWorkerCount
 	c.Parser.WorkerDelayInMs = *parserWorkerDelay
+
+	c.Indexer.WorkerDelayInMs = *indexerWorkerDelay
 }

@@ -21,10 +21,10 @@ import type { ResultType } from '@/plugins/search/result'
 import InfiniteScrollTrigger from '@/components/structure/InfiniteScrollTrigger.vue'
 import { useSearchStore } from '@/stores/search'
 
-const currentQuery = computed(() => useSearchStore().currentQuery)
+const currentQuery = computed(() => useSearchStore().currentQueryInstance)
 const lastSortKey = computed(() => useSearchStore().lastSortKey)
 
-const { executeQuerySearch } = useSearchStore()
+const { search } = useSearchStore()
 
 function resolveComponent(type: ResultType): any {
   switch (type) {
@@ -52,7 +52,7 @@ const loadMore = async () => {
     q.search_after = lastSortKey.value
   }
 
-  const result = await executeQuerySearch(q)
+  const result = await search(q)
 
   useSearchResultStore().updateBatch(
     result.hits.map((h) => {

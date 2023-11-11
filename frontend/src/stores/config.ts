@@ -10,12 +10,7 @@ export interface Config {
   }
 
   log: LogConfig
-
-  behaviour: {
-    autostart_webservice: boolean
-    autostart_browser: boolean
-    show_gui: boolean
-  }
+  behaviour: BehaviorConfig
 
   collector: {
     worker_count: number
@@ -46,6 +41,12 @@ export interface LogConfig {
   readonly process_logfile_path: string
 }
 
+export interface BehaviorConfig {
+  autostart_webservice: boolean
+  open_browser_on_start: boolean
+  show_service_gui: boolean
+}
+
 export const useConfigStore = defineStore('config', () => {
   // Initialize the current settings with a fallback config that will be replaced once we load the URL
   const current = ref<Config>({
@@ -55,9 +56,9 @@ export const useConfigStore = defineStore('config', () => {
       build: ''
     },
     behaviour: {
-      autostart_browser: false,
-      autostart_webservice: false,
-      show_gui: true
+      autostart_webservice: true,
+      open_browser_on_start: true,
+      show_service_gui: true
     },
     collector: {
       worker_count: 4,
@@ -85,7 +86,11 @@ export const useConfigStore = defineStore('config', () => {
   })
 
   const load = async () => {
-    current.value = await fetchApi<Config>('/api/config')
+    try {
+      current.value = await fetchApi<Config>('/api/config')
+    } catch (e) {
+      console.error('Failed to load config', e)
+    }
   }
 
   return {

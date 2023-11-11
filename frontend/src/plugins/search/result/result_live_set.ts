@@ -2,7 +2,7 @@ import type { ResultType } from '@/plugins/search/result/index'
 
 export interface LiveSetResult {
   id: string
-  type: ResultType.LiveSet
+  type: ResultType.AbletonLiveSet
   tags?: string[]
 
   pathAbsolute?: string

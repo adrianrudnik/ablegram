@@ -140,6 +140,7 @@ common:
     hide-tags: Hide tags
 
   label:
+    no-name: No name
     anything: Anything
     everything: Everything
 
@@ -233,6 +234,20 @@ common:
       s: Tag
       c: Tags | Tag | Tags
       nc: No tags | One tag | {count} tags
+
+index:
+  type:
+    AbletonLiveSet: '@:common.label.ableton-live-set.s'
+    AbletonMidiTrack: '@:common.label.midi-track.s'
+    AbletonAudioTrack: '@:common.label.audio-track.s'
+    AbletonReturnTrack: '@:common.label.ableton-return-track.s'
+    AbletonGroupTrack: '@:common.label.ableton-group-track.s'
+    AbletonPreHearTrack: '@:common.label.ableton-prehear-track.s'
+    AbletonMidiClip: '@:common.label.ableton-midi-clip.s'
+    AbletonAudioClip: '@:common.label.ableton-audio-clip.s'
+    AbletonMixer: '@:common.label.ableton-mixer.s'
+    AbletonDeviceChain: '@:common.label.ableton-device-chain.s'
+    AbletonScene: '@:common.label.ableton-scene.s'
 
 tag:
   example: Category
@@ -399,6 +414,11 @@ shutdown-confirm-modal:
   accept: Shutdown
   reject: Return
 
+search-query-input:
+  placeholder: Search by text or boolean query
+  total-hits: '@:common.label.search-result.nc'
+
+# DEPRECATED
 query-input-component:
   placeholder: Search by tag, string or boolean query
   hits: '@:common.label.search-result.nc'
@@ -496,6 +516,29 @@ log-settings:
         It helps to debug why certain files get excluded, not scanned at all, or failed.
       location: >-
         The logfile will be populated at {path}
+
+behavior-settings:
+  title: Behavior settings
+  description: >-
+    Here you can customize the behavior of the software.
+  form:
+    open_browser_on_start:
+      title: Open browser on startup
+      description: >-
+        Open the browser automatically when the software starts.
+        If you want to run the webservice on a server for others to access, you could turn this off.
+
+    autostart_webservice:
+      title: Start webservice on startup
+      description: >-
+        Start the webservice automatically when the software starts.
+        Used for debugging issues.
+
+    show_service_gui:
+      title: Show service GUI
+      description: >-
+        Show the service GUI on startup.
+        Used for debugging issues. Depending on the OS a log console will be shown.
 
 settings-view:
   title: Settings

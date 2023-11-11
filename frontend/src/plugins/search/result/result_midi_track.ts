@@ -2,7 +2,7 @@ import type { ResultType } from '@/plugins/search/result/index'
 
 export interface MidiTrackResult {
   id: string
-  type: ResultType.MidiTrack
+  type: ResultType.AbletonMidiTrack
   tags?: string[]
 
   pathAbsolute?: string

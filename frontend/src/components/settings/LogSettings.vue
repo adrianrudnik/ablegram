@@ -7,8 +7,6 @@
       </p>
 
       <FormGrid @submit="onFormSubmit">
-        <FormRow> </FormRow>
-
         <FormRow>
           <CheckboxInput
             name="enable_runtime_logfile"

@@ -49,7 +49,9 @@ const numericValueTags = [
 export const useTagStore = defineStore('tags', setupStore<Tag>())
 
 export const hydrateTags = async () => {
-  const r = await useSearchStore().executeQuerySearch({
+  // @todo deprecated
+  return
+  const r = await useSearchStore().search({
     size: 4,
     query: {
       query: '*'

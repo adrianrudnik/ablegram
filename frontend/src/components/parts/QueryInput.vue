@@ -113,7 +113,7 @@ const clearInput = () => {
   currentSelection.value = []
   currentResultCount.value = 0
   currentRequestValid.value = true
-  useSearchStore().clear()
+  useSearchStore().reset()
 }
 
 const currentResultCount = ref(0)
@@ -134,7 +134,7 @@ watchDebounced(
     statStore.isSearching = true
 
     try {
-      const result = await useSearchStore().executeQuerySearch({
+      const result = await useSearchStore().search({
         size: 4,
         query: {
           query: query.value

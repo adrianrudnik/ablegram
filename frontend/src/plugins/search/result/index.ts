@@ -39,9 +39,17 @@ export interface Hit {
 }
 
 export enum ResultType {
-  LiveSet = 'LiveSet',
-  MidiTrack = 'MidiTrack',
-  AudioTrack = 'AudioTrack'
+  AbletonLiveSet = 'AbletonLiveSet',
+  AbletonMidiTrack = 'AbletonMidiTrack',
+  AbletonAudioTrack = 'AbletonAudioTrack',
+  AbletonReturnTrack = 'AbletonReturnTrack',
+  AbletonGroupTrack = 'AbletonGroupTrack',
+  AbletonPreHearTrack = 'AbletonPreHearTrack',
+  AbletonMidiClip = 'AbletonMidiClip',
+  AbletonAudioClip = 'AbletonAudioClip',
+  AbletonMixer = 'AbletonMixer',
+  AbletonDeviceChain = 'AbletonDeviceChain',
+  AbletonScene = 'AbletonScene'
 }
 
 export type HitFieldset = LiveSetResult | MidiTrackResult | AudioTrackResult

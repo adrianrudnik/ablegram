@@ -81,13 +81,6 @@ func Serve(
 		c.FileFromFS("/", frontendFS)
 	})
 
-	api := r.Group("/api")
-	registerApiRoutes(api)
-	registerTagRoutes(api, tc)
-
-	search := r.Group("/search")
-	registerBleveRoutes(search, indexer)
-
 	// Start a websocket server for UI related channels
 	// @see https://medium.com/@abhishekranjandev/building-a-production-grade-websocket-for-notifications-with-golang-and-gin-a-detailed-guide-5b676dcfbd5a
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
@@ -96,16 +89,22 @@ func Serve(
 		connectClientWebsocket(c, pushChan)
 	})
 
+	// Register common API routes
+	api := r.Group("/api")
+	registerApiRoutes(api)
+	registerTagRoutes(api, tc)
+	registerConfigRoutes(api, conf)
+
+	// Register the bleve HTTP router
+	search := r.Group("/search")
+	registerBleveRoutes(search, indexer)
+
 	r.GET("/about", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"version": conf.About.Version,
 			"commit":  conf.About.Commit,
 			"date":    conf.About.Date,
 		})
-	})
-
-	r.GET("/config", func(c *gin.Context) {
-		c.JSON(200, conf)
 	})
 
 	r.POST("/shutdown", func(c *gin.Context) {

@@ -480,12 +480,12 @@ log-settings:
         The runtime logfile will be populated at {path}
     level:
       info:
-        title: INFO
+        title: Informational
         description: >-
           The most basic information about the software's operations will be logged.
           This helps in the most common cases.
       debug:
-        title: DEBUG
+        title: Debugging
         description: >-
           All information about the software's operations will be logged. This helps
           to debug more complicated scenarios, but will huge amounts of information.

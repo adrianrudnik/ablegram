@@ -45,3 +45,13 @@ body {
 .tag-list-complete-leave-active {
   position: absolute;
 }
+
+code {
+  overflow-wrap: break-word;
+}
+
+/* Prevent cards to have a huge content padding */
+.p-card .p-card-content {
+  padding-top: unset;
+  padding-bottom: unset;
+}

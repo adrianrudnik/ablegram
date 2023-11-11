@@ -33,7 +33,7 @@ Content-Type: application/json
   "size": 10,
   "from": 0,
   "query": {
-    "query": "+type:LiveSet"
+    "query": "+type:AbletonMixer"
   },
   "fields": [
     "*"

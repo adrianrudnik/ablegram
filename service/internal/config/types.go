@@ -20,8 +20,8 @@ type LogConfig struct {
 	Level                  string `yaml:"level" json:"level"`
 	EnableRuntimeLogfile   bool   `yaml:"enable_runtime_logfile" json:"enable_runtime_logfile"`
 	EnableProcessedLogfile bool   `yaml:"enable_processed_logfile" json:"enable_processed_logfile"`
-	RuntimeLogfilePath     string `json:"runtime_logfile_path"`
-	ProcessLogfilePath     string `json:"process_logfile_path"`
+	RuntimeLogfilePath     string `yaml:"-" json:"runtime_logfile_path"`
+	ProcessLogfilePath     string `yaml:"-" json:"process_logfile_path"`
 }
 
 type BehaviourConfig struct {

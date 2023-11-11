@@ -87,13 +87,13 @@ func Load(path string) (*Config, error) {
 	return c, nil
 }
 
-func Save(c *Config, path string) error {
+func (c *Config) Save() error {
 	b, err := yaml.Marshal(&c)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(path, b, 0644)
+	err = os.WriteFile(GetRelativeFilePath(".config.yaml"), b, 0644)
 	if err != nil {
 		return err
 	}

@@ -85,7 +85,7 @@ export const useConfigStore = defineStore('config', () => {
   })
 
   const load = async () => {
-    current.value = await fetchApi<Config>('/config')
+    current.value = await fetchApi<Config>('/api/config')
   }
 
   return {

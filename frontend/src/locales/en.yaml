@@ -302,6 +302,7 @@ tag:
   type:ableton-return-track: '@:common.label.ableton-return-track.s'
   type:ableton-device-chain: '@:common.label.ableton-device-chain.s'
   type:ableton-group-track: '@:common.label.ableton-group-track.s'
+  type:ableton-scene: '@:common.label.ableton-scene.s'
   type:ableton-midi-chord-device: MIDI Chord device
   type:ableton-midi-pitcher-device: MIDI Pitcher device
   type:ableton-midi-arpeggiator-device: MIDI Arpeggiator device
@@ -322,7 +323,11 @@ tag:
   ableton-track:frozen: '@:common.label.frozen'
 
   ableton-sample-reference: '@:common.label.ableton-sample-reference.s'
-  ableton-sample-reference:unavailable: 'Not available'
+  ableton-sample-reference:available: 'Available'
+  ableton-sample-reference:caution: 'Caution'
+  ableton-sample-reference:wrong-os: 'Wrong OS'
+  ableton-sample-reference:modified: 'Modified'
+  ableton-sample-reference:collected: 'Collected'
 
   file: File
   file:location: Location
@@ -389,7 +394,7 @@ tag:
   color:ableton: '@:common.vendor.ableton.short'
 
 app-status:
-  title: App status
+  title: Status
   description: Contains information about the application and its current status.
   version:
     label: Version
@@ -565,10 +570,21 @@ behavior-settings:
         Show the service GUI on startup.
         Used for debugging issues. Depending on the OS a log console will be shown.
 
+tag-overview:
+  title: Tag overview
+  intro: >-
+    Tags are listed in descending order based on their frequency of use, with the most commonly used tags at the top.
+    This sorting helps you quickly identify which tags are most relevant or popular among users.
+  filtering: >-
+    If you're looking for a specific tag, you can use the filter option. Just type in the name of the tag in the filter
+    bar, and the list will update to show only the tags that match your input. This feature makes it easier to
+    find the exact tag you're looking for without scrolling through the entire list.
+    By clicking on the tag it is copied to your clipboard, allowing you to easily paste it into the search page.
+
 settings-view:
   title: Settings
   description: >-
-    Here you can customize the behavior of the software. Don't worry, we'll keep it simple and straightforward.
+    Here you can customize the behavior of the software.
   form:
     enable: Enable file based logging
     level:
@@ -586,7 +602,7 @@ settings-view:
   logging:
     title: Logfile Options
     description: >-
-      Here, you can customize how the software handles logfiles. Don't worry, we'll keep it simple and straightforward.
+      Here, you can customize how the software handles logfiles.
     logging-level:
       title: Logging Level
       info-level:

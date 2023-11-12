@@ -85,19 +85,14 @@ const items: MenuItem[] = [
     route: { name: 'search' }
   },
   {
-    label: t('menu.files.label'),
-    icon: 'pi pi-fw pi-file',
-    route: { name: 'files' }
-  },
-  {
     label: t('menu.tags.label'),
     icon: 'pi pi-fw pi-tag',
     route: { name: 'tags' }
   },
   {
-    label: t('menu.info.label'),
-    icon: 'pi pi-fw pi-info-circle',
-    route: { name: 'info' }
+    label: t('menu.files.label'),
+    icon: 'pi pi-fw pi-file',
+    route: { name: 'files' }
   },
   {
     label: t('menu.settings.label'),

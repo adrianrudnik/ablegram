@@ -10,7 +10,7 @@ const emit = defineEmits(['trigger'])
 
 const trigger = ref()
 
-const {stop} = useIntersectionObserver(trigger, ([{ isIntersecting }], observerElement) => {
+const { stop } = useIntersectionObserver(trigger, ([{ isIntersecting }], observerElement) => {
   if (isIntersecting) {
     console.log('TRIGGER')
     emit('trigger')

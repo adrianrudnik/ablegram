@@ -2,9 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import AppLayout from '@/layouts/AppLayout.vue'
 import SearchView from '@/views/SearchView.vue'
-import TagsView from '@/views/TagsView.vue'
+import TagsOverviewView from '@/views/TagsOverviewView.vue'
 import FilesView from '@/views/FilesView.vue'
-import InfoView from '@/views/InfoView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import GoodbyeView from '@/views/GoodbyeView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
@@ -39,12 +38,7 @@ const router = createRouter({
         {
           path: 'tags',
           name: 'tags',
-          component: TagsView
-        },
-        {
-          path: 'info',
-          name: 'info',
-          component: InfoView
+          component: TagsOverviewView
         },
         {
           path: 'settings',

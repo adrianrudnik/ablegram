@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/util"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/antchfx/xmlquery"
 	"os"
@@ -60,14 +61,48 @@ func ParseSampleReferences(
 		// Check if the sample is actually unavailable
 		fstat, err := os.Stat(doc.SampleAbsPath)
 		if errors.Is(err, os.ErrNotExist) {
-			tb.Add("ableton-sample-reference:unavailable")
+			tb.Add("ableton-sample-reference:available=false")
+
+			// There are several scenarios that can be at play here:
+			// First lets check if we might have the wrong OS
+			if !util.IsPathOriginFromTheSameOs(doc.SampleAbsPath) {
+				tb.Add("ableton-sample-reference:wrong-os")
+			}
+
+			// Now lets check if the files might have been collected, so it
+			// has to be in the same folder as the ALS file.
+			fstat, err = os.Stat(filepath.Join(filepath.Dir(path), filepath.Base(doc.SampleAbsPath)))
+			if errors.Is(err, os.ErrNotExist) {
+				// We can't find the file in the same folder as the ALS file
+				tb.Add("ableton-sample-reference:collected=false")
+			} else if err != nil {
+				// Unexpected error
+				Logger.Warn().Err(err).
+					Str("path", doc.SampleAbsPath).
+					Msg("Failed to stat collected file for sample reference")
+				tb.Add("ableton-sample-reference:caution")
+			} else {
+				// It is available as collected, but maybe it was modified?
+				tb.Add("ableton-sample-reference:collected=true")
+
+				if fstat.Size() != doc.SampleOriginalFileSize {
+					tb.Add("ableton-sample-reference:modified=true")
+				} else {
+					tb.Add("ableton-sample-reference:modified=false")
+				}
+			}
 		} else if err != nil {
 			Logger.Warn().Err(err).
 				Str("path", doc.SampleAbsPath).
 				Msg("Failed to stat file for sample reference")
+			tb.Add("ableton-sample-reference:caution")
 		} else {
+			tb.Add("ableton-sample-reference:available=true")
+
 			if fstat.Size() != doc.SampleOriginalFileSize {
-				tb.Add("ableton-sample-reference:modified")
+				tb.Add("ableton-sample-reference:modified=true")
+			} else {
+				tb.Add("ableton-sample-reference:modified=false")
 			}
 		}
 

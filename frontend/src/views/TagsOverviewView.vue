@@ -1,12 +1,20 @@
 <template>
-  <SectionHeadline :title="t('tag-overview.type.title')">
+  <SectionHeadline :title="t('tag-overview.title')">
     <template #description>
-      <p>{{ t('tag-overview.type.description') }}</p>
+      <p>{{ t('tag-overview.intro') }}</p>
+      <p>{{ t('tag-overview.filtering') }}</p>
     </template>
 
     <InputText v-model="filter" placeholder="Filter" class="w-full mb-3" />
 
-    <SearchTag :tag="tag" v-for="tag in entries" :key="tag.id" show-count @click="copyTag(tag)" />
+    <SearchTag
+      class="cursor-pointer"
+      :tag="tag"
+      v-for="tag in entries"
+      :key="tag.id"
+      show-count
+      @click="copyTag(tag)"
+    />
   </SectionHeadline>
 </template>
 

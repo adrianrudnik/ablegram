@@ -2,7 +2,6 @@ package abletonv5
 
 type LiveSetDocument struct {
 	HasBase
-	HasFileReference
 	HasUserInfoText
 	HasScaleInformation
 
@@ -21,7 +20,6 @@ type LiveSetDocument struct {
 func NewLiveSetDocument() *LiveSetDocument {
 	return &LiveSetDocument{
 		HasBase:             NewHasBase(AbletonLiveSet),
-		HasFileReference:    NewHasFileReference(),
 		HasUserInfoText:     NewHasUserInfoText(),
 		HasScaleInformation: NewHasScaleInformation(),
 	}

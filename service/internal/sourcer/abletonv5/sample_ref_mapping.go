@@ -9,7 +9,6 @@ func buildSampleReferenceMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createBaseMappings(m)
-	createFileReferenceMappings(m)
 
 	m.AddFieldMappingsAt("sampleAbsPath", mapping.NewKeywordFieldMapping())
 	m.AddFieldMappingsAt("sampleFilename", mapping.NewKeywordFieldMapping())

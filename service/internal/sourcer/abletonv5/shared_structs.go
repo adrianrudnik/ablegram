@@ -11,9 +11,12 @@ import (
 
 // HasBase is the minimum struct to comply to for the indexer
 type HasBase struct {
-	T           string   `json:"type"`
-	Tags        []string `json:"tags,omitempty"`
-	DisplayName string   `json:"displayName,omitempty"`
+	T            string   `json:"type"`
+	Tags         []string `json:"tags,omitempty"`
+	DisplayName  string   `json:"displayName,omitempty"`
+	PathAbsolute string   `json:"pathAbsolute,omitempty"`
+	PathFolder   string   `json:"pathFolder,omitempty"`
+	Filename     string   `json:"filename,omitempty"`
 }
 
 func (b *HasBase) Type() string {
@@ -31,29 +34,18 @@ func (b *HasBase) GetAutoId() string {
 	return fmt.Sprintf("%x", md5.Sum([]byte(typedId)))
 }
 
-func (b *HasBase) EngraveTags(t *tagger.TagBucket) {
-	b.Tags = t.Engrave()
+func (b *HasBase) EngraveTags(tb *tagger.TagBucket) {
+	b.Tags = tb.Engrave([]string{b.PathAbsolute})
 }
 
 func NewHasBase(t string) HasBase {
 	return HasBase{T: t}
 }
 
-// HasFileReference represents a link to a file that contained the element
-type HasFileReference struct {
-	PathAbsolute string `json:"pathAbsolute,omitempty"`
-	PathFolder   string `json:"pathFolder,omitempty"`
-	Filename     string `json:"filename,omitempty"`
-}
-
-func (r *HasFileReference) LoadFileReference(path string, t *tagger.TagBucket) {
-	r.PathAbsolute = path
-	r.PathFolder = filepath.Dir(path)
-	r.Filename = filepath.Base(path)
-}
-
-func NewHasFileReference() HasFileReference {
-	return HasFileReference{}
+func (b *HasBase) LoadFileReference(path string, t *tagger.TagBucket) {
+	b.PathAbsolute = path
+	b.PathFolder = filepath.Dir(path)
+	b.Filename = filepath.Base(path)
 }
 
 type HasUserName struct {

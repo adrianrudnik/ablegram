@@ -15,6 +15,7 @@
       v-model="currentQueryString"
       class="w-full"
       :placeholder="t('search-query-input.placeholder')"
+      v-focus
     />
 
     <SearchQueryToolbar />
@@ -73,11 +74,5 @@ watchThrottled(
   right: 0.25rem;
   position: absolute;
   z-index: 10;
-}
-.p-menubar {
-  background-color: white;
-  border: none;
-  padding: 0;
-  margin-top: 0.4rem;
 }
 </style>

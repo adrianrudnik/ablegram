@@ -41,9 +41,7 @@ func NewInfoTextFieldMapping() *mapping.FieldMapping {
 func createBaseMappings(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("type", mapping.NewKeywordFieldMapping())
 	im.AddFieldMappingsAt("tags", mapping.NewKeywordFieldMapping())
-}
 
-func createFileReferenceMappings(im *mapping.DocumentMapping) {
 	im.AddFieldMappingsAt("pathFolder", mapping.NewKeywordFieldMapping())
 	im.AddFieldMappingsAt("pathAbsolute", mapping.NewKeywordFieldMapping())
 	im.AddFieldMappingsAt("filename", mapping.NewKeywordFieldMapping())
@@ -68,7 +66,6 @@ func createFullNameMapping(im *mapping.DocumentMapping) {
 
 func createSharedTrackMappings(im *mapping.DocumentMapping) {
 	createBaseMappings(im)
-	createFileReferenceMappings(im)
 	createFullNameMapping(im)
 	createColorMapping(im)
 }

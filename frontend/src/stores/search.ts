@@ -21,9 +21,13 @@ export const useSearchStore = defineStore('search', () => {
   // Holds the total result count of the current query
   const totalHits = ref(0)
 
+  // Used to determine if the search was used before. If not, we can show intro stuff and hide the hit count.
   const isClean = ref(true)
+
   // Used to determine if there are results to show, or even available
   const hasResults = computed(() => currentQueryInstance.value !== undefined && totalHits.value > 0)
+
+  const resultViewMode = ref<'elements' | 'files'>('elements')
 
   const { isSearching } = storeToRefs(useStatStore())
 
@@ -40,6 +44,15 @@ export const useSearchStore = defineStore('search', () => {
     isSearching.value = true
     isClean.value = false
 
+    // If the view mode is files, we need to add a filter to the query.
+    let actualQueryString = ''
+
+    if (resultViewMode.value === 'files') {
+      actualQueryString = query.query.query + ' +tags:"type:file"'
+    } else {
+      actualQueryString = query.query.query + ' -tags:"type:file"'
+    }
+
     try {
       const response = await fetch(import.meta.env.VITE_API_URL + '/search/query', {
         credentials: 'include',
@@ -47,7 +60,13 @@ export const useSearchStore = defineStore('search', () => {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(query),
+        body: JSON.stringify({
+          ...query,
+          query: {
+            ...query.query,
+            query: actualQueryString
+          }
+        }),
         method: 'POST'
       })
 
@@ -87,6 +106,10 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
 
+  const resetLoadMore = () => {
+    lastSortKey.value = []
+  }
+
   const loadMore = async () => {
     if (currentQueryInstance.value === undefined) {
       return
@@ -124,6 +147,8 @@ export const useSearchStore = defineStore('search', () => {
     totalHits,
     search,
     loadMore,
-    reset
+    reset,
+    resetLoadMore,
+    resultViewMode
   }
 })

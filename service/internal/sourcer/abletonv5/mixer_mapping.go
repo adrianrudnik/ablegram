@@ -9,7 +9,6 @@ func buildMixerMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createBaseMappings(m)
-	createFileReferenceMappings(m)
 	createUserNameMapping(m)
 	createUserInfoTextMapping(m)
 

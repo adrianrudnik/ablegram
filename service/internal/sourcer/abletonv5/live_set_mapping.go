@@ -9,7 +9,6 @@ func buildLiveSetMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createBaseMappings(m)
-	createFileReferenceMappings(m)
 	createUserInfoTextMapping(m)
 	createScaleInformationMapping(m)
 

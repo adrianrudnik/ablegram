@@ -2,7 +2,6 @@ package abletonv5
 
 type SceneDocument struct {
 	HasBase
-	HasFileReference
 	HasUserInfoText
 	HasColor
 	HasTempoWithToggle
@@ -10,10 +9,9 @@ type SceneDocument struct {
 
 func NewSceneDocument() *SceneDocument {
 	return &SceneDocument{
-		HasBase:          NewHasBase(AbletonScene),
-		HasFileReference: NewHasFileReference(),
-		HasUserInfoText:  NewHasUserInfoText(),
-		HasColor:         NewHasColor(),
+		HasBase:         NewHasBase(AbletonScene),
+		HasUserInfoText: NewHasUserInfoText(),
+		HasColor:        NewHasColor(),
 		HasTempoWithToggle: HasTempoWithToggle{
 			Tempo:        0,
 			TempoEnabled: false,

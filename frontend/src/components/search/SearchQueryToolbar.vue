@@ -1,57 +1,67 @@
+<template>
+  <Menubar :model="items" class="w-full" />
+
+  <Message severity="info" v-if="resultViewMode === 'files'" :closable="false">
+    {{ t('search-query-toolbar.file-search-notice') }}
+  </Message>
+</template>
+
 <script setup lang="ts">
 import Menubar from 'primevue/menubar'
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useSearchStore } from '@/stores/search'
+import { useI18n } from 'vue-i18n'
+import Message from 'primevue/message'
 
-const items = ref([
+const { t } = useI18n()
+const { resultViewMode, currentQueryInstance } = storeToRefs(useSearchStore())
+const { search, resetLoadMore } = useSearchStore()
+
+const switchViewMode = (mode: 'elements' | 'files') => {
+  if (mode !== resultViewMode.value) {
+    // Switch mode
+    resultViewMode.value = mode
+
+    // Redo the search
+    if (currentQueryInstance.value !== undefined) {
+      resetLoadMore()
+      search(currentQueryInstance.value)
+    }
+  }
+}
+
+const items = computed(() => [
   {
-    label: 'Home',
-    icon: 'pi pi-home'
-  },
-  {
-    label: 'Features',
-    icon: 'pi pi-star'
-  },
-  {
-    label: 'Projects',
+    label: 'View',
     icon: 'pi pi-search',
     items: [
       {
-        label: 'Components',
-        icon: 'pi pi-bolt'
-      },
-      {
-        label: 'Blocks',
-        icon: 'pi pi-server'
-      },
-      {
-        label: 'UI Kit',
-        icon: 'pi pi-pencil'
-      },
-      {
-        label: 'Templates',
-        icon: 'pi pi-palette',
+        label: 'Results',
+        icon: 'pi pi-list',
         items: [
           {
-            label: 'Apollo',
-            icon: 'pi pi-palette'
+            label: 'Single elements',
+            icon: resultViewMode.value === 'elements' ? 'pi pi-circle-on' : 'pi pi-circle-off',
+            command: () => switchViewMode('elements')
           },
           {
-            label: 'Ultima',
-            icon: 'pi pi-palette'
+            label: 'Grouped by file',
+            icon: resultViewMode.value === 'files' ? 'pi pi-circle-on' : 'pi pi-circle-off',
+            command: () => switchViewMode('files')
           }
         ]
       }
     ]
-  },
-  {
-    label: 'Contact',
-    icon: 'pi pi-envelope'
   }
 ])
 </script>
 
-<template>
-  <Menubar :model="items" class="w-full" />
-</template>
-
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.p-menubar {
+  background-color: white;
+  border: none;
+  padding: 0;
+  margin-top: 0.4rem;
+}
+</style>

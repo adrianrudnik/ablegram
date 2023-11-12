@@ -9,7 +9,6 @@ func buildMidiClipMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createBaseMappings(m)
-	createFileReferenceMappings(m)
 	createUserNameMapping(m)
 	createUserInfoTextMapping(m)
 	createColorMapping(m)
@@ -23,7 +22,6 @@ func buildAudioClipMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createBaseMappings(m)
-	createFileReferenceMappings(m)
 	createUserNameMapping(m)
 	createUserInfoTextMapping(m)
 

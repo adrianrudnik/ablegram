@@ -47,6 +47,10 @@ func parseAlsV5(stat *stats.Statistics, tc *tagger.TagCollector, path string) ([
 	docs = append(docs, abletonv5.ParseMidiPitcherDevice(stat, tc, path, &data)...)
 	docs = append(docs, abletonv5.ParseMidiVelocityDevice(stat, tc, path, &data)...)
 
+	// Finally create a file document, that bundles all found tags together
+	// This allows us to search for files by tags, skipping detailed elements
+	docs = append(docs, abletonv5.ParseAlsFile(stat, tc, path, &data))
+
 	return docs, nil
 }
 

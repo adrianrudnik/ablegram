@@ -1,6 +1,6 @@
 import './assets/styles/main.scss'
 
-import { createApp } from 'vue'
+import { createApp, nextTick } from 'vue'
 import { createPinia } from 'pinia'
 
 import PrimeVue from 'primevue/config'
@@ -24,4 +24,5 @@ app
   .use(ToastService)
   .directive('badge', BadgeDirective)
   .directive('tooltip', Tooltip)
+  .directive('focus', { mounted: (el) => setTimeout(() => el.focus(), 50) })
   .mount('#app')

@@ -9,7 +9,6 @@ func buildDeviceChainMapping() *mapping.DocumentMapping {
 	m := bleve.NewDocumentMapping()
 
 	createBaseMappings(m)
-	createFileReferenceMappings(m)
 
 	m.AddFieldMappingsAt("device_count", mapping.NewNumericFieldMapping())
 

@@ -269,6 +269,7 @@ index:
     AbletonDeviceChain: '@:common.label.ableton-device-chain.s'
     AbletonScene: '@:common.label.ableton-scene.s'
     AbletonSampleReference: '@:common.label.ableton-sample-reference.s'
+    AbletonAlsFile: 'Ableton Live Set (.ALS) file'
 
 tag:
   example: Category
@@ -308,6 +309,7 @@ tag:
   type:ableton-midi-arpeggiator-device: MIDI Arpeggiator device
   type:ableton-midi-velocity-device: MIDI Velocity device
   type:ableton-sample-reference: '@:common.label.ableton-sample-reference.s'
+  type:ableton-als-file: '@:index.type.AbletonAlsFile'
 
   ableton-live-set: '@:common.label.ableton-live-set.s'
   ableton-live-set:tracks: '@:common.label.track.c'
@@ -448,6 +450,11 @@ search-query-input:
   placeholder: Search by text or boolean query
   total-hits: '@:common.label.search-result.nc'
 
+search-query-toolbar:
+  file-search-notice: >-
+    The file-based search in this application is specifically designed for tag searches. Please use tags to find the files you're looking for.
+    Free text search results are not reliable and will be inaccurate.
+
 # DEPRECATED
 query-input-component:
   placeholder: Search by tag, string or boolean query
@@ -573,13 +580,13 @@ behavior-settings:
 tag-overview:
   title: Tag overview
   intro: >-
-    Tags are listed in descending order based on their frequency of use, with the most commonly used tags at the top.
-    This sorting helps you quickly identify which tags are most relevant or popular among users.
+    Tags are listed in descending order by time found, with the most frequently found at the top.
+    This sorting helps you quickly see which tags are most relevant or popular with users.
   filtering: >-
-    If you're looking for a specific tag, you can use the filter option. Just type in the name of the tag in the filter
-    bar, and the list will update to show only the tags that match your input. This feature makes it easier to
-    find the exact tag you're looking for without scrolling through the entire list.
-    By clicking on the tag it is copied to your clipboard, allowing you to easily paste it into the search page.
+    If you're looking for a specific tag, you can use the filter option. Simply enter the name of the tag in the filter
+    bar and the list will update to show only the tags that match your input. This feature makes it easier to
+    to find the tag you're looking for without having to scroll through the whole list.
+    Clicking on the tag will copy it to your clipboard so you can paste it into the search page.
 
 settings-view:
   title: Settings

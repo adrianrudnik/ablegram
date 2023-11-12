@@ -19,6 +19,9 @@ type TagCollector struct {
 	detailedTags  map[string]uint64
 	detailedMutex sync.RWMutex
 
+	groupTags  map[string]map[string]uint64
+	groupMutex sync.RWMutex
+
 	TriggerUpdate func()
 }
 
@@ -27,6 +30,7 @@ func NewTagCollector(conf *config.Config) *TagCollector {
 		config:        conf,
 		baseTags:      make(map[string]uint64, 500),
 		detailedTags:  make(map[string]uint64, 2000),
+		groupTags:     make(map[string]map[string]uint64, 500),
 		TriggerUpdate: func() {},
 	}
 
@@ -43,7 +47,7 @@ func (c *TagCollector) NewBucket() *TagBucket {
 	return NewTagBucket(c)
 }
 
-func (c *TagCollector) collectBaseTag(t string) {
+func (c *TagCollector) collectBaseTag(t string, groups []string) {
 	if strings.TrimSpace(t) == "" {
 		return
 	}
@@ -63,10 +67,12 @@ func (c *TagCollector) collectBaseTag(t string) {
 		c.baseTags[t] = 1
 	}
 
+	c.collectGroupedTag(t, groups)
+
 	c.TriggerUpdate()
 }
 
-func (c *TagCollector) collectDetailedTag(t string) {
+func (c *TagCollector) collectDetailedTag(t string, groups []string) {
 	if strings.TrimSpace(t) == "" {
 		return
 	}
@@ -80,7 +86,30 @@ func (c *TagCollector) collectDetailedTag(t string) {
 		c.detailedTags[t] = 1
 	}
 
+	c.collectGroupedTag(t, groups)
+
 	c.TriggerUpdate()
+}
+
+func (c *TagCollector) collectGroupedTag(t string, groups []string) {
+	c.groupMutex.Lock()
+	defer c.groupMutex.Unlock()
+
+	if len(groups) == 0 {
+		return
+	}
+
+	for _, group := range groups {
+		if _, ok := c.groupTags[group]; !ok {
+			c.groupTags[group] = make(map[string]uint64, 100)
+		}
+
+		if _, ok := c.groupTags[group][t]; ok {
+			c.groupTags[group][t]++
+		} else {
+			c.groupTags[group][t] = 1
+		}
+	}
 }
 
 func (c *TagCollector) GetBaseTags() map[string]uint64 {
@@ -103,6 +132,19 @@ func (c *TagCollector) GetDetailedTags() map[string]uint64 {
 	// Create a copy and return that
 	tags := make(map[string]uint64, len(c.detailedTags))
 	for k, v := range c.detailedTags {
+		tags[k] = v
+	}
+
+	return tags
+}
+
+func (c *TagCollector) GetGroupedTags(group string) map[string]uint64 {
+	c.groupMutex.RLock()
+	defer c.groupMutex.RUnlock()
+
+	// Create a copy and return that
+	tags := make(map[string]uint64, len(c.groupTags[group]))
+	for k, v := range c.groupTags[group] {
 		tags[k] = v
 	}
 

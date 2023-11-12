@@ -54,7 +54,7 @@ CGO_ENABLED=1 \
 GOARCH=amd64 \
 GOOS=darwin \
   go build \
-    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE} -ldflags=-X=main.BuildNumber=${BUILD_NUMBER}" \
+    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE} -X=main.BuildNumber=${BUILD_NUMBER}" \
     -o ablegram_darwin_amd64 \
     .
 
@@ -63,7 +63,7 @@ CGO_ENABLED=1 \
 GOARCH=arm64 \
 GOOS=darwin \
   go build \
-    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE} -ldflags=-X=main.BuildNumber=${BUILD_NUMBER}" \
+    -ldflags="-s -w -X=main.AppVersion=${APP_VERSION} -X=main.BuildCommit=${BUILD_COMMIT} -X=main.BuildDate=${BUILD_DATE} -X=main.BuildNumber=${BUILD_NUMBER}" \
     -o ablegram_darwin_arm64 \
     .
 

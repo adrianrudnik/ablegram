@@ -1,5 +1,5 @@
 <template>
-  <SearchResultCard :result="result"> UGG </SearchResultCard>
+  <SearchResultCard :result="result"></SearchResultCard>
 </template>
 
 <script setup lang="ts">

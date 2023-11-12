@@ -28,7 +28,7 @@ func ParseLiveSet(
 	tb.Add("type:ableton-live-set")
 
 	doc := NewLiveSetDocument()
-	doc.LoadDisplayName([]string{filepath.Base(path)})
+	doc.LoadDisplayName([]string{strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))})
 	doc.LoadFileReference(path, tb)
 	doc.LoadUserInfoText(data.LiveSet.Annotation.Value, tb)
 	doc.LoadScaleInformation(&data.LiveSet.ScaleInformation, tb)

@@ -38,14 +38,18 @@ const searchStore = useSearchStore()
 
 const { currentQueryString, isClean, totalHits } = storeToRefs(searchStore)
 
-onMounted(() => (currentQueryString.value = '*'))
+onMounted(() => {
+  if (currentQueryString.value === '') {
+    // currentQueryString.value = '*'
+  }
+})
 
 watchThrottled(
   computed(() => currentQueryString.value),
   async (q) => {
     try {
       await useSearchStore().search({
-        size: 24,
+        size: 60,
         query: {
           query: q
         },

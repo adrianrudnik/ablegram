@@ -1,34 +1,21 @@
 <template>
-  <div class="infinite-scroll-trigger" ref="trigger"></div>
+  <div ref="trigger"></div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { useIntersectionObserver, watchImmediate } from '@vueuse/core'
 
 const emit = defineEmits(['trigger'])
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        emit('trigger')
-      }
-    })
-  },
-  { threshold: 0.5 }
-)
+const trigger = ref()
 
-const trigger = ref<Element>()
-
-onMounted(() => {
-  if (trigger.value) {
-    observer.observe(trigger.value)
+const {stop} = useIntersectionObserver(trigger, ([{ isIntersecting }], observerElement) => {
+  if (isIntersecting) {
+    console.log('TRIGGER')
+    emit('trigger')
   }
 })
 
-onBeforeUnmount(() => {
-  if (trigger.value) {
-    observer.unobserve(trigger.value)
-  }
-})
+onBeforeUnmount(() => stop())
 </script>

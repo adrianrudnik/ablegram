@@ -6,7 +6,6 @@ type LiveSetDocument struct {
 	HasUserInfoText
 	HasScaleInformation
 
-	DisplayName  string `json:"displayName,omitempty"`
 	MajorVersion string `json:"majorVersion,omitempty"`
 	MinorVersion string `json:"minorVersion,omitempty"`
 	Creator      string `json:"creator,omitempty"`

@@ -1,8 +1,8 @@
-# Ablegram: Your Ableton project file finder
+# Ablegram: Ableton project search engine
 
 Ablegram is a free and independent tool designed with Ableton users in mind, although it's not directly affiliated with Ableton. This easy-to-use software allows you to effortlessly navigate through your Ableton project files.
 
-As a standalone application, Ablegram requires no installation or online connectivity. It's designed to work effectively across Windows, (hopefully soon) MacOS and Linux platforms.
+As a standalone application, Ablegram requires no installation or online connectivity. It's designed to work effectively across Windows, MacOS and Linux platforms.
 
 ![Screenshot of the search result view](docs/media/screenshot.jpg "Screenshot of the search result view")
 

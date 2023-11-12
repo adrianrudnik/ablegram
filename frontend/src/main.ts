@@ -8,6 +8,7 @@ import ConfirmationService from 'primevue/confirmationservice'
 import BadgeDirective from 'primevue/badgedirective'
 import Tooltip from 'primevue/tooltip'
 import ToastService from 'primevue/toastservice'
+import DialogService from 'primevue/dialogservice'
 
 import App from './App.vue'
 import router from './router'
@@ -22,6 +23,7 @@ app
   .use(PrimeVue)
   .use(ConfirmationService)
   .use(ToastService)
+  .use(DialogService)
   .directive('badge', BadgeDirective)
   .directive('tooltip', Tooltip)
   .directive('focus', { mounted: (el) => setTimeout(() => el.focus(), 50) })

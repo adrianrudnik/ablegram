@@ -1,5 +1,5 @@
 <template>
-  <SearchResultCard :result="result"></SearchResultCard>
+  <SearchResultCard :result="result" />
 </template>
 
 <script setup lang="ts">
@@ -10,4 +10,3 @@ const props = defineProps<{
   result: MidiTrackResult
 }>()
 </script>
-<style scoped lang="scss"></style>

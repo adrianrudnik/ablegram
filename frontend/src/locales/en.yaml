@@ -455,6 +455,8 @@ search-query-toolbar:
     The file-based search in this application is specifically designed for tag searches. Please use tags to find the files you're looking for.
     Free text search results are not reliable and will be inaccurate.
 
+search-result-focus-dialog:
+  header: Focus view
 # DEPRECATED
 query-input-component:
   placeholder: Search by tag, string or boolean query
@@ -471,61 +473,35 @@ result-item-component:
     hide-tags: '@:common.button.hide-tags'
 
 search-examples:
-  basic:
-    title: Basics
-    rules:
+  advanced:
+    title: Advanced
+    examples:
       description: >-
-        The input field is a combination of automatic tag completion (via AutoComplete)
-        and manual input. Here are some rules of conduct:
+        Advanced search is possible via simple binary entries. Here are some examples to give ideas:
       list:
         1: >-
-          If tags are to be used for the search, they must be entered first. The
-          combination {0} is not possible via the AutoComplete function.
-        2:
-          text: >-
-            The selection of several tags and possibly a free text is interpreted as a wish to
-            find everything, in the sense of {e1}, not {e2}. The selection of a single tag or word
-            is interpreted as a {e2}.
-          should: should # e1
-          must: must # e2
+          {e1} searches only for audio tracks, regardless of whether additional
+          search parameters have been specified. Other types are also {e2} and {e3}.
+        2: >-
+          {0} searches for all hits that are not MIDI tracks.
         3: >-
-          The free texts are sorted by accuracy. The closer an entry is to the formulated text,
-          the higher the search result is displayed.
-      example:
-        intro: >-
-          Here is a simple example of a combined search and how the search engine understands it:
-        explain:
-          text: >-
-            {e1} searches all results that contain {e2}, {e3} or
-            the word {e4}. The more combinations found, the higher the search result. So the example
-            project {e5} with a {e2} could be the first result.
-
-    advanced:
-      title: Advanced
-      examples:
-        description: >-
-          Advanced search is possible via simple binary entries. Here are some examples to give ideas:
-        list:
-          1: >-
-            {e1} searches only for audio tracks, regardless of whether additional
-            search parameters have been specified. Other types are also {e2} and {e3}.
-          2: >-
-            {0} searches for all hits that are not MIDI tracks.
-          3: >-
-            {0} (watch the signs!) prefers MIDI tracks that must contain the word "fx".
-          4: >-
-            {0} searches for all data points that have the attribute BPM and whose
-            value lies between 110 and 120.
-          5: >-
-            {0} searches for all data points associated
-            with this exact filename.
-          6: >-
-            {e1} will exclude all results related to this folder. The same goes for the
-            absolute path of a file with {e2}.
-          7: >-
-            {e1} without any further information searches all manual info field entries
-            (like the Ableton Info-Text) for the word {e2}, which includes e.g. the word {e3}.
-
+          {0} (watch the signs!) prefers MIDI tracks that must contain the word "fx".
+        4: >-
+          {0} searches for all data points that have the attribute BPM and whose
+          value lies between 110 and 120.
+        5: >-
+          {0} searches for all data points associated
+          with this exact filename.
+        6: >-
+          {e1} will exclude all results related to this folder. The same goes for the
+          absolute path of a file with {e2}.
+        7: >-
+          {e1} without any further information searches all manual info field entries
+          (like the Ableton Info-Text) for the word {e2}, which includes e.g. the word {e3}.
+        8: >-
+          Wildcard works as well: {e1} search for all data. {e2} searches for all annotations with any
+          value (but should be present).
+    tag-api-link: Query the API for all found tags and their respective counts
 log-settings:
   title: Log settings
   description: >-

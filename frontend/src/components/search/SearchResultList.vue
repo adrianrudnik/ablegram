@@ -5,7 +5,11 @@
       v-for="result in results"
       :key="result.id"
     >
-      <component :is="resolveComponent(result.type)" :result="result" />
+      <component
+        :is="resolveComponent(result.type)"
+        :result="result"
+        @click="openFocusDialog(result)"
+      />
     </div>
   </div>
 
@@ -19,14 +23,18 @@
 <script lang="ts" setup>
 import SearchResultCard from '@/components/search/SearchResultCard.vue'
 import { useSearchResultStore } from '@/stores/results'
-import { computed } from 'vue'
-import type { ResultType } from '@/plugins/search/result'
+import { computed, defineComponent, shallowRef } from 'vue'
+import type { HitFieldset, ResultType } from '@/plugins/search/result'
 import InfiniteScrollTrigger from '@/components/structure/InfiniteScrollTrigger.vue'
 import { useSearchStore } from '@/stores/search'
 import AbletonMidiTrack from '@/components/search/types/AbletonMidiTrack.vue'
 import { storeToRefs } from 'pinia'
 import { useStatStore } from '@/stores/stats'
+import { useDialog } from 'primevue/usedialog'
+import SearchResultFocusDialog from '@/components/search/SearchResultFocusDialog.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { loadMore } = useSearchStore()
 const { isClean } = storeToRefs(useSearchStore())
 const { isSearching } = storeToRefs(useStatStore())
@@ -53,4 +61,24 @@ function resolveComponent(type: ResultType): any {
 }
 
 const results = computed(() => useSearchResultStore().entries)
+
+const dialog = useDialog()
+
+const openFocusDialog = (result: HitFieldset) => {
+  dialog.open(SearchResultFocusDialog, {
+    props: {
+      header: t('search-result-focus-dialog.header'),
+      modal: true,
+      style: {
+        'min-width': '50vw',
+        'max-width': '95vw'
+      }
+    },
+    data: {
+      component: shallowRef(resolveComponent(result.type)),
+      result: result,
+      variant: 'default'
+    }
+  })
+}
 </script>

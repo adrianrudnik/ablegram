@@ -52,7 +52,7 @@ func createUserNameMapping(im *mapping.DocumentMapping) {
 }
 
 func createUserInfoTextMapping(im *mapping.DocumentMapping) {
-	im.AddFieldMappingsAt("annotation", mapping.NewTextFieldMapping())
+	im.AddFieldMappingsAt("annotation", NewFulltextTextFieldMapping(true))
 }
 
 func createFullNameMapping(im *mapping.DocumentMapping) {

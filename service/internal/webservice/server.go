@@ -129,9 +129,9 @@ func Serve(
 func registerTagRoutes(rg *gin.RouterGroup, tc *tagger.TagCollector) {
 	rg.GET("/tags", func(c *gin.Context) {
 		if c.Query("verbose") != "" {
-			c.JSON(200, tc.GetDetailedTags())
+			c.IndentedJSON(200, tc.GetDetailedTags())
 		} else {
-			c.JSON(200, tc.GetBaseTags())
+			c.IndentedJSON(200, tc.GetBaseTags())
 		}
 	})
 }

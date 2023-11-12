@@ -12,11 +12,18 @@
 
     <template #content>
       <div class="filename">{{ props.result.filename }}</div>
+      <div class="folder" v-if="variant === 'default'">{{ props.result.pathFolder }}</div>
       <div class="user-memo" v-if="userMemo">
         <MoreText :text="userMemo" :expanded="variant === 'default'" />
       </div>
 
       <slot />
+
+      <div v-if="variant === 'default' && props.result.tags" class="mt-3">
+        <div class="tags">
+          <TagRow :tags="props.result.tags" />
+        </div>
+      </div>
     </template>
   </Card>
 </template>
@@ -27,6 +34,7 @@ import type { HitFieldset } from '@/plugins/search/result'
 import { resolveAbletonColorByIndex } from '@/plugins/colors'
 import { useI18n } from 'vue-i18n'
 import MoreText from '@/components/structure/MoreText.vue'
+import TagRow from '@/components/parts/search/TagRow.vue'
 
 const { t } = useI18n()
 

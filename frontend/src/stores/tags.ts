@@ -48,33 +48,6 @@ const numericValueTags = [
 
 export const useTagStore = defineStore('tags', setupStore<Tag>())
 
-export const hydrateTags = async () => {
-  // @todo deprecated
-  return
-  const r = await useSearchStore().search({
-    size: 4,
-    query: {
-      query: '*'
-    },
-    facets: {
-      tags: {
-        field: 'tags',
-        size: 1000
-      }
-    }
-  })
-
-  if (!r.facets?.tags.terms) {
-    return
-  }
-
-  // Parse the resulting tags
-  for (const term of r.facets?.tags.terms ?? []) {
-    const t = createTagFromString(term.term, term.count)
-    if (t) useTagStore().update(t)
-  }
-}
-
 export function createTagFromString(raw: string, count: number): Tag {
   if (!raw || raw.trim() === '') raw = 'unknown'
 

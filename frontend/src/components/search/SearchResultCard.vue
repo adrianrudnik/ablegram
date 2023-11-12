@@ -34,7 +34,7 @@ import type { HitFieldset } from '@/plugins/search/result'
 import { resolveAbletonColorByIndex } from '@/plugins/colors'
 import { useI18n } from 'vue-i18n'
 import MoreText from '@/components/structure/MoreText.vue'
-import TagRow from '@/components/parts/search/TagRow.vue'
+import TagRow from '@/components/search/TagRow.vue'
 
 const { t } = useI18n()
 

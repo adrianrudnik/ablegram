@@ -15,7 +15,7 @@ import { storeToRefs } from 'pinia'
 import { useSearchStore } from '@/stores/search'
 import { useI18n } from 'vue-i18n'
 import Message from 'primevue/message'
-import SearchExamples from '@/components/parts/search/SearchExamples.vue'
+import SearchExamples from '@/components/search/SearchExamples.vue'
 
 const { t } = useI18n()
 const { resultViewMode, currentQueryInstance } = storeToRefs(useSearchStore())

@@ -1,5 +1,5 @@
 <template>
-  <div class="field" :class="props.class">
+  <div class="field">
     <div class="flex align-items-center">
       <Checkbox
         v-model="value"

@@ -1,5 +1,6 @@
 <template>
   <RouterView />
+  <Toast position="bottom-center" />
 </template>
 
 <script setup lang="ts">
@@ -7,6 +8,7 @@ import { RouterView } from 'vue-router'
 import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { preferredLocale } from 'preferred-locale'
+import Toast from 'primevue/toast'
 
 onMounted(() => {
   // Ensure the html tag contains the correct language

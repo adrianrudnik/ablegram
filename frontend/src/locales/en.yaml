@@ -128,6 +128,10 @@ button:
   state-loading: Loading
   state-success: Success
 
+toast:
+  copy-to-clipboard:
+    title: Copied to clipboard
+
 common:
   vendor:
     ableton:
@@ -140,7 +144,7 @@ common:
     hide-tags: Hide tags
 
   label:
-    no-name: No name
+    no-name: Unnamed
     anything: Anything
     everything: Everything
 
@@ -186,6 +190,10 @@ common:
       s: MIDI Clip
       c: MIDI Clips | MIDI Clip | MIDI Clips
       nc: No MIDI Clips | One MIDI Clip | {count} MIDI Clips
+    ableton-audio-clip:
+      s: Audio Clip
+      c: Audio Clips | Audio Clip | Audio Clips
+      nc: No Audio Clips | One Audio Clip | {count} Audio Clips
     ableton-mixer:
       s: Mixer
       c: Mixers | Mixer | Mixers
@@ -202,6 +210,18 @@ common:
       s: Group Track
       c: Group Tracks | Group Track | Group Tracks
       nc: No group tracks | One group track | {count} group tracks
+    ableton-prehear-track:
+      s: Prehear Track
+      c: Prehear Tracks | Prehear Track | Prehear Tracks
+      nc: No prehear tracks | One prehear track | {count} prehear tracks
+    ableton-scene:
+      s: Scene
+      c: Scenes | Scene | Scenes
+      nc: No scenes | One scene | {count} scenes
+    ableton-sample-reference:
+      s: Sample Reference
+      c: Sample References | Sample Reference | Sample References
+      nc: No sample references | One sample reference | {count} sample references
     beats-per-minute:
       s: BPM
       c: BPM
@@ -248,6 +268,7 @@ index:
     AbletonMixer: '@:common.label.ableton-mixer.s'
     AbletonDeviceChain: '@:common.label.ableton-device-chain.s'
     AbletonScene: '@:common.label.ableton-scene.s'
+    AbletonSampleReference: '@:common.label.ableton-sample-reference.s'
 
 tag:
   example: Category
@@ -285,6 +306,7 @@ tag:
   type:ableton-midi-pitcher-device: MIDI Pitcher device
   type:ableton-midi-arpeggiator-device: MIDI Arpeggiator device
   type:ableton-midi-velocity-device: MIDI Velocity device
+  type:ableton-sample-reference: '@:common.label.ableton-sample-reference.s'
 
   ableton-live-set: '@:common.label.ableton-live-set.s'
   ableton-live-set:tracks: '@:common.label.track.c'
@@ -298,6 +320,9 @@ tag:
 
   ableton-track: '@:common.label.track.s'
   ableton-track:frozen: '@:common.label.frozen'
+
+  ableton-sample-reference: '@:common.label.ableton-sample-reference.s'
+  ableton-sample-reference:unavailable: 'Not available'
 
   file: File
   file:location: Location

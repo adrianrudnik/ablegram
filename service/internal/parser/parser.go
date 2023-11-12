@@ -38,6 +38,7 @@ func parseAlsV5(stat *stats.Statistics, tc *tagger.TagCollector, path string) ([
 	docs = append(docs, abletonv5.ParseTrackDeviceChains(stat, tc, path, &data)...)
 	docs = append(docs, abletonv5.ParseScenes(stat, tc, path, &data)...)
 	docs = append(docs, abletonv5.ParseClips(stat, tc, path, &data)...)
+	docs = append(docs, abletonv5.ParseSampleReferences(stat, tc, path, &data)...)
 
 	// Devices
 

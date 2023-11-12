@@ -21,6 +21,7 @@ export const useSearchStore = defineStore('search', () => {
   // Holds the total result count of the current query
   const totalHits = ref(0)
 
+  const isClean = ref(true)
   // Used to determine if there are results to show, or even available
   const hasResults = computed(() => currentQueryInstance.value !== undefined && totalHits.value > 0)
 
@@ -29,8 +30,15 @@ export const useSearchStore = defineStore('search', () => {
   const search = async (
     query: SearchQuery,
     storeResults: boolean = true
-  ): Promise<SearchResult> => {
+  ): Promise<SearchResult | null> => {
+    // Catch a reset by the user
+    if (currentQueryString.value.trim() === '') {
+      reset()
+      return null
+    }
+
     isSearching.value = true
+    isClean.value = false
 
     try {
       const response = await fetch(import.meta.env.VITE_API_URL + '/search/query', {
@@ -89,18 +97,21 @@ export const useSearchStore = defineStore('search', () => {
     const result = await search(currentQueryInstance.value, false)
 
     // Append the results to the store
-    useSearchResultStore().updateBatch(
-      result.hits.map((h) => {
-        h.fields.id = h.id
-        return h.fields
-      })
-    )
+    if (result !== null) {
+      useSearchResultStore().updateBatch(
+        result.hits.map((h) => {
+          h.fields.id = h.id
+          return h.fields
+        })
+      )
+    }
   }
 
   const reset = () => {
     useSearchResultStore().clear()
     currentQueryInstance.value = undefined
     totalHits.value = 0
+    isClean.value = true
     lastSortKey.value = []
   }
 
@@ -109,6 +120,7 @@ export const useSearchStore = defineStore('search', () => {
     currentQueryInstance,
     lastSortKey,
     hasResults,
+    isClean,
     totalHits,
     search,
     loadMore,

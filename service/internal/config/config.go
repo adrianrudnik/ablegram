@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/rs/zerolog"
 	"gopkg.in/yaml.v3"
 	"os"
@@ -22,9 +23,9 @@ func newConfig() *Config {
 		},
 
 		Behaviour: BehaviourConfig{
-			WebserviceAutostart: true,
-			BrowserAutostart:    true,
-			ShowGui:             true,
+			AutostartWebservice: true,
+			OpenBrowserOnStart:  true,
+			ShowServiceGui:      true,
 		},
 
 		Collector: CollectorConfig{
@@ -40,7 +41,8 @@ func newConfig() *Config {
 		},
 
 		Webservice: WebserviceConfig{
-			TryPorts: []int{10000, 20000, 30000, 40000, 50000, 10001},
+			OwnerPassword: auth.HashPassword(auth.GenerateRandomPassword()),
+			TryPorts:      []int{10000, 20000, 30000, 40000, 50000, 10001},
 		},
 	}
 }

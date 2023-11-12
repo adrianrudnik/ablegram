@@ -25,9 +25,9 @@ type LogConfig struct {
 }
 
 type BehaviourConfig struct {
-	WebserviceAutostart bool `yaml:"autostart_webservice" json:"autostart_webservice"`
-	BrowserAutostart    bool `yaml:"autostart_browser" json:"autostart_browser"`
-	ShowGui             bool `yaml:"show_gui" json:"show_gui"`
+	AutostartWebservice bool `yaml:"autostart_webservice" json:"autostart_webservice"`
+	OpenBrowserOnStart  bool `yaml:"open_browser_on_start" json:"open_browser_on_start"`
+	ShowServiceGui      bool `yaml:"show_service_gui" json:"show_service_gui"`
 }
 
 type CollectorConfig struct {
@@ -47,6 +47,7 @@ type IndexerConfig struct {
 }
 
 type WebserviceConfig struct {
-	TryPorts   []int `yaml:"try_ports" json:"try_ports"`
-	ChosenPort int   `yaml:"-" json:"-"`
+	TryPorts      []int  `yaml:"try_ports" json:"-"`
+	ChosenPort    int    `yaml:"-" json:"-"`
+	OwnerPassword string `yaml:"owner_password" json:"owner_password"`
 }

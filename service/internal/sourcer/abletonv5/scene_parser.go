@@ -1,7 +1,6 @@
 package abletonv5
 
 import (
-	"fmt"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/workload"
@@ -21,7 +20,6 @@ func ParseScenes(
 
 		doc := NewSceneDocument()
 		doc.LoadDisplayName([]string{
-			fmt.Sprintf("%d", scene.Id),
 			scene.Name.Value,
 		})
 		doc.LoadUserInfoText(scene.Annotation.Value, tb)

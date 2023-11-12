@@ -49,7 +49,8 @@ export enum ResultType {
   AbletonAudioClip = 'AbletonAudioClip',
   AbletonMixer = 'AbletonMixer',
   AbletonDeviceChain = 'AbletonDeviceChain',
-  AbletonScene = 'AbletonScene'
+  AbletonScene = 'AbletonScene',
+  AbletonSampleReference = 'AbletonSampleReference'
 }
 
 export type HitFieldset = LiveSetResult | MidiTrackResult | AudioTrackResult

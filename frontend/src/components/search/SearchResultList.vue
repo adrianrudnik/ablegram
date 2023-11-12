@@ -11,7 +11,7 @@
 
   <InfiniteScrollTrigger @trigger="loadMore" class="mb-6" />
 
-  <div class="mx-auto my-5 text-center" v-if="isSearching">
+  <div class="mx-auto my-5 text-center" v-if="isSearching && !isClean">
     <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
   </div>
 </template>
@@ -28,6 +28,7 @@ import { storeToRefs } from 'pinia'
 import { useStatStore } from '@/stores/stats'
 
 const { loadMore } = useSearchStore()
+const { isClean } = storeToRefs(useSearchStore())
 const { isSearching } = storeToRefs(useStatStore())
 
 function resolveComponent(type: ResultType): any {
@@ -44,6 +45,7 @@ function resolveComponent(type: ResultType): any {
     // case 'AbletonMixer':
     // case 'AbletonDeviceChain':
     // case 'AbletonScene':
+    // case 'AbletonSampleReference':
     //   return SearchResultCard
     default:
       return SearchResultCard

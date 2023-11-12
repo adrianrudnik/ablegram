@@ -74,3 +74,19 @@ func (l *XmlLiveSet) GetAllActualDeviceChains() []XmlActualDeviceChain {
 
 	return hits
 }
+
+func (l *XmlLiveSet) GetAllAudioClips() []XmlAudioClip {
+	hits := make([]XmlAudioClip, 0, 100)
+
+	for _, chain := range l.GetAllTrackDeviceChains() {
+		for _, slot := range chain.MainSequencer.ClipSlotList.ClipSlots {
+			if slot.AudioClip == nil {
+				continue
+			}
+
+			hits = append(hits, *slot.AudioClip)
+		}
+	}
+
+	return hits
+}

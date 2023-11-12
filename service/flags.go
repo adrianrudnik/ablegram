@@ -28,9 +28,9 @@ func parseFlags(c *config.Config) {
 	c.Log.EnableRuntimeLogfile = *logToFiles
 	c.Log.EnableProcessedLogfile = *logScannedFolders
 
-	c.Behaviour.BrowserAutostart = !*noBrowserFlag
-	c.Behaviour.ShowGui = !*noGuiFlag
-	c.Behaviour.WebserviceAutostart = !*noWebserviceFlag
+	c.Behaviour.OpenBrowserOnStart = !*noBrowserFlag
+	c.Behaviour.ShowServiceGui = !*noGuiFlag
+	c.Behaviour.AutostartWebservice = !*noWebserviceFlag
 
 	c.Collector.WorkerCount = *collectorWorkerCount
 	c.Collector.WorkerDelayInMs = *collectorWorkerDelay

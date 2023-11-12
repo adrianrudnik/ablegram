@@ -43,4 +43,32 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 		c.JSON(200, conf)
 	})
+
+	rg.PUT("/config/behaviour", func(c *gin.Context) {
+		type userInput struct {
+			AutostartWebservice bool `json:"autostart_webservice"`
+			OpenBrowserOnStart  bool `json:"open_browser_on_start"`
+			ShowServiceGui      bool `json:"show_service_gui"`
+		}
+
+		var input userInput
+
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		conf.Behaviour.AutostartWebservice = input.AutostartWebservice
+		conf.Behaviour.OpenBrowserOnStart = input.OpenBrowserOnStart
+		conf.Behaviour.ShowServiceGui = input.ShowServiceGui
+
+		err := conf.Save()
+		if err != nil {
+			Logger.Error().Err(err).Msg("Could not save configuration")
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(200, conf)
+	})
 }

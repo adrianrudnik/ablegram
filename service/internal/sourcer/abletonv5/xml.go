@@ -2,6 +2,8 @@ package abletonv5
 
 import (
 	"encoding/xml"
+	"fmt"
+	"strings"
 )
 
 type XmlRoot struct {
@@ -13,7 +15,13 @@ type XmlRoot struct {
 	Creator           string `xml:"Creator,attr"`
 	Revision          string `xml:"Revision,attr"`
 
+	Raw string `xml:",innerxml"`
+
 	LiveSet XmlLiveSet `xml:"LiveSet"`
+}
+
+func (x *XmlRoot) IsMinorVersion(v int) bool {
+	return strings.HasPrefix(x.MinorVersion, fmt.Sprintf("%d.", v))
 }
 
 type XmlRootNoteValue struct {

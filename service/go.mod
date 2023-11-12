@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	fyne.io/fyne/v2 v2.4.1
+	github.com/antchfx/xmlquery v1.3.18
 	github.com/blevesearch/bleve/v2 v2.3.10
 	github.com/djherbis/times v1.6.0
 	github.com/duaneking/gozodiacs v0.0.0-20230703202012-0830be15d5c0
@@ -16,12 +17,15 @@ require (
 	github.com/icza/gox v0.0.0-20230924165045-adcb03233bb5
 	github.com/rs/zerolog v1.31.0
 	github.com/samber/lo v1.38.1
+	github.com/sethvargo/go-password v0.2.0
+	golang.org/x/crypto v0.14.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	fyne.io/systray v1.10.1-0.20230722100817-88df1e0ffa9a // indirect
 	github.com/RoaringBitmap/roaring v1.6.0 // indirect
+	github.com/antchfx/xpath v1.2.4 // indirect
 	github.com/bits-and-blooms/bitset v1.11.0 // indirect
 	github.com/blevesearch/bleve_index_api v1.1.2 // indirect
 	github.com/blevesearch/geo v0.1.18 // indirect
@@ -59,6 +63,7 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/geo v0.0.0-20230421003525-6adc56603217 // indirect
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
@@ -82,7 +87,6 @@ require (
 	github.com/yuin/goldmark v1.6.0 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
 	golang.org/x/arch v0.6.0 // indirect
-	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/image v0.14.0 // indirect
 	golang.org/x/mobile v0.0.0-20231006135142-2b44d11868fe // indirect

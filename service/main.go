@@ -103,7 +103,7 @@ func main() {
 
 	// Kick of the webservice
 	go func() {
-		if !appConfig.Behaviour.WebserviceAutostart {
+		if !appConfig.Behaviour.AutostartWebservice {
 			return
 		}
 
@@ -136,7 +136,7 @@ func main() {
 
 		// Try to open the default browser on the given OS
 		go func() {
-			if !appConfig.Behaviour.BrowserAutostart {
+			if !appConfig.Behaviour.OpenBrowserOnStart {
 				return
 			}
 
@@ -161,7 +161,7 @@ func main() {
 		}
 	}()
 
-	if !appConfig.Behaviour.ShowGui {
+	if !appConfig.Behaviour.ShowServiceGui {
 		select {}
 	} else {
 		// Define a clean theme

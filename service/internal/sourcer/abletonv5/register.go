@@ -19,6 +19,7 @@ func RegisterDocumentMappings(idx *mapping.IndexMappingImpl) {
 	idx.AddDocumentMapping(AbletonMixer, buildMixerMapping())
 	idx.AddDocumentMapping(AbletonDeviceChain, buildDeviceChainMapping())
 	idx.AddDocumentMapping(AbletonScene, buildSceneMapping())
+	idx.AddDocumentMapping(AbletonSampleReference, buildSampleReferenceMapping())
 
 	// Devices
 

@@ -5,7 +5,7 @@
       keypath="search-query-input.total-hits"
       tag="div"
       class="ResultCounter"
-      v-if="hasResults"
+      v-if="!isClean"
       :plural="totalHits"
     >
       <template v-slot:count>{{ n(totalHits) }}</template>
@@ -36,7 +36,7 @@ const { t, n } = useI18n()
 const statStore = useStatStore()
 const searchStore = useSearchStore()
 
-const { currentQueryString, hasResults, totalHits } = storeToRefs(searchStore)
+const { currentQueryString, isClean, totalHits } = storeToRefs(searchStore)
 
 onMounted(() => (currentQueryString.value = '*'))
 

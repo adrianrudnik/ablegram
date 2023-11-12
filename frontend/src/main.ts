@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
 import BadgeDirective from 'primevue/badgedirective'
 import Tooltip from 'primevue/tooltip'
+import ToastService from 'primevue/toastservice'
 
 import App from './App.vue'
 import router from './router'
@@ -20,6 +21,7 @@ app
   .use(router)
   .use(PrimeVue)
   .use(ConfirmationService)
+  .use(ToastService)
   .directive('badge', BadgeDirective)
   .directive('tooltip', Tooltip)
   .mount('#app')

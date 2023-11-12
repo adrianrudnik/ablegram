@@ -6,7 +6,7 @@
 
     <InputText v-model="filter" placeholder="Filter" class="w-full mb-3" />
 
-    <SearchTag :tag="tag" v-for="tag in entries" :key="tag.id" show-count />
+    <SearchTag :tag="tag" v-for="tag in entries" :key="tag.id" show-count @click="copyTag(tag)" />
   </SectionHeadline>
 </template>
 
@@ -18,10 +18,27 @@ import SectionHeadline from '@/components/structure/SectionHeadline.vue'
 import InputText from 'primevue/inputtext'
 import { useI18n } from 'vue-i18n'
 import orderBy from 'lodash/orderBy'
+import type { Tag } from '@/stores/tags'
+import { useToast } from 'primevue/usetoast'
 
 const { t } = useI18n()
 
 const filter = ref('')
+
+const toast = useToast()
+
+const copyTag = (tag: Tag) => {
+  const v = 'tags:"' + tag.id + '"'
+
+  navigator.clipboard.writeText(v)
+
+  toast.add({
+    severity: 'info',
+    summary: t('toast.copy-to-clipboard.title'),
+    detail: v,
+    life: 3000
+  })
+}
 
 const entries = computed(() => {
   if (filter.value.trim() != '') {

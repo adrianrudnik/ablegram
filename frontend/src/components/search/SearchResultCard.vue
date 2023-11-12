@@ -1,18 +1,20 @@
 <template>
-  <Card class="SearchResultCard" @click="showTemplate($event)">
+  <Card class="SearchResultCard">
     <template #header v-if="color">
       <div class="ColorBox" :style="'background-color: ' + color"></div>
     </template>
 
     <template #title>
       <div class="title" v-if="props.result.displayName">{{ props.result.displayName }}</div>
-      <div class="title" v-else>{{ t('common.label.no-name') }}</div>
+      <div class="title font-italic text-gray-400" v-else>{{ t('common.label.no-name') }}</div>
       <div class="type">{{ t('index.type.' + props.result.type) }}</div>
     </template>
 
     <template #content>
       <div class="filename">{{ props.result.filename }}</div>
-      <div class="user-memo" v-if="userMemo">{{ userMemo }}</div>
+      <div class="user-memo" v-if="userMemo">
+        <MoreText :text="userMemo" :expanded="variant === 'default'" />
+      </div>
 
       <slot />
     </template>
@@ -24,11 +26,13 @@ import Card from 'primevue/card'
 import type { HitFieldset } from '@/plugins/search/result'
 import { resolveAbletonColorByIndex } from '@/plugins/colors'
 import { useI18n } from 'vue-i18n'
+import MoreText from '@/components/structure/MoreText.vue'
 
 const { t } = useI18n()
 
 const props = defineProps<{
   result: HitFieldset
+  variant?: 'compact' | 'default'
 }>()
 
 const color = 'color' in props.result ? resolveAbletonColorByIndex(props.result.color) : undefined

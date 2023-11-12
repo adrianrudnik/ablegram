@@ -20,9 +20,9 @@
 
 <script setup lang="ts">
 import ProgressSpinner from 'primevue/progressspinner'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStatStore } from '@/stores/stats'
-import { watchThrottled } from '@vueuse/core'
+import { watchDebounced } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -30,11 +30,21 @@ const { t } = useI18n()
 const indicatorActive = ref(false)
 const inProgress = computed(() => useStatStore().inProgress)
 
-watchThrottled(
+watch(inProgress, () => {
+  // Active the visible indicator, if not already active
+  if (!indicatorActive.value) {
+    indicatorActive.value = true
+    return
+  }
+})
+
+watchDebounced(
   inProgress,
   () => {
-    indicatorActive.value = inProgress.value
+    if (indicatorActive.value) {
+      indicatorActive.value = inProgress.value
+    }
   },
-  { throttle: 125 }
+  { debounce: 1000 }
 )
 </script>

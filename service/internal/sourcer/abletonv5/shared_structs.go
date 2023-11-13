@@ -6,7 +6,10 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/util"
 	"math"
+	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 // HasBase is the minimum struct to comply to for the indexer
@@ -42,10 +45,51 @@ func NewHasBase(t string) HasBase {
 	return HasBase{T: t}
 }
 
-func (b *HasBase) LoadFileReference(path string, t *tagger.TagBucket) {
+func (b *HasBase) LoadFileReference(path string, tb *tagger.TagBucket) {
 	b.PathAbsolute = path
 	b.PathFolder = filepath.Dir(path)
 	b.Filename = filepath.Base(path)
+
+	// Determine the overall location of the file
+	homeDir, err := os.UserHomeDir()
+	if err == nil {
+		if strings.HasPrefix(path, homeDir) {
+			tb.Add("file:location=inside-user-home")
+		} else {
+			tb.Add("file:location=outside-user-home")
+		}
+	}
+
+	// Backups can be caught by a path pattern like
+	// ".../samples/Backup/MIDI Effect Arpeggiator [2023-11-06 163730].als"
+	found, err := regexp.MatchString(`Backup[/\\](.*)\[\d{4}-\d{2}-\d{2} \d{6}]`, path)
+	if err == nil && found {
+		tb.Add("file:location=ableton-backup")
+	}
+
+	if util.PathContainsFolder(path, "Trash") || util.PathContainsFolder(path, "$Recycle.Bin") {
+		tb.Add("file:location=trash")
+	}
+
+	if util.PathContainsFolder(path, "pCloudDrive") {
+		tb.Add("file:location=p-cloud")
+	}
+
+	if util.PathContainsFolder(path, "Live Recordings") {
+		tb.Add("file:location=ableton-live-recording")
+	}
+
+	if util.PathContainsFolder(path, "Factory Packs") {
+		tb.Add("file:location=ableton-factory-pack")
+	}
+
+	if util.PathContainsFolder(path, "Cloud Manager") {
+		tb.Add("file:location=ableton-cloud-manager")
+	}
+
+	if util.PathContainsFolder(path, "User Library") {
+		tb.Add("file:location=ableton-user-library")
+	}
 }
 
 type HasUserName struct {

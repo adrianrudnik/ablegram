@@ -1,6 +1,6 @@
 import type { ResultType } from '@/plugins/search/result/index'
 
-export interface LiveSetResult {
+export interface AbletonLiveSetResult {
   id: string
   type: ResultType.AbletonLiveSet
   tags?: string[]
@@ -10,6 +10,7 @@ export interface LiveSetResult {
   filename?: string
 
   displayName?: string
+
   majorVersion?: string
   minorVersion?: string
   creator?: string
@@ -17,7 +18,6 @@ export interface LiveSetResult {
 
   scaleRootNote?: string
   scaleName?: string
-  scale?: string
 
   inKey?: boolean
   bpm?: number

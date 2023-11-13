@@ -1,12 +1,13 @@
 <template>
-  <SearchResultCard :result="result" />
+  <SearchResultCard :result="result" :expanded="expanded" />
 </template>
 
 <script setup lang="ts">
 import SearchResultCard from '@/components/search/SearchResultCard.vue'
-import type { MidiTrackResult } from '@/plugins/search/result/result_midi_track'
+import type { AbletonMidiTrackResult } from '@/plugins/search/result/AbletonMidiTrackResult'
 
 const props = defineProps<{
-  result: MidiTrackResult
+  result: AbletonMidiTrackResult
+  expanded: boolean
 }>()
 </script>

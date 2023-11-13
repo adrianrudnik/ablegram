@@ -1,6 +1,8 @@
-import type { LiveSetResult } from '@/plugins/search/result/result_live_set'
-import type { MidiTrackResult } from '@/plugins/search/result/result_midi_track'
-import type { AudioTrackResult } from '@/plugins/search/result/result_audio_track'
+import type { AbletonLiveSetResult } from '@/plugins/search/result/AbletonLiveSetResult'
+import type { AbletonMidiTrackResult } from '@/plugins/search/result/AbletonMidiTrackResult'
+import type { AbletonAudioTrackResult } from '@/plugins/search/result/AbletonAudioTrackResult'
+import type { AbletonSampleReferenceResult } from '@/plugins/search/result/AbletonSampleReferenceResult'
+import type { AbletonMdiClipResult } from '@/plugins/search/result/AbletonMdiClipResult'
 
 export interface SearchResult {
   status: StatusNode
@@ -53,4 +55,9 @@ export enum ResultType {
   AbletonSampleReference = 'AbletonSampleReference'
 }
 
-export type HitFieldset = LiveSetResult | MidiTrackResult | AudioTrackResult
+export type HitFieldset =
+  | AbletonLiveSetResult
+  | AbletonMidiTrackResult
+  | AbletonAudioTrackResult
+  | AbletonSampleReferenceResult
+  | AbletonMdiClipResult

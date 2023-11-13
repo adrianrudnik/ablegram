@@ -132,6 +132,11 @@ toast:
   copy-to-clipboard:
     title: Copied to clipboard
 
+units:
+  byte:
+    s: Byte
+    c: Bytes | Byte | Bytes
+    nc: No bytes | One byte | {count} bytes
 common:
   vendor:
     ableton:

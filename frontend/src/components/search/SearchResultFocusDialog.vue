@@ -2,7 +2,7 @@
   <component
     :is="dialogRef.data.component"
     :result="dialogRef.data.result"
-    :variant="dialogRef.data.variant"
+    :expanded="dialogRef.data.expanded"
     class="mb-3"
   />
   <div class="flex mb-3 gap-2">
@@ -38,7 +38,7 @@ const dialogRef = inject('dialogRef') as {
   data: {
     component: Component
     result: HitFieldset
-    variant: 'compact' | 'default'
+    expanded: boolean
   }
 }
 </script>

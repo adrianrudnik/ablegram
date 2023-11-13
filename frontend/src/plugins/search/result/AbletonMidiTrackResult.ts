@@ -1,8 +1,8 @@
 import type { ResultType } from '@/plugins/search/result/index'
 
-export interface AudioTrackResult {
+export interface AbletonMidiTrackResult {
   id: string
-  type: ResultType.AbletonAudioTrack
+  type: ResultType.AbletonMidiTrack
   tags?: string[]
 
   pathAbsolute?: string

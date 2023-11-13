@@ -1,16 +1,16 @@
 import type { ResultType } from '@/plugins/search/result/index'
 
-export interface MidiTrackResult {
+export interface AbletonSampleReferenceResult {
   id: string
-  type: ResultType.AbletonMidiTrack
+  type: ResultType.AbletonSampleReference
   tags?: string[]
-
   pathAbsolute?: string
   pathFolder?: string
   filename?: string
 
   displayName?: string
-  annotation?: string
 
-  color?: number
+  sampleAbsPath?: string
+  sampleFilename?: string
+  sampleOriginalFileSize?: number
 }

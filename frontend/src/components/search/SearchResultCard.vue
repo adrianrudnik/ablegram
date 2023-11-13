@@ -1,5 +1,5 @@
 <template>
-  <Card class="SearchResultCard">
+  <Card class="SearchResultCard" :class="{ Expanded: expanded, Compacted: !expanded }">
     <template #header v-if="color">
       <div class="ColorBox" :style="'background-color: ' + color"></div>
     </template>
@@ -12,14 +12,14 @@
 
     <template #content>
       <div class="filename">{{ props.result.filename }}</div>
-      <div class="folder" v-if="variant === 'default'">{{ props.result.pathFolder }}</div>
+      <div class="folder" v-if="expanded">{{ props.result.pathFolder }}</div>
       <div class="user-memo" v-if="userMemo">
-        <MoreText :text="userMemo" :expanded="variant === 'default'" />
+        <MoreText :text="userMemo" :expanded="expanded" />
       </div>
 
       <slot />
 
-      <div v-if="variant === 'default' && props.result.tags" class="mt-3">
+      <div v-if="expanded && props.result.tags" class="mt-3">
         <div class="tags">
           <TagRow :tags="props.result.tags" />
         </div>
@@ -38,10 +38,15 @@ import TagRow from '@/components/search/TagRow.vue'
 
 const { t } = useI18n()
 
-const props = defineProps<{
-  result: HitFieldset
-  variant?: 'compact' | 'default'
-}>()
+const props = withDefaults(
+  defineProps<{
+    result: HitFieldset
+    expanded?: boolean
+  }>(),
+  {
+    expanded: false
+  }
+)
 
 const color = 'color' in props.result ? resolveAbletonColorByIndex(props.result.color) : undefined
 const userMemo = 'annotation' in props.result ? props.result.annotation : undefined
@@ -49,14 +54,17 @@ const userMemo = 'annotation' in props.result ? props.result.annotation : undefi
 
 <style lang="scss">
 .SearchResultCard {
-  cursor: pointer;
   flex-grow: 1;
   position: relative;
   border: 2px solid black;
   box-shadow: unset;
 
-  &:hover {
-    background-color: var(--surface-100);
+  &.Compacted {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--surface-100);
+    }
   }
 
   .p-card-body {
@@ -91,7 +99,7 @@ const userMemo = 'annotation' in props.result ? props.result.annotation : undefi
 
     .type {
       font-size: small;
-      font-weight: normal;
+      font-weight: 600;
     }
   }
 

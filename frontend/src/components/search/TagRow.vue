@@ -9,6 +9,8 @@ import type { Tag } from '@/stores/tags'
 import { useTagStore } from '@/stores/tags'
 import { computed } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
+import sortBy from 'lodash/sortBy'
+import orderBy from 'lodash/orderBy'
 
 const props = defineProps<{
   tags: string[]
@@ -16,6 +18,8 @@ const props = defineProps<{
 
 const parsedTags = computed(() => {
   const rawTags = props.tags?.filter((t) => useTagStore().entries.find((tt) => tt.id === t)) ?? []
-  return rawTags.map((t) => useTagStore().entries.find((tt) => tt.id === t)) as Tag[]
+  return orderBy(rawTags.map((t) => useTagStore().entries.find((tt) => tt.id === t)) as Tag[], [
+    'search'
+  ])
 })
 </script>

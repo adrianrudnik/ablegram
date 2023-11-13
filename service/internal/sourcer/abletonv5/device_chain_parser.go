@@ -24,7 +24,7 @@ func ParseTrackDeviceChains(
 		}
 
 		doc := NewDeviceChainDocument()
-		doc.LoadDisplayName([]string{AbletonDeviceChain})
+		doc.LoadDisplayName([]string{})
 		doc.LoadFileReference(path, tb)
 
 		doc.DeviceCount = dc.DeviceChain.Devices.GetCount()

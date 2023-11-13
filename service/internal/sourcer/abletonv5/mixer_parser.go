@@ -38,7 +38,7 @@ func ParseMixerDocuments(
 		tb.Add("type:ableton-mixer")
 
 		doc := NewMixerDocument()
-		doc.LoadDisplayName([]string{AbletonMixer})
+		doc.LoadDisplayName([]string{})
 		doc.LoadFileReference(path, tb)
 		doc.LoadUserInfoText(mx.Annotation.Value, tb)
 		doc.LoadUserName(mx.UserName.Value, tb)

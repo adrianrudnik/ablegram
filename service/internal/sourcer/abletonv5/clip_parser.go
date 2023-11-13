@@ -60,7 +60,7 @@ func ParseClips(
 
 			if slots.AudioClip != nil {
 				tb := tc.NewBucket()
-				tb.Add("type:ableton-midi-clip")
+				tb.Add("type:ableton-audio-clip")
 
 				doc := NewAudioClipDocument()
 				doc.LoadDisplayName([]string{

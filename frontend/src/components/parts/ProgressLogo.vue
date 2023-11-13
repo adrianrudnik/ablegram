@@ -1,5 +1,5 @@
 <template>
-  <RouterLink :to="{ name: 'search' }" class="inline-flex h-2rem w-2rem" v-if="!indicatorActive">
+  <RouterLink :to="{ name: 'search' }" class="inline-flex h-2rem w-2rem" v-if="!inProgress">
     <img
       src="@/assets/media/logo.svg"
       class="inline-flex border-round-md border-1 border-transparent h-2rem mb-2"
@@ -7,7 +7,7 @@
     />
   </RouterLink>
 
-  <span v-if="indicatorActive" class="h-2rem w-2rem inline-flex">
+  <span v-if="inProgress" class="h-2rem w-2rem inline-flex">
     <ProgressSpinner
       class="h-auto"
       :pt="{ circle: { style: 'stroke: black !important; paint-order: stroke;' } }"
@@ -20,31 +20,11 @@
 
 <script setup lang="ts">
 import ProgressSpinner from 'primevue/progressspinner'
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useStatStore } from '@/stores/stats'
-import { watchDebounced } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const indicatorActive = ref(false)
 const inProgress = computed(() => useStatStore().inProgress)
-
-watch(inProgress, () => {
-  // Active the visible indicator, if not already active
-  if (!indicatorActive.value) {
-    indicatorActive.value = true
-    return
-  }
-})
-
-watchDebounced(
-  inProgress,
-  () => {
-    if (indicatorActive.value) {
-      indicatorActive.value = inProgress.value
-    }
-  },
-  { debounce: 1000 }
-)
 </script>

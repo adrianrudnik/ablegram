@@ -1,15 +1,15 @@
 ---
-title: "Documentation"
+title: "Welcome"
 description: ""
 summary: ""
-date: 2023-09-07T16:12:03+02:00
-lastmod: 2023-09-07T16:12:03+02:00
-draft: false
+date: 2023-11-13T19:00:50+01:00
+lastmod: 2023-11-13T19:00:50+01:00
+draft: true
 menu:
   docs:
     parent: ""
-    identifier: "docs-9602b15bad02600f3883f55e2ade6b81"
-weight: 999
+    identifier: "welcome-b0dc86ad20ba59b3eb94feb24e8f5179"
+weight: 1
 toc: true
 seo:
   title: "" # custom title (optional)

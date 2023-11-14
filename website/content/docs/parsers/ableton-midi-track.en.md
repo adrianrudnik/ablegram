@@ -1,14 +1,14 @@
 ---
-title: "Documentation"
+title: "Ableton Midi Track"
 description: ""
 summary: ""
-date: 2023-09-07T16:12:03+02:00
-lastmod: 2023-09-07T16:12:03+02:00
-draft: false
+date: 2023-11-13T18:39:20+01:00
+lastmod: 2023-11-13T18:39:20+01:00
+draft: true
 menu:
   docs:
     parent: ""
-    identifier: "docs-9602b15bad02600f3883f55e2ade6b81"
+    identifier: "ableton-midi-track-45ed9ee78a039b2aa91056c8d8d29c80"
 weight: 999
 toc: true
 seo:

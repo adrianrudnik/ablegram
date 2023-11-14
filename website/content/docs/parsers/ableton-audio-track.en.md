@@ -1,14 +1,14 @@
 ---
-title: "Documentation"
+title: "Ableton Audio Track"
 description: ""
 summary: ""
-date: 2023-09-07T16:12:03+02:00
-lastmod: 2023-09-07T16:12:03+02:00
-draft: false
+date: 2023-11-13T18:39:23+01:00
+lastmod: 2023-11-13T18:39:23+01:00
+draft: true
 menu:
   docs:
     parent: ""
-    identifier: "docs-9602b15bad02600f3883f55e2ade6b81"
+    identifier: "ableton-audio-track-fc4ee90c1f62532e83de7d2f0820b3e0"
 weight: 999
 toc: true
 seo:

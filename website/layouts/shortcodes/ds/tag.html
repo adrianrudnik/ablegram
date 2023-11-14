@@ -1,0 +1,14 @@
+{{- if not .IsNamedParams -}}
+  <div class="DatasetTag Error">Invalid tag, named parameters must be used</div>
+{{- else -}}
+  {{- $value := .Get "value" -}}
+  {{- $root := .Get "root" -}}
+
+  ### {{ $root -}} {{- if strings.ContainsNonSpace $value -}}={{- "{" -}}{{- $value -}}{{- "}" -}}{{- end -}}
+
+  {{ if strings.ContainsNonSpace .Inner }}
+  <div class="DatasetTag Desc">
+    {{ .Inner | markdownify }}
+  </div>
+  {{ end }}
+{{- end -}}

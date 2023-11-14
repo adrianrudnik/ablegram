@@ -6,4 +6,5 @@
 /node_modules
 /public
 /resources/_gen
+/hugo_stats.json
 .DS_Store

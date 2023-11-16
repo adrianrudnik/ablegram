@@ -31,25 +31,30 @@ h2#produced-tags ~ h3 {
 
 
 /* Fix button colors, not sure why it is not settable via variables */
-.btn.btn-primary {
-  background-color: black;
-}
+html[data-bs-theme="light"] {
+  .btn.btn-primary {
+    background-color: black;
+  }
 
-#toc a.active {
-  color: black;
-}
-
-.btn-toggle-nav a {
-  &.active, &:hover, &:focus {
+  #toc a.active {
     color: black;
+  }
+
+  .btn-toggle-nav a {
+    &.active, &:hover, &:focus {
+      color: black;
+    }
+  }
+
+  p a {
+    &:hover {
+      color: black;
+    }
   }
 }
 
 p a {
   text-decoration: underline;
-  &:hover {
-    color: black;
-  }
 }
 
 :root {

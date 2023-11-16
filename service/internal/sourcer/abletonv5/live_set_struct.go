@@ -8,7 +8,6 @@ type LiveSetDocument struct {
 	MajorVersion string `json:"majorVersion,omitempty"`
 	MinorVersion string `json:"minorVersion,omitempty"`
 	Creator      string `json:"creator,omitempty"`
-	Revision     string `json:"revision,omitempty"`
 
 	InKey bool  `json:"inKey,omitempty"`
 	Tempo int64 `json:"bpm,omitempty"`

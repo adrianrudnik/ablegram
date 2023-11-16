@@ -1,11 +1,16 @@
 ---
-title: "Privacy Policy"
+title: "Mapping"
 description: ""
 summary: ""
-date: 2023-09-07T17:19:07+02:00
-lastmod: 2023-09-07T17:19:07+02:00
-draft: false
-type: "legal"
+date: 2023-11-16T16:46:51+01:00
+lastmod: 2023-11-16T16:46:51+01:00
+draft: true
+menu:
+  docs:
+    parent: ""
+    identifier: "mapping-bd966b34cd799662aedb942f9fd3f4df"
+weight: 999
+toc: true
 seo:
   title: "" # custom title (optional)
   description: "" # custom description (recommended)

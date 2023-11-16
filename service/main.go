@@ -184,8 +184,8 @@ func main() {
 		logo.FillMode = canvas.ImageFillOriginal
 
 		statusTxt := canvas.NewText("The service is processing files...", theme.ForegroundColor())
-		quitBtn := widget.NewButton("Shut down service", func() { a.Quit() })
-		startBtn := widget.NewButton("Open results in browser", func() { ui.OpenFrontend(appConfig) })
+		quitBtn := widget.NewButton("Shutdown", func() { a.Quit() })
+		startBtn := widget.NewButton("Open search", func() { ui.OpenFrontend(appConfig) })
 
 		progressBar := widget.NewProgressBarInfinite()
 

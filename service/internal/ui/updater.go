@@ -40,7 +40,7 @@ func (u *UiUpdater) updateStatusText(progress *stats.ProcessProgress) {
 		u.statusText.Text = "The service is processing files."
 		u.progressBar.Start()
 	} else {
-		u.statusText.Text = "The result is available via web."
+		u.statusText.Text = "The service as finished processing files."
 		u.progressBar.Hide()
 	}
 

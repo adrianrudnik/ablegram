@@ -34,11 +34,6 @@ func ParseLiveSet(
 	doc.MajorVersion = data.MajorVersion
 	doc.MinorVersion = data.MinorVersion
 	doc.Creator = data.Creator
-	doc.Revision = data.Revision
-
-	//doc.ScaleRootNote = data.LiveSet.ScaleInformation.HumanizeRootNote()
-	//doc.ScaleName = data.LiveSet.ScaleInformation.Name.Value
-	//doc.Scale = fmt.Sprintf("%s %s", doc.ScaleRootNote, doc.ScaleName)
 
 	doc.InKey = data.LiveSet.InKey.Value
 	doc.Tempo = int64(math.Round(data.LiveSet.MasterTrack.DeviceChain.Mixer.Tempo.Manual.Value))

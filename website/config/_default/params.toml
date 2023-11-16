@@ -54,7 +54,7 @@ images = ["cover.png"]
 
   # UX
   headerBar = false # true (default) or false
-  backgroundDots = true # true (default) or false
+  backgroundDots = false # true (default) or false
 
   # Homepage
   sectionFooter = false # false (default) or true

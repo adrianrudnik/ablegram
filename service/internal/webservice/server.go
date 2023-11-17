@@ -14,7 +14,6 @@ import (
 	"github.com/rs/zerolog"
 	"net/http"
 	"os"
-	"time"
 )
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
@@ -105,16 +104,6 @@ func Serve(
 			"commit":  conf.About.Commit,
 			"date":    conf.About.Date,
 		})
-	})
-
-	r.POST("/shutdown", func(c *gin.Context) {
-		c.Status(202)
-		c.JSON(200, gin.H{"message": "Shutting down"})
-
-		go func() {
-			time.Sleep(500 * time.Millisecond)
-			os.Exit(0)
-		}()
 	})
 
 	// Register the fallback route to the frontend UI bootstrap

@@ -128,3 +128,10 @@ a.btn svg {
   margin-right: 0.25rem;
   margin-bottom: .1rem;
 }
+
+/* callout white on white in dark mode */
+html[data-bs-theme="dark"] {
+  .callout {
+    background-color: var(--callout-bg, var(--bs-gray-900))
+  }
+}

@@ -135,3 +135,10 @@ html[data-bs-theme="dark"] {
     background-color: var(--callout-bg, var(--bs-gray-900))
   }
 }
+
+/* screenshot shadow */
+img.Screenshot {
+  box-shadow: rgba(50, 50, 93, 0.25) 0 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  border-radius: .3rem;
+  margin: 1rem;
+}

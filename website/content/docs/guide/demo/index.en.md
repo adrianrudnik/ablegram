@@ -20,3 +20,11 @@ seo:
 A working read-only demo on a selection of Ableton projects is available online.
 
 You can access this demonstration at [https://demo.ablegram.app/](https://demo.ablegram.app/).
+
+The demo itself is not a special build of Ablegram, but the same version that is available for download.
+
+It runs in an isolated container containing some example project files. It is started with the following arguments:
+
+```bash
+-demo-mode -no-gui -no-browser -log-level debug
+```

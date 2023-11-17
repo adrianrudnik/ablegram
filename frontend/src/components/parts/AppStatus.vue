@@ -36,12 +36,12 @@ import SectionHeadline from '@/components/structure/SectionHeadline.vue'
 import DescriptionList from '@/components/structure/DescriptionList.vue'
 import DescriptionListItem from '@/components/structure/DescriptionListItem.vue'
 import { useI18n } from 'vue-i18n'
-import { websocket } from '@/websocket'
+import { getWebsocketUrl, websocket } from '@/websocket'
 import { onMounted, ref } from 'vue'
 import { fetchApi } from '@/plugins/api'
 
 const websocketStatus = websocket.status
-const websocketUrl = import.meta.env.VITE_WEBSOCKET_URL
+const websocketUrl = getWebsocketUrl()
 
 const { t } = useI18n()
 

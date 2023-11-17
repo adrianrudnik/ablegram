@@ -6,7 +6,19 @@ import { PushMessageType } from '@/websocket/messages/global'
 import router from '@/router'
 import { createTagFromString, useTagStore } from '@/stores/tags'
 
-export const websocket = useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
+export function getWebsocketUrl() {
+  if (import.meta.env.VITE_WEBSOCKET_URL ?? null) {
+    return import.meta.env.VITE_WEBSOCKET_URL
+  }
+
+  const loc = window.location
+  const protocol = loc.protocol === 'https:' ? 'wss://' : 'ws://'
+  const host = loc.host
+  const path = '/ws'
+  return protocol + host + path
+}
+
+export const websocket = useWebSocket(getWebsocketUrl(), {
   autoReconnect: true,
   async onMessage(ws, event) {
     const payload = JSON.parse(event.data) as PushMessage

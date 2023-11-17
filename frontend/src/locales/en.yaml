@@ -302,6 +302,7 @@ tag:
   type:ableton-live-set: '@:common.label.ableton-live-set.s'
   type:ableton-track: '@:common.label.track.s'
   type:ableton-audio-track: '@:common.label.audio-track.s'
+  type:ableton-audio-clip: '@:common.label.ableton-audio-clip.s'
   type:ableton-midi-track: '@:common.label.midi-track.s'
   type:ableton-midi-clip: '@:common.label.ableton-midi-clip.s'
   type:ableton-mixer: '@:common.label.ableton-mixer.s'
@@ -452,7 +453,7 @@ shutdown-confirm-modal:
   reject: Return
 
 search-query-input:
-  placeholder: Search by text or boolean query
+  placeholder: Search by text, boolean query, * for everything
   total-hits: '@:common.label.search-result.nc'
 
 search-query-toolbar:
@@ -462,15 +463,6 @@ search-query-toolbar:
 
 search-result-focus-dialog:
   header: Focus view
-# DEPRECATED
-query-input-component:
-  placeholder: Search by tag, string or boolean query
-  hits: '@:common.label.search-result.nc'
-  invalid-query: Invalid query
-  action:
-    reset-search: clear
-    show-examples: examples / help
-    hide-examples: hide examples / help
 
 result-item-component:
   button:

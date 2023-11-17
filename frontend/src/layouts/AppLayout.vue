@@ -1,10 +1,24 @@
 <template>
-  <div class="AppLayout">
-    <h1 class="text-3xl flex gap-2 font-medium">
-      <ProgressLogo />
+  <div class="AppLayout mt-3">
+    <div class="flex gap-2 font-medium justify-content-between mb-3">
+      <div class="flex gap-2 justify-content-center">
+        <ProgressLogo />
+        <h1 class="text-3xl p-0 m-0">Ablegram</h1>
+      </div>
+      <div class="flex gap-3 mt-1 OutLinks">
+        <a href="https://www.ablegram.app/docs/guide/welcome/" target="_blank">
+          <i class="pi pi-fw pi-book text-xl"></i>
+        </a>
 
-      Ablegram
-    </h1>
+        <a href="https://www.ablegram.app/" target="_blank">
+          <i class="pi pi-fw pi-globe text-xl"></i>
+        </a>
+
+        <a href="https://github.com/adrianrudnik/ablegram" target="_blank">
+          <i class="pi pi-fw pi-github text-xl"></i>
+        </a>
+      </div>
+    </div>
 
     <MenuBar class="mb-3" />
 
@@ -24,6 +38,11 @@ import DynamicDialog from 'primevue/dynamicdialog'
 
 <style lang="scss">
 .AppLayout {
+  .OutLinks {
+    a {
+      color: black;
+    }
+  }
   padding-left: 1rem;
   padding-right: 1rem;
 }

@@ -11,6 +11,12 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import { bootApp } from '@/router/middleware/bootApp'
 import FullscreenLayout from '@/layouts/FullscreenLayout.vue'
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+  }
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -28,27 +34,32 @@ const router = createRouter({
         {
           path: 'search',
           name: 'search',
-          component: SearchView
+          component: SearchView,
+          meta: { title: 'menu.search.label' }
         },
         {
           path: 'files',
           name: 'files',
-          component: FilesView
+          component: FilesView,
+          meta: { title: 'menu.files.label' }
         },
         {
           path: 'tags',
           name: 'tags',
-          component: TagsOverviewView
+          component: TagsOverviewView,
+          meta: { title: 'menu.tags.label' }
         },
         {
           path: 'settings',
           name: 'settings',
-          component: SettingsView
+          component: SettingsView,
+          meta: { title: 'menu.settings.label' }
         },
         {
           path: 'goodbye',
           name: 'goodbye',
-          component: GoodbyeView
+          component: GoodbyeView,
+          meta: { title: 'menu.quit.label' }
         }
       ]
     },

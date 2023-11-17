@@ -8,7 +8,7 @@ menu:
   docs:
     parent: ""
     identifier: "installation-fef8ebcbf4697a7b05df91e833a0b659"
-weight: 999
+weight: 30
 toc: true
 seo:
   title: "" # custom title (optional)

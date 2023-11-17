@@ -19,6 +19,10 @@ seo:
 
 The parser for `.als` files will extract the most common metadata and add it to the search index as `AbletonLiveSet` type.
 
+{{< callout context="info" title="Note" icon="info-circle" >}}
+This document is not only about the file itself. The roots are based on the primary XML node within an `.als` file. This means that the document is a combination of file and meta related information.
+{{< /callout >}}
+
 ## Fields
 
 {{% inc_md "shared/base.mdinc" "AbletonLiveSet" %}}

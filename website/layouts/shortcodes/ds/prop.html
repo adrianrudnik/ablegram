@@ -14,11 +14,11 @@
   <li>
     Mapping: <code>{{ $mapping -}}</code>
     {{- if eq $mapping "exact" }}
-      <a class="btn btn-primary btn-sm" href="{{ "docs/terms/exact-mapping" | relLangURL }}">?</a>
+      <a class="btn btn-link btn-sm" href="{{ "docs/terms/exact-mapping" | relLangURL }}">?</a>
     {{- else if eq $mapping "fulltext" }}
-      <a class="btn btn-primary btn-sm" href="{{ "docs/terms/fulltext-mapping" | relLangURL }}">?</a>
+      <a class="btn btn-link btn-sm" href="{{ "docs/terms/fulltext-mapping" | relLangURL }}">?</a>
     {{- else if eq $mapping "numeric" }}
-    <a class="btn btn-primary btn-sm" href="{{ "docs/terms/numeric-mapping" | relLangURL }}">?</a>
+    <a class="btn btn-link  btn-sm" href="{{ "docs/terms/numeric-mapping" | relLangURL }}">?</a>
     {{ end }}
   </li>
 </ul>

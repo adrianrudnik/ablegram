@@ -1,5 +1,5 @@
 ---
-title: "Introduction"
+title: "Welcome"
 description: ""
 summary: ""
 date: 2023-11-13T19:02:06+01:00
@@ -7,8 +7,8 @@ lastmod: 2023-11-13T19:02:06+01:00
 menu:
   docs:
     parent: ""
-    identifier: "introduction-219c483d42be485034e43afbe1a8b90c"
-weight: 999
+    identifier: "welcome-219c483d42be485034e43afbe1a8b90c"
+weight: 10
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -16,8 +16,6 @@ seo:
   canonical: "" # custom canonical URL (optional)
   noindex: false # false (default) or true
 ---
-
-## Welcome 
 
 Ablegram is a free and independent tool designed with Ableton users in mind, although it's not directly affiliated with Ableton. This easy-to-use software allows you to effortlessly navigate through your Ableton project files.
 

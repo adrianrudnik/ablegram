@@ -1,5 +1,5 @@
 ---
-title: "Release V1.3.0"
+title: "Release v1.3.0"
 description: ""
 summary: ""
 date: 2023-11-13T20:31:20+01:00

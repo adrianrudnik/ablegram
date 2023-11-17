@@ -1,7 +1,7 @@
 
 [[main]]
   name = "Documentation"
-  url = "/docs/welcome/introduction/"
+  url = "/docs/guide/welcome/"
   weight = 10
 
 [[main]]

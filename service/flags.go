@@ -10,6 +10,7 @@ func parseFlags(c *config.Config) {
 	logToFiles := flag.Bool("enable-logs", false, "Enable debug log writing to files")
 	logScannedFolders := flag.Bool("enable-scanned-log", false, "Enable scanned paths log file")
 
+	demoMode := flag.Bool("demo-mode", false, "Enable demo mode, only readable actions will be executed")
 	noBrowserFlag := flag.Bool("no-browser", false, "Skip the automatic browser opening")
 	noGuiFlag := flag.Bool("no-gui", false, "Do no start the GUI.")
 	noWebserviceFlag := flag.Bool("no-webservice", false, "Do no start the webservice")
@@ -28,6 +29,7 @@ func parseFlags(c *config.Config) {
 	c.Log.EnableRuntimeLogfile = *logToFiles
 	c.Log.EnableProcessedLogfile = *logScannedFolders
 
+	c.Behaviour.DemoMode = *demoMode
 	c.Behaviour.OpenBrowserOnStart = !*noBrowserFlag
 	c.Behaviour.ShowServiceGui = !*noGuiFlag
 	c.Behaviour.AutostartWebservice = !*noWebserviceFlag

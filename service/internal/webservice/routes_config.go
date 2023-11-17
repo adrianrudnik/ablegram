@@ -25,6 +25,12 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
+		// Early exit in demo mode, we do not want to save anything
+		if conf.Behaviour.DemoMode {
+			c.JSON(200, conf)
+			return
+		}
+
 		conf.Log.Level = input.Level
 
 		if input.EnableRuntimeLogfile {
@@ -55,6 +61,12 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Early exit in demo mode, we do not want to save anything
+		if conf.Behaviour.DemoMode {
+			c.JSON(200, conf)
 			return
 		}
 

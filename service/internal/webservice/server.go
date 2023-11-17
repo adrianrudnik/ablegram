@@ -5,7 +5,6 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
-	"github.com/adrianrudnik/ablegram/internal/ui"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/logger"
@@ -94,6 +93,7 @@ func Serve(
 	registerApiRoutes(api)
 	registerTagRoutes(api, tc)
 	registerConfigRoutes(api, conf)
+	registerOsRoutes(api, conf)
 
 	// Register the bleve HTTP router
 	search := r.Group("/search")
@@ -139,18 +139,6 @@ func registerTagRoutes(rg *gin.RouterGroup, tc *tagger.TagCollector) {
 func registerApiRoutes(rg *gin.RouterGroup) {
 	rg.GET("/status", func(c *gin.Context) {
 		c.String(200, "pong")
-	})
-
-	rg.POST("/open", func(c *gin.Context) {
-		var json OpenInput
-		if err := c.ShouldBindJSON(&json); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		ui.OpenDefault(json.Path)
-
-		c.JSON(200, gin.H{"status": "ok"})
 	})
 }
 

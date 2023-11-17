@@ -25,6 +25,7 @@ type LogConfig struct {
 }
 
 type BehaviourConfig struct {
+	DemoMode            bool `yaml:"demo_mode" json:"demo_mode"`
 	AutostartWebservice bool `yaml:"autostart_webservice" json:"autostart_webservice"`
 	OpenBrowserOnStart  bool `yaml:"open_browser_on_start" json:"open_browser_on_start"`
 	ShowServiceGui      bool `yaml:"show_service_gui" json:"show_service_gui"`

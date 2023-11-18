@@ -21,6 +21,11 @@ func ParseLiveSet(
 	path string,
 	data *XmlRoot,
 ) *workload.DocumentPayload {
+	// We only support v9+
+	if !data.IsFromMinorVersion(9) {
+		return nil
+	}
+
 	// Extract the tb for live sets
 	tb := tc.NewBucket()
 	tb.Add("type:ableton-live-set")

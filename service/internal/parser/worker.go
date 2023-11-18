@@ -72,6 +72,11 @@ func (p *WorkerPool) doWork(progress *stats.ProcessProgress, stat *stats.Statist
 
 		// Move the result over to the indexer pipeline
 		for _, doc := range docs {
+			// skip empty ones, parsers are allowed to return nil documents if they deem them invalid
+			if doc == nil {
+				continue
+			}
+
 			p.outDocumentChan <- doc
 		}
 	}

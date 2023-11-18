@@ -8,7 +8,7 @@ menu:
   docs:
     parent: ""
     identifier: "guide-b0dc86ad20ba59b3eb94feb24e8f5179"
-weight: 1
+weight: 10
 toc: true
 seo:
   title: "" # custom title (optional)

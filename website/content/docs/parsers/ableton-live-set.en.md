@@ -19,9 +19,7 @@ seo:
 
 The parser for `.als` files will extract the most common metadata and add it to the search index as `AbletonLiveSet` type.
 
-{{< callout context="info" title="Note" icon="info-circle" >}}
-This document is not only about the file itself. The roots are based on the primary XML node within an `.als` file. This means that the document is a combination of file and meta related information.
-{{< /callout >}}
+The parser shou
 
 ## Fields
 
@@ -29,37 +27,38 @@ This document is not only about the file itself. The roots are based on the prim
 {{% inc_md "shared/annotation.mdinc" "AbletonLiveSet" %}}
 {{% inc_md "shared/scale-info.mdinc" "Live Set" %}}
 
-{{% ds/prop name="bpm" type="number" mapping="numeric" %}}
+{{% ds/prop name="bpm" type="number" mapping="numeric" versions="11,10,9" %}}
   The global tempo of the Live Set in BPM.
   - `+bpm:>=120` will match all documents that have a tempo of 120 BPM or higher.
   - `+bpm:<120` will match all documents that have a tempo of less than 120 BPM.
 {{%/ ds/prop %}}
 
-{{% ds/prop name="midiTrackCount" type="number" mapping="numeric" %}}
+{{% ds/prop name="midiTrackCount" type="number" mapping="numeric" versions="11,10,9" %}}
   The count of MIDI tracks in the Live Set.
   - `+midiTrackCount:0` will match all documents that have no MIDI tracks.
   - `+midiTrackCount:>=3 +midiTrackCount:<10` will match all documents that have between 3 and 9 MIDI tracks.
 {{%/ ds/prop %}}
 
-{{% ds/prop name="audioTrackCount" type="number" mapping="numeric" %}}
+{{% ds/prop name="audioTrackCount" type="number" mapping="numeric" versions="11,10,9" %}}
   The count of audio tracks in the Live Set.
   - `+audioTrackCount:0` will match all documents that have no audio tracks.
   - `+audioTrackCount:>=7 +audioTrackCount:<10` will match all documents that have between 7 and 9 audio tracks.
 {{%/ ds/prop %}}
 
-{{% ds/prop name="majorVersion" type="string" mapping="exact" %}}
+{{% ds/prop name="majorVersion" type="string" mapping="exact" versions="11,10,9" %}}
   The major version of the Live Set. This seems to match against an Ableton-internal version number
   maybe representing the used XML schema variant.
   - `+majorVersion:5` will match all documents that have a major version of 5 (Ableton Live 10 and 11).
+  - `+majorVersion:4` will match all documents that have a major version of 4 (Ableton Live 9).
 {{%/ ds/prop %}}
 
-{{% ds/prop name="minorVersion" type="string" mapping="exact" %}}
+{{% ds/prop name="minorVersion" type="string" mapping="exact" versions="11,10,9" %}}
   The minor version of the Live Set. This is more align towards the  end-user version number used that
   produced the Live Set file.
   - `+minorVersion:"11.0_11300"` will match all documents that were produced with Ableton Live Ableton Live 11.3.13.
 {{%/ ds/prop %}}
 
-{{% ds/prop name="creator" type="string" mapping="exact" %}}
+{{% ds/prop name="creator" type="string" mapping="exact" versions="11,10,9" %}}
   The label of the software used to create the Live Set file. This is a end-user facing product name. 
   - `+creator:"Ableton Live 11.3.13"` will match all documents that were produced with Ableton Live 11.3.13.
 {{%/ ds/prop %}}

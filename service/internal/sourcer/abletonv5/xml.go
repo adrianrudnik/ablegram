@@ -3,6 +3,7 @@ package abletonv5
 import (
 	"encoding/xml"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -22,6 +23,39 @@ type XmlRoot struct {
 
 func (x *XmlRoot) IsMinorVersion(v int) bool {
 	return strings.HasPrefix(x.MinorVersion, fmt.Sprintf("%d.", v))
+}
+
+func (x *XmlRoot) IsFromMinorVersion(v int) bool {
+	mv, err := extractMajorVersionNumber(x.MinorVersion)
+	if err != nil {
+		return false
+	}
+
+	return mv >= v
+}
+
+func (x *XmlRoot) IsToMinorVersion(v int) bool {
+	mv, err := extractMajorVersionNumber(x.MinorVersion)
+	if err != nil {
+		return false
+	}
+
+	return mv <= v
+}
+
+func extractMajorVersionNumber(v string) (int, error) {
+	mv := v[:strings.IndexByte(v, '.')]
+
+	i, err := strconv.Atoi(mv)
+	if err != nil {
+		Logger.Warn().Err(err).
+			Str("version", v).
+			Msg("Failed to parse minor XML version")
+
+		return 0, err
+	}
+
+	return i, nil
 }
 
 type XmlRootNoteValue struct {

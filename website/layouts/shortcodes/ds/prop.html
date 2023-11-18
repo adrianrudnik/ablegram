@@ -21,6 +21,15 @@
     <a class="btn btn-link  btn-sm" href="{{ "docs/terms/numeric-mapping" | relLangURL }}">?</a>
     {{ end }}
   </li>
+  {{- if isset .Params "versions" -}}
+  {{- $versions := sort (strings.Split (.Get "versions") ",") "value" "desc" -}}
+  <li>
+    Supported versions:
+      {{- range $versions }}
+      <code>{{ . }}</code>
+      {{- end }}
+  </li>
+  {{- end -}}
 </ul>
 
 {{ if strings.ContainsNonSpace .Inner }}

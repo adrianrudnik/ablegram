@@ -48,7 +48,9 @@ func ParseClips(
 				}
 
 				if hasProbability {
-					tb.Add("ableton:feature:probability=true")
+					tb.Add("ableton-feature:probability=true")
+				} else {
+					tb.Add("ableton-feature:probability=false")
 				}
 
 				doc.EngraveTags(tb)

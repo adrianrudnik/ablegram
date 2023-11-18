@@ -72,3 +72,4 @@ GOFLAGS="-ldflags=-X=main.AppVersion=${APP_VERSION} -ldflags=-X=main.BuildCommit
 tar -Jxvf Ablegram.tar.xz -C dist/os/linux usr/local/bin/ablegram --strip-components=3
 mv Ablegram.tar.xz "dist/deploy/Ablegram-v${APP_VERSION}-Linux_amd64.tar.xz"
 mv dist/os/linux/ablegram "dist/os/linux/ablegram-v${APP_VERSION}"
+cp "dist/os/linux/ablegram-v${APP_VERSION}" "dist/os/linux/ablegram-latest"

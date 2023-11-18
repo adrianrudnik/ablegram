@@ -6,9 +6,9 @@
     </div>
     <div class="col-lg-9 col-xl-8 text-center">
       <p class="lead">{{ .Params.lead | safeHTML }}</p>
-      <img class="Screenshot" src="screenshot.jpg" alt="Screenshot of the app">
-      </div>
+      <img class="Screenshot" src="{{ .Resources.GetMatch "screenshot.jpg" | resources.Fingerprint "sha256"}}" alt="Screenshot of the app">
     </div>
+  </div>
     <div class="row justify-content-center">
     <div class="col-lg-9 col-xl-8 text-center">
       <a class="btn btn-primary rounded-pill btn-lg my-3 mx-1" href="{{ "docs/guide/welcome" | relLangURL }}/" role="button">

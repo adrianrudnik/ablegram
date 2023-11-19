@@ -112,7 +112,7 @@ This means that an Ableton Live Version of `11.3.13` will be split into three av
 
 The total count of tracks (MIDI and audio) in the Live Set.
 
-- `+tags:ableton-live-set:tracks:count=8` if the document has no tracks.
+- `+tags:"ableton-live-set:tracks:count=8"` if the document has no tracks.
 </IndexTag>
 
 ### `ableton-live-set:midi-tracks:available`
@@ -121,8 +121,8 @@ The total count of tracks (MIDI and audio) in the Live Set.
 
 Whether the document has any audio tracks.
 
-- `+tags:ableton-live-set:audio-tracks:available=true` if the document has audio tracks.
-- `+tags:ableton-live-set:audio-tracks:available=false` if the document has no audio tracks.
+- `+tags:"ableton-live-set:audio-tracks:available=true"` if the document has audio tracks.
+- `+tags:"ableton-live-set:audio-tracks:available=false"` if the document has no audio tracks.
 </IndexTag>
 
 ### `ableton-live-set:midi-tracks:available`
@@ -131,8 +131,8 @@ Whether the document has any audio tracks.
 
 Whether the document has any MIDI tracks.
 
-- `+tags:ableton-live-set:midi-tracks:available=true` if the document has MIDI tracks.
-- `+tags:ableton-live-set:midi-tracks:available=false` if the document has no MIDI tracks.
+- `+tags:"ableton-live-set:midi-tracks:available=true"` if the document has MIDI tracks.
+- `+tags:"ableton-live-set:midi-tracks:available=false"` if the document has no MIDI tracks.
 </IndexTag>
 
 ### `file:mtime-year`
@@ -141,7 +141,7 @@ Whether the document has any MIDI tracks.
 
 File was last modified in the year `{int}`.
 
-- `file:mtime-year=2023` if the file was modified in 2023.
+- `+tags:"file:mtime-year=2023"` if the file was modified in 2023.
 </IndexTag>
 
 ### `file:mtime-weekday`
@@ -150,8 +150,8 @@ File was last modified in the year `{int}`.
 
 File was last modified on a weekday represented by `{int}`.
 
-- `file:mtime-weekday=0` if the file was modified on a Sunday.
-- `file:mtime-weekday=6` if the file was modified on a Saturday.
+- `+tags:"file:mtime-weekday=0"` if the file was modified on a Sunday.
+- `+tags:"file:mtime-weekday=6"` if the file was modified on a Saturday.
 </IndexTag>
 
 ### `file:mtime-month`
@@ -160,7 +160,7 @@ File was last modified on a weekday represented by `{int}`.
 
 File was last modified in the month represented by `{int}`.
 
-- `file:mtime-month=1` if the file was modified in January.
+- `+tags:"file:mtime-month=1"` if the file was modified in January.
 </IndexTag>
 
 ### `file:mtime-quarter`
@@ -169,7 +169,7 @@ File was last modified in the month represented by `{int}`.
 
 File was last modified in the quarter represented by `{int}`.
 
-- `file:mtime-quarter=3` if the file was modified in the third quarter of the year.
+- `+tags:"file:mtime-quarter=3"` if the file was modified in the third quarter of the year.
 </IndexTag>
 
 ### `file:mtime-weekno`
@@ -178,7 +178,7 @@ File was last modified in the quarter represented by `{int}`.
 
 File was last modified in the week number represented by `{int}`.
 
-- `file:mtime-weekno=40` if the file was modified in the 40th week of the year.
+- `+tags:"file:mtime-weekno=40"` if the file was modified in the 40th week of the year.
 </IndexTag>
 
 ### `file:btime-year`
@@ -187,7 +187,7 @@ File was last modified in the week number represented by `{int}`.
 
 File was created in the year `{int}`.
 
-- `file:btime-year=2023` if the file created in 2023.
+- `+tags:"file:btime-year=2023"` if the file created in 2023.
 </IndexTag>
 
 ### `file:btime-weekday`
@@ -196,8 +196,8 @@ File was created in the year `{int}`.
 
 File was created on a weekday represented by `{int}`.
 
-- `file:btime-weekday=0` if the file was created on a Sunday.
-- `file:btime-weekday=6` if the file was created on a Saturday.
+- `+tags:"file:btime-weekday=0"` if the file was created on a Sunday.
+- `+tags:"file:btime-weekday=6"` if the file was created on a Saturday.
 </IndexTag>
 
 ### `file:btime-month`
@@ -206,7 +206,7 @@ File was created on a weekday represented by `{int}`.
 
 File was created in the month represented by `{int}`.
 
-- `file:btime-month=1` if the file was created in January.
+- `+tags:"file:btime-month=1"` if the file was created in January.
 </IndexTag>
 
 ### `file:btime-quarter`
@@ -215,7 +215,7 @@ File was created in the month represented by `{int}`.
 
 File was created in the quarter represented by `{int}`.
 
-- `file:btime-quarter=3` if the file was created in the third quarter of the year.
+- `+tags:"file:btime-quarter=3"` if the file was created in the third quarter of the year.
 </IndexTag>
 
 ### `file:btime-weekno`
@@ -224,7 +224,7 @@ File was created in the quarter represented by `{int}`.
 
 File was created in the week number represented by `{int}`.
 
-- `file:btime-weekno=40` if the file was created in the 40th week of the year.
+- `+tags:"file:btime-weekno=40"` if the file was created in the 40th week of the year.
 </IndexTag>
 
 ### `file:zodiac-western`
@@ -233,7 +233,7 @@ File was created in the week number represented by `{int}`.
 
 The file was created in the western zodiac sign represented by `{string}`.
 
-- `file:zodiac-western=scorpio` if the file was created in the Scorpio zodiac sign.
+- `+tags:"file:zodiac-western=scorpio"` if the file was created in the Scorpio zodiac sign.
 </IndexTag>
 
 ### `file:zodiac-chinese`
@@ -242,5 +242,5 @@ The file was created in the western zodiac sign represented by `{string}`.
 
 The file was created in the chinese zodiac sign represented by `{string}`.
 
-- `file:zodiac-chinese=rabbit` if the file was created in the Rabbit zodiac sign.
+- `+tags:"file:zodiac-chinese=rabbit"` if the file was created in the Rabbit zodiac sign.
 </IndexTag>

@@ -1,9 +1,0 @@
-{{< ds/prop name="scaleRootNote" type="string" mapping="exact" versions="11,10,9" >}}
-  The global root note of the {0}.
-  - `+scaleRootNote:C` will match all documents that have a root note of `C`.
-{{</ ds/prop >}}
-
-{{< ds/prop name="scaleName" type="string" mapping="exact" versions="11,10,9" >}}
-  The global scale name of the {0}.
-  - `+scaleName:Minor` will match all documents that have a scale name of `Minor`.
-{{</ ds/prop >}}

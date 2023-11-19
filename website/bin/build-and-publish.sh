@@ -2,6 +2,6 @@
 
 cd $( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/..
 
-npm run build
+npm run docs:build
 
-rsync -avh ./public/ chinchilla-prod:/home/deploy/docker/ablegram.app/webroot
+rsync -avh --delete ./docs/.vitepress/dist/ chinchilla-prod:/home/deploy/docker/ablegram.app/webroot

@@ -1,5 +1,5 @@
 <template>
-  <div class="ResultTag inline-block" @click="print">
+  <div class="ResultTag inline-block">
     <div class="flex align-items-center gap-0">
       <span class="p-1 px-2" v-for="(part, idx) in tag.parts" :key="idx">
         {{ tag.trans.parts[idx] ?? part }}
@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import type { Tag } from '@/stores/tags'
-import { toRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { n } = useI18n()
@@ -39,8 +38,6 @@ const props = withDefaults(
     disableTranslation: false
   }
 )
-
-const print = () => console.log(toRaw(props.tag))
 </script>
 
 <style lang="scss">

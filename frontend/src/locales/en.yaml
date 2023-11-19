@@ -277,6 +277,7 @@ index:
     AbletonScene: '@:common.label.ableton-scene.s'
     AbletonSampleReference: '@:common.label.ableton-sample-reference.s'
     AbletonAlsFile: 'Ableton Live Set (.ALS) file'
+    AbletonMidiArpeggiatorDevice: 'MIDI Arpeggiator device'
 
 tag:
   example: Category

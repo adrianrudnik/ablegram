@@ -6,12 +6,8 @@
         <h1 class="text-3xl p-0 m-0">Ablegram</h1>
       </div>
       <div class="flex gap-3 mt-1 OutLinks">
-        <a href="https://www.ablegram.app/docs/guide/welcome/" target="_blank">
-          <i class="pi pi-fw pi-book text-xl"></i>
-        </a>
-
         <a href="https://www.ablegram.app/" target="_blank">
-          <i class="pi pi-fw pi-globe text-xl"></i>
+          <i class="pi pi-fw pi-book text-xl"></i>
         </a>
 
         <a href="https://github.com/adrianrudnik/ablegram" target="_blank">

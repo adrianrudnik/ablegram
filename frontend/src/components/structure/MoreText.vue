@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { truncate } from 'lodash'
 
 const props = withDefaults(
@@ -24,7 +24,7 @@ const props = withDefaults(
   }
 )
 
-const isExpanded = ref(props.expanded || props.text.length <= props.length)
+const isExpanded = computed(() => props.expanded || props.text.length <= props.length)
 const shortText = computed(() => truncate(props.text, { length: props.length }))
 </script>
 

@@ -37,6 +37,8 @@ export const useSearchStore = defineStore('search', () => {
 
   // Install a watcher that will retrigger when a tag is added to the active filters
   watch(activeFilters.value, async () => {
+    // Also ensure we reset the lastSortKey to begin a fresh result
+    lastSortKey.value = [];
     await search(currentQueryInstance.value ?? createQueryInstanceWithDefaults(), true)
   })
 
@@ -46,6 +48,7 @@ export const useSearchStore = defineStore('search', () => {
   ): Promise<SearchResult | null> => {
     // Catch a reset by the user
     if (currentQueryString.value.trim() === '' && activeFilters.value.length == 0) {
+      console.log('RESETTING');
       reset()
       return null
     }

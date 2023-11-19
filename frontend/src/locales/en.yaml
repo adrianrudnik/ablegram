@@ -129,8 +129,10 @@ button:
   state-success: Success
 
 toast:
-  copy-to-clipboard:
-    title: Copied to clipboard
+  tag-added-to-filter:
+    title: Added
+    detail: >-
+      Selected tag was added to the active filters: {tag}
 
 units:
   byte:
@@ -460,12 +462,20 @@ search-query-input:
   total-hits: '@:common.label.search-result.nc'
 
 search-query-toolbar:
-  file-search-notice: >-
-    The file-based search in this application is specifically designed for tag searches. Please use tags to find the files you're looking for.
-    Free text search results are not reliable and will be inaccurate.
+  tools:
+    header: Tools
+    filters:
+      header: Filters
+      clear-all: Clear all filters
+    tags:
+      header: Tags
+      add-random: Add random tag
+    search:
+      header: Search
+      clear: Clear search
 
 search-result-focus-dialog:
-  header: Focus view
+  header: Result focus view
 
 result-item-component:
   button:

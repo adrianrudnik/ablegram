@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-column mb-3 relative">
+  <div class="flex flex-column relative">
     <!-- total result counter above the query input bar -->
     <i18n-t
       keypath="search-query-input.total-hits"
@@ -17,19 +17,16 @@
       :placeholder="t('search-query-input.placeholder')"
       v-focus
     />
-
-    <SearchQueryToolbar />
   </div>
 </template>
 
 <script setup lang="ts">
 import InputText from 'primevue/inputtext'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { watchThrottled } from '@vueuse/core'
 import { useStatStore } from '@/stores/stats'
 import { useSearchStore } from '@/stores/search'
 import { useI18n } from 'vue-i18n'
-import SearchQueryToolbar from '@/components/search/SearchQueryToolbar.vue'
 import { storeToRefs } from 'pinia'
 
 const { t, n } = useI18n()
@@ -38,12 +35,6 @@ const statStore = useStatStore()
 const searchStore = useSearchStore()
 
 const { currentQueryString, isClean, totalHits } = storeToRefs(searchStore)
-
-onMounted(() => {
-  if (currentQueryString.value === '') {
-    // currentQueryString.value = '*'
-  }
-})
 
 watchThrottled(
   computed(() => currentQueryString.value),

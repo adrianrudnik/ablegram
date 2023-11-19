@@ -1,6 +1,6 @@
 <template>
   <div class="tags" v-if="tags">
-    <SearchTag :tag="tag" v-for="tag in parsedTags" :key="tag.id" />
+    <SearchTag :tag="tag" v-for="tag in parsedTags" :key="tag.id" class="mr-1 mb-1" />
   </div>
 </template>
 
@@ -9,7 +9,6 @@ import type { Tag } from '@/stores/tags'
 import { useTagStore } from '@/stores/tags'
 import { computed } from 'vue'
 import SearchTag from '@/components/structure/SearchTag.vue'
-import sortBy from 'lodash/sortBy'
 import orderBy from 'lodash/orderBy'
 
 const props = defineProps<{

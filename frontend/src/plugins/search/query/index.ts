@@ -1,3 +1,5 @@
+export const defaultSearchResultSize = 32
+
 export interface SearchQuery {
   size: number
   query: SearchQueryString
@@ -19,4 +21,14 @@ export interface SearchFacet {
 
 export interface SearchQueryString {
   query: string
+}
+
+export function createQueryInstanceWithDefaults(): SearchQuery {
+  return {
+    query: {
+      query: ''
+    },
+    fields: ['*'],
+    size: defaultSearchResultSize
+  }
 }

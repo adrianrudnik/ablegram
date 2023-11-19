@@ -1,15 +1,13 @@
 <template>
-  <!--  <MetaBar class="mb-3" />-->
-  <SearchQueryInput />
-  <!--  <QueryInput class="mb-3" v-if="dataPoints" />-->
-  <!--  <SearchResultList />-->
-
+  <SearchQueryInput class="z-2 relative" />
+  <SearchQueryToolbar class="mb-3 z-1 relative" />
+  <ActiveFilterBar class="mb-3 z-0" />
   <SearchResultList />
 </template>
 
 <script setup lang="ts">
 import SearchResultList from '@/components/search/SearchResultList.vue'
-import { computed } from 'vue'
-import { useStatStore } from '@/stores/stats'
 import SearchQueryInput from '@/components/search/SearchQueryInput.vue'
+import ActiveFilterBar from '@/components/search/ActiveFilterBar.vue'
+import SearchQueryToolbar from '@/components/search/SearchQueryToolbar.vue'
 </script>

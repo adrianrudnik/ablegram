@@ -1,9 +1,11 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { SearchQuery } from '@/plugins/search/query'
 import type { SearchResult } from '@/plugins/search/result'
 import { useStatStore } from '@/stores/stats'
 import { useSearchResultStore } from '@/stores/results'
+import { compileFilter, useActiveFiltersStore } from '@/stores/search-filters'
+import { createQueryInstanceWithDefaults } from '@/plugins/search/query'
 
 export const useSearchStore = defineStore('search', () => {
   // Holds the user given query string
@@ -31,12 +33,19 @@ export const useSearchStore = defineStore('search', () => {
 
   const { isSearching } = storeToRefs(useStatStore())
 
+  const activeFilters = computed(() => useActiveFiltersStore().all)
+
+  // Install a watcher that will retrigger when a tag is added to the active filters
+  watch(activeFilters.value, async () => {
+    await search(currentQueryInstance.value ?? createQueryInstanceWithDefaults(), true)
+  })
+
   const search = async (
     query: SearchQuery,
     storeResults: boolean = true
   ): Promise<SearchResult | null> => {
     // Catch a reset by the user
-    if (currentQueryString.value.trim() === '') {
+    if (currentQueryString.value.trim() === '' && activeFilters.value.length == 0) {
       reset()
       return null
     }
@@ -51,6 +60,11 @@ export const useSearchStore = defineStore('search', () => {
       actualQueryString = query.query.query + ' +tags:"type:file"'
     } else {
       actualQueryString = query.query.query + ' -tags:"type:file"'
+    }
+
+    // If we have active filters, we need to add them to the query.
+    if (activeFilters.value.length > 0) {
+      actualQueryString += ' ' + activeFilters.value.map((f) => compileFilter(f)).join(' ')
     }
 
     try {
@@ -132,6 +146,8 @@ export const useSearchStore = defineStore('search', () => {
 
   const reset = () => {
     useSearchResultStore().clear()
+    useActiveFiltersStore().clear()
+    currentQueryString.value = ''
     currentQueryInstance.value = undefined
     totalHits.value = 0
     isClean.value = true

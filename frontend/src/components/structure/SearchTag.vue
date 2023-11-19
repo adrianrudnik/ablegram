@@ -1,5 +1,5 @@
 <template>
-  <div class="ResultTag mb-1 mr-1 inline-block" @click="print">
+  <div class="ResultTag inline-block" @click="print">
     <div class="flex align-items-center gap-0">
       <span class="p-1 px-2" v-for="(part, idx) in tag.parts" :key="idx">
         {{ tag.trans.parts[idx] ?? part }}

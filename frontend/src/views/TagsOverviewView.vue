@@ -8,7 +8,7 @@
     <InputText v-model="filter" placeholder="Filter" class="w-full mb-3" v-focus />
 
     <SearchTag
-      class="cursor-pointer"
+      class="cursor-pointer mb-1 mr-1"
       :tag="tag"
       v-for="tag in entries"
       :key="tag.id"
@@ -28,6 +28,7 @@ import { useI18n } from 'vue-i18n'
 import orderBy from 'lodash/orderBy'
 import type { Tag } from '@/stores/tags'
 import { useToast } from 'primevue/usetoast'
+import { ActiveFilterMode, ActiveFilterType, useActiveFiltersStore } from '@/stores/search-filters'
 
 const { t } = useI18n()
 
@@ -38,12 +39,18 @@ const toast = useToast()
 const copyTag = (tag: Tag) => {
   const v = 'tags:"' + tag.id + '"'
 
-  navigator.clipboard.writeText(v)
+  useActiveFiltersStore().update({
+    id: tag.id,
+    type: ActiveFilterType.TAG,
+    mode: ActiveFilterMode.SHOULD,
+    content: tag,
+    query: 'tags:"' + tag.id + '"'
+  })
 
   toast.add({
     severity: 'info',
-    summary: t('toast.copy-to-clipboard.title'),
-    detail: v,
+    summary: t('toast.tag-added-to-filter.title'),
+    detail: t('toast.tag-added-to-filter.detail', { tag: tag.id }),
     life: 3000
   })
 }

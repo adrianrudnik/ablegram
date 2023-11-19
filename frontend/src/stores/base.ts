@@ -9,6 +9,8 @@ export function setupStore<T extends StoreResource>() {
   return () => {
     const entries = ref<T[]>([]) as Ref<T[]>
 
+    const all = computed(() => entries.value)
+
     function overwrite(resource: T[]) {
       entries.value = resource
     }
@@ -39,12 +41,30 @@ export function setupStore<T extends StoreResource>() {
       return entries.value.find((entry) => entry.id === id)
     }
 
+    function getRandomElement(): T | undefined {
+      if (entries.value.length === 0) return undefined
+
+      const rand = Math.floor(Math.random() * entries.value.length)
+      return entries.value[rand]
+    }
+
     const count = computed(() => entries.value.length)
 
     function clear(): void {
-      entries.value = []
+      entries.value.splice(0, entries.value.length)
     }
 
-    return { entries, overwrite, update, updateBatch, remove, get, count, clear }
+    return {
+      all,
+      entries,
+      overwrite,
+      update,
+      updateBatch,
+      remove,
+      get,
+      getRandomElement,
+      count,
+      clear
+    }
   }
 }

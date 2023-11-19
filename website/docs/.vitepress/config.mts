@@ -14,6 +14,10 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 
+    footer: {
+      message: 'Website realized with <a href="https://vitepress.dev/" target="_blank">VitePress</a>',
+    },
+
     lastUpdated: true,
 
     nav: [

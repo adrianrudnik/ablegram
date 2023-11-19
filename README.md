@@ -4,7 +4,7 @@ Ablegram is a free and independent tool designed with Ableton users in mind, alt
 
 As a standalone application, Ablegram requires no installation or online connectivity. It's designed to work effectively across Windows, MacOS and Linux platforms.
 
-![Screenshot of the search result view](docs/media/screenshot.jpg "Screenshot of the search result view")
+![Screenshot of the search result view](website/docs/public/assets/screenshots/overview-v1.4.0.png "Screenshot of the search result view")
 
 ## Features
 

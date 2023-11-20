@@ -14,6 +14,10 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 
+    editLink: {
+      pattern: 'https://github.com/adrianrudnik/ablegram/tree/main/website/docs/:path'
+    },
+
     footer: {
       message: 'Website realized with <a href="https://vitepress.dev/" target="_blank">VitePress</a>',
     },
@@ -38,7 +42,7 @@ export default defineConfig({
       },
       {
         text: 'Search',
-        collapsed: true,
+        collapsed: false,
         items: [
           {
             text: 'Parsers',
@@ -50,6 +54,7 @@ export default defineConfig({
           {
             text: 'Mappings',
             link: '/search/mapping-type/',
+            collapsed: true,
             items: [
               {text: 'Exact mapping', link: '/search/mapping-type/exact'},
               {text: 'Fulltext mapping', link: '/search/mapping-type/fulltext'},
@@ -60,11 +65,19 @@ export default defineConfig({
           {
             text: 'Internals',
             link: '/search/internals/',
+            collapsed: true,
             items: [
               {text: 'Ableton .ALS', link: '/search/internals/ableton-als-file'},
             ]
           }
         ],
+      },
+      {
+        text: 'Push 3',
+        link: '/push3/',
+        items: [
+          {text: 'Web API', link: '/push3/web-api'},
+        ]
       }
     ],
 

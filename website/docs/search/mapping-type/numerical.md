@@ -11,6 +11,6 @@ It is possible to use range queries on numeric fields.
 
 ## Examples
 
-- field:>=3 will find all documents with a field value greater than or equal to 3.
-- field:<10 will match all documents with a field value less than 10.
-- field:>=3 field:<10 will match all documents with a value of `field` between `3` and `9`.
+- `+field:>=3` will find all documents with a field value greater than or equal to 3.
+- `+field:<10` will match all documents with a field value less than 10.
+- `+field:>=3 +field:<10` will match all documents with a value of `field` between `3` and `9`.

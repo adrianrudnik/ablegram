@@ -12,4 +12,4 @@ It will match if the search value is similar to the indexed value.
 
 - `+field:foo` will match all documents that have a value of `field` that contains the word `foo` or something similar.
 - `+field:*` will match all documents that have a value of `field` that contains any word.
-- field:"foo bar"` will give a higher score to matches of documents with a value of `field` that contain the exact phrase `foo bar`.
+- `+field:"foo bar"` will give a higher score to matches of documents with a value of `field` that contain the exact phrase `foo bar`.

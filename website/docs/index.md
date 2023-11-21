@@ -1,4 +1,6 @@
 ---
+title: Ablegram
+titleTemplate: Search Ableton projects
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
 

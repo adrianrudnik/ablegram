@@ -3,7 +3,6 @@ import {defineConfig} from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Ablegram",
-  titleTemplate: ':title',
   description: "Search effortlessly through your Ableton project files.",
 
   // Block shared snippets from becoming pages
@@ -45,6 +44,10 @@ export default defineConfig({
         collapsed: false,
         items: [
           {
+            text: 'Examples',
+            link: '/search/examples/',
+          },
+          {
             text: 'Parsers',
             link: '/search/parser/',
             items: [
@@ -68,6 +71,13 @@ export default defineConfig({
             collapsed: true,
             items: [
               {text: 'Ableton .ALS', link: '/search/internals/ableton-als-file'},
+            ]
+          },
+          {
+            text: 'APIs',
+            collapsed: true,
+            items: [
+              {text: 'Tags API', link: '/search/api/tags'},
             ]
           }
         ],

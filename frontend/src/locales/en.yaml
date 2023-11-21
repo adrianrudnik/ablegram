@@ -564,6 +564,41 @@ behavior-settings:
         Show the service GUI on startup.
         Used for debugging issues. Depending on the OS a log console will be shown.
 
+collector-settings:
+  title: Collector settings
+  description: >-
+    Here you can customize how the software collects information about your files.
+
+  form:
+    target:
+      filesystem:
+        id:
+          title: Target ID
+          help: >-
+            A unique ID for the source to collect information from.
+        uri:
+          title: Path
+          help: >-
+            The path (and its sub paths) to collect information from.
+        performance:
+          title: Performance mode
+          help: >-
+            The performance of the collector. The higher, the more stress will be put on the system.
+          value:
+            low: Low (HDD or network)
+            default: Default (SSD, but laptop)
+            high: High (SSD, desktop)
+        delay:
+          title: Processing delay
+          help: >-
+            The delay between processing files. The lower, the faster the collector will run.
+
+collector-target-card:
+  confirm-delete:
+    header: Confirm deletion
+    message: >-
+      Are you sure you want to delete the target {id}?
+
 tag-overview:
   title: Tag overview
   intro: >-

@@ -26,3 +26,23 @@ $highlightFocusBg: rgba($primaryColor, 0.24) !default;
     border: 0;
   }
 }
+
+:root {
+  --font-family-monospace: monospace;
+}
+
+.font-mono {
+  font-family: var(--font-family-monospace);
+}
+
+.text-break-all {
+  word-break: break-all;
+}
+
+.zoom-90 {
+  zoom: 0.9;
+}
+
+.zoom-80 {
+  zoom: 0.8;
+}

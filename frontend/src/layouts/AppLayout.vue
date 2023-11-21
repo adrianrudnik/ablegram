@@ -19,17 +19,17 @@
     <MenuBar class="mb-3" />
 
     <RouterView />
-  </div>
 
-  <ConfirmDialog />
-  <DynamicDialog />
+    <ConfirmDialog />
+    <DynamicDialog />
+  </div>
 </template>
 
 <script setup lang="ts">
 import MenuBar from '@/components/parts/MenuBar.vue'
-import ConfirmDialog from 'primevue/confirmdialog'
 import ProgressLogo from '@/components/parts/ProgressLogo.vue'
 import DynamicDialog from 'primevue/dynamicdialog'
+import ConfirmDialog from 'primevue/confirmdialog'
 </script>
 
 <style lang="scss">

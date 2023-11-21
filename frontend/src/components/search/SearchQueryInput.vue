@@ -28,6 +28,7 @@ import { useStatStore } from '@/stores/stats'
 import { useSearchStore } from '@/stores/search'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
+import { createQueryInstanceWithDefaults } from '@/plugins/search/query'
 
 const { t, n } = useI18n()
 
@@ -41,12 +42,11 @@ watchThrottled(
   async (q) => {
     try {
       await useSearchStore().search({
-        size: 60,
+        ...createQueryInstanceWithDefaults(),
         query: {
           query: q
         },
-        sort: ['-_score', '_id'],
-        fields: ['*']
+        sort: ['-_score', '_id']
       })
     } finally {
       statStore.isSearching = false

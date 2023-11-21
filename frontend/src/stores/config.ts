@@ -11,18 +11,7 @@ export interface Config {
 
   log: LogConfig
   behaviour: BehaviorConfig
-
-  collector: {
-    worker_count: number
-    worker_delay_in_milliseconds: number
-    searchable_paths: string[]
-    exclude_system_folders: boolean
-  }
-
-  parser: {
-    worker_count: number
-    worker_delay_in_milliseconds: number
-  }
+  collector: CollectorConfig
 
   indexer: {
     worker_delay_in_milliseconds: number
@@ -47,6 +36,20 @@ export interface BehaviorConfig {
   show_service_gui: boolean
 }
 
+export interface CollectorConfig {
+  targets: CollectorTargetConfig[]
+}
+
+export interface CollectorTargetConfig {
+  id: string
+  type: 'filesystem'
+  uri: string
+  parser_performance: 'low' | 'default' | 'high'
+  parser_delay: number
+  exclude_system_folders: boolean
+  exclude_dot_folders: boolean
+}
+
 export const useConfigStore = defineStore('config', () => {
   // Initialize the current settings with a fallback config that will be replaced once we load the URL
   const current = ref<Config>({
@@ -61,10 +64,7 @@ export const useConfigStore = defineStore('config', () => {
       show_service_gui: true
     },
     collector: {
-      worker_count: 4,
-      worker_delay_in_milliseconds: 100,
-      searchable_paths: [],
-      exclude_system_folders: true
+      targets: []
     },
     indexer: {
       worker_delay_in_milliseconds: 100
@@ -75,10 +75,6 @@ export const useConfigStore = defineStore('config', () => {
       enable_processed_logfile: false,
       runtime_logfile_path: '',
       process_logfile_path: ''
-    },
-    parser: {
-      worker_count: 4,
-      worker_delay_in_milliseconds: 100
     },
     webservice: {
       try_ports: [8080, 8081, 8082, 8083, 8084, 8085, 8086]

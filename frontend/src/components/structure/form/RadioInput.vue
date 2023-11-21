@@ -16,6 +16,7 @@
 import RadioButton from 'primevue/radiobutton'
 import { toRef } from 'vue'
 import { useField } from 'vee-validate'
+import { createIdFrom } from '@/plugins/id'
 
 const props = defineProps<{
   name: string
@@ -23,7 +24,7 @@ const props = defineProps<{
   radioValue?: string
 }>()
 
-const id = 'f_' + props.name + '_' + (props.radioValue?.toString() ?? 'null')
+const id = createIdFrom(props.name + '_' + (props.radioValue?.toString() ?? 'null'))
 
 const { errorMessage, value } = useField(toRef(props, 'name'))
 

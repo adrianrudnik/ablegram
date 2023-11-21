@@ -85,7 +85,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 	})
 
 	// Register new collector
-	rg.POST("/config/collector", func(c *gin.Context) {
+	rg.POST("/config/collector/targets", func(c *gin.Context) {
 		type userInput struct {
 			ID                   string `json:"id"`
 			Type                 string `json:"type"`
@@ -129,7 +129,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 	})
 
 	// Update existing collector
-	rg.PUT("/config/collector/:id", func(c *gin.Context) {
+	rg.PUT("/config/collector/targets/:id", func(c *gin.Context) {
 		id := c.Param("id")
 
 		type userInput struct {
@@ -175,7 +175,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 	})
 
 	// Delete collector
-	rg.DELETE("/config/collector/:id", func(c *gin.Context) {
+	rg.DELETE("/config/collector/targets/:id", func(c *gin.Context) {
 		id := c.Param("id")
 
 		// Early exit in demo mode, we do not want to save anything

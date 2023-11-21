@@ -1,59 +1,55 @@
 <template>
-  <Card class="surface-200">
-    <template #title>{{ t('log-settings.title') }}</template>
-    <template #content>
+  <SectionHeadline :title="t('log-settings.title')" class="mb-6">
+    <template #description>
       <p>
         {{ t('log-settings.description') }}
       </p>
-
-      <FormGrid @submit="onFormSubmit">
-        <FormRow>
-          <CheckboxInput
-            name="enable_runtime_logfile"
-            :label="t('log-settings.form.runtime-logfile.title')"
-          />
-
-          <i18n-t keypath="log-settings.form.runtime-logfile.location" tag="p">
-            <template v-slot:path>
-              <code>{{ values.runtime_logfile_path }}</code>
-            </template>
-          </i18n-t>
-        </FormRow>
-
-        <FormRow v-show="values.enable_runtime_logfile">
-          <RadioInputGroup>
-            <RadioInput
-              name="level"
-              :label="t('log-settings.form.level.info.title')"
-              radio-value="info"
-            />
-            <RadioInput
-              name="level"
-              :label="t('log-settings.form.level.debug.title')"
-              radio-value="debug"
-            />
-          </RadioInputGroup>
-
-          <p v-if="values.level === 'info'">{{ t('log-settings.form.level.info.description') }}</p>
-          <p v-if="values.level === 'debug'">
-            {{ t('log-settings.form.level.debug.description') }}
-          </p>
-        </FormRow>
-
-        <FormRow v-show="values.enable_runtime_logfile">
-          <CheckboxInput name="enable_processed_logfile" label="Log scanned folders to log file" />
-
-          <i18n-t keypath="log-settings.form.processed-logfile.location" tag="p">
-            <template v-slot:path>
-              <code>{{ values.process_logfile_path }}</code>
-            </template>
-          </i18n-t>
-        </FormRow>
-
-        <SubmitButton :label="t('button.save')" :loading="isSubmitting" v-model="isSaved" />
-      </FormGrid>
     </template>
-  </Card>
+
+    <FormGrid @submit="onFormSubmit">
+      <FormRow>
+        <CheckboxInput
+          name="enable_runtime_logfile"
+          :label="t('log-settings.form.runtime-logfile.title')"
+        />
+
+        <i18n-t keypath="log-settings.form.runtime-logfile.location" tag="p">
+          <template v-slot:path>
+            <code>{{ values.runtime_logfile_path }}</code>
+          </template>
+        </i18n-t>
+      </FormRow>
+
+      <FormRow v-show="values.enable_runtime_logfile">
+        <RadioInputGroup>
+          <RadioInput
+            name="level"
+            :label="t('log-settings.form.level.info.title')"
+            :help="t('log-settings.form.level.info.description')"
+            radio-value="info"
+          />
+          <RadioInput
+            name="level"
+            :label="t('log-settings.form.level.debug.title')"
+            radio-value="debug"
+            :help="t('log-settings.form.level.debug.description')"
+          />
+        </RadioInputGroup>
+      </FormRow>
+
+      <FormRow v-show="values.enable_runtime_logfile">
+        <CheckboxInput name="enable_processed_logfile" label="Log scanned folders to log file" />
+
+        <i18n-t keypath="log-settings.form.processed-logfile.location" tag="p">
+          <template v-slot:path>
+            <code>{{ values.process_logfile_path }}</code>
+          </template>
+        </i18n-t>
+      </FormRow>
+
+      <SubmitButton :label="t('button.save')" :loading="isSubmitting" v-model="isSaved" />
+    </FormGrid>
+  </SectionHeadline>
 </template>
 
 <script setup lang="ts">
@@ -70,6 +66,7 @@ import FormGrid from '@/components/structure/form/FormGrid.vue'
 import Card from 'primevue/card'
 import { fetchApi } from '@/plugins/api'
 import { ref } from 'vue'
+import SectionHeadline from '@/components/structure/SectionHeadline.vue'
 
 const { t } = useI18n()
 const isSaved = ref<boolean>(false)

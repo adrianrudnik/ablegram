@@ -2,19 +2,18 @@
   <div class="flex flex-column sm:col-12 md:col flex-wrap">
     <div class="align-items-center">
       <RadioButton
-          v-model="value"
-          :inputId="id"
-          :name="name"
-          :value="radioValue"
-          v-bind="$attrs"
-          :class="{ 'p-invalid': !!errorMessage }"
+        v-model="value"
+        :inputId="id"
+        :name="name"
+        :value="radioValue"
+        v-bind="$attrs"
+        :class="{ 'p-invalid': !!errorMessage }"
       />
       <label :for="id" class="ml-2">
         {{ label }}
         <small v-if="props.help" class="block mt-2">{{ props.help }}</small>
       </label>
     </div>
-
   </div>
 </template>
 

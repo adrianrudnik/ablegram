@@ -1,5 +1,5 @@
 <template>
-  <div class="TextField field">
+  <div class="TextInput field">
     <label :for="id">{{ label }}</label>
     <InputText
       v-model="value"
@@ -38,7 +38,7 @@ defineExpose({
 </script>
 
 <style lang="scss">
-.TextField {
+.TextInput {
   display: flex;
   flex-direction: column;
   label > small {

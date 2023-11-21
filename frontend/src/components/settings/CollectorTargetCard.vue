@@ -8,7 +8,7 @@
           <div class="font-mono text-xs text-break-all">{{ props.target.uri }}</div>
         </div>
         <div class="zoom-80 flex-nowrap flex gap-2">
-          <Button icon="pi pi-pencil" aria-label="Change" />
+          <Button icon="pi pi-pencil" aria-label="Change" @click="editFilesystemTarget" />
           <Button
             icon="pi pi-trash"
             severity="danger"
@@ -29,6 +29,8 @@ import { useConfirm } from 'primevue/useconfirm'
 import { useI18n } from 'vue-i18n'
 import { fetchApi } from '@/plugins/api'
 import { useConfigStore } from '@/stores/config'
+import { useDialog } from 'primevue/usedialog'
+import CollectorTargetForm from '@/components/settings/CollectorTargetForm.vue'
 
 const { t } = useI18n()
 
@@ -38,7 +40,19 @@ const props = defineProps<{
   target: CollectorTargetConfig
 }>()
 
+const dialog = useDialog()
 const confirm = useConfirm()
+
+const editFilesystemTarget = () => {
+  dialog.open(CollectorTargetForm, {
+    props: {
+      header: t('collector-target-form.title')
+    },
+    data: {
+      target: props.target
+    }
+  })
+}
 
 const confirmDelete = (event: Event) => {
   confirm.require({

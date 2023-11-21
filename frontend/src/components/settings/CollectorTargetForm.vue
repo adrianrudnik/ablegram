@@ -18,8 +18,8 @@
 
     <FormRow>
       <RadioInputGroup
-          :title="t('collector-target-form.form.target.filesystem.performance.title')"
-          :help="t('collector-target-form.form.target.filesystem.performance.help')"
+        :title="t('collector-target-form.form.target.filesystem.performance.title')"
+        :help="t('collector-target-form.form.target.filesystem.performance.help')"
       >
         <RadioInput
           name="parser_performance"
@@ -43,7 +43,11 @@
     </FormRow>
 
     <FormRow>
-      <NumberInput name="parser_delay" label="P Worker Delay" />
+      <NumberInput
+        name="parser_delay"
+        :label="t('collector-target-form.form.target.filesystem.delay.title')"
+        :help="t('collector-target-form.form.target.filesystem.delay.help')"
+      />
       <p>{{ t('collector-settings.form.target.filesystem.delay.help') }}</p>
     </FormRow>
 
@@ -81,51 +85,68 @@ import type { CollectorConfig, CollectorTargetConfig } from '@/stores/config'
 import { useConfigStore, defaultCollectorTargetConfig } from '@/stores/config'
 import { boolean, number, object, string } from 'yup'
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { ref, inject, onMounted, toRaw } from 'vue'
+import type { Ref } from 'vue'
+import { fetchApi } from '@/plugins/api'
+import type { DynamicDialogInstance } from 'primevue/dynamicdialogoptions'
 
 const { t } = useI18n()
 
+const configStore = useConfigStore()
+
 const isSaved = ref<boolean>(false)
 
-const props = withDefaults(
-  defineProps<{
-    target?: CollectorTargetConfig
-  }>(),
-  {
-    target: () => defaultCollectorTargetConfig()
-  }
-)
+// Reference injected by PrimeVue dialog service
+const dialogRef = inject<Ref<DynamicDialogInstance>>('dialogRef')
+
+// We extract the original ID, in case we rename something.
+const id = toRaw(dialogRef?.value.data?.target.id ?? '')
+
+// The given target, or an empty one with defaults.
+const target = toRaw(dialogRef?.value.data?.target ?? defaultCollectorTargetConfig())
 
 const { handleSubmit, isSubmitting, values } = useForm<CollectorTargetConfig>({
-  initialValues: props.target,
+  initialValues: target,
   validationSchema: object().shape({
     id: string()
       .required()
-      .matches(/^[\w_]+$/)
-      .label(t('collector-settings.form.target.filesystem.id.title')),
-    type: string().required(),
-    uri: string().required().label(t('collector-settings.form.target.filesystem.uri.title')),
+      .matches(/^[a-zA-Z0-9_-]+$/)
+      .label(t('collector-target-form.form.target.filesystem.id.title')),
+    uri: string().required().label(t('collector-target-form.form.target.filesystem.uri.title')),
     parser_performance: string()
       .required()
-      .label(t('collector-settings.form.target.filesystem.performance.title')),
+      .label(t('collector-target-form.form.target.filesystem.performance.title')),
     parser_delay: number()
       .required()
-      .label(t('collector-settings.form.target.filesystem.delay.title')),
-    exclude_system_folders: boolean().default(true),
-    exclude_dot_folders: boolean().default(true)
+      .min(0)
+      .max(60 * 1000)
+      .label(t('collector-target-form.form.target.filesystem.delay.title')),
+    exclude_system_folders: boolean(),
+    exclude_dot_folders: boolean()
   })
 })
 
 const onFormSubmit = handleSubmit(async (v) => {
-  // useConfigStore().current = await fetchApi<Config>('/api/config/behaviour', {
-  //   method: 'PUT',
-  //   body: JSON.stringify({
-  //     autostart_webservice: v.autostart_webservice,
-  //     open_browser_on_start: v.open_browser_on_start,
-  //     show_service_gui: v.show_service_gui
-  //   })
-  // })
+  // Store the target in the config store.
+  await fetchApi('/api/config/collector/targets/' + v.id, {
+    method: 'PUT',
+    body: JSON.stringify({
+      ...v,
+      type: 'filesystem'
+    })
+  })
+
+  // If the ID is set and is different, we should delete the old source
+  if (id !== '' && id !== v.id) {
+    await fetchApi('/api/config/collector/targets/' + id, {
+      method: 'DELETE'
+    })
+  }
+
+  await configStore.load()
 
   isSaved.value = true
+
+  dialogRef?.value.close()
 })
 </script>

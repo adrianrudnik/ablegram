@@ -4,12 +4,14 @@
   <SectionHeadline :title="t('settings-view.title')">
     <template #description>
       <p>{{ t('settings-view.description') }}</p>
+
+      <Message severity="warn" :closable="false">
+        {{ t('settings-view.restart-notice') }}
+      </Message>
     </template>
 
-    <CollectorSettings class="mb-3" />
-
+    <CollectorSettings />
     <LogSettings />
-
     <BehaviourSettings />
   </SectionHeadline>
 </template>
@@ -21,6 +23,7 @@ import { useI18n } from 'vue-i18n'
 import BehaviourSettings from '@/components/settings/BehaviourSettings.vue'
 import AppStatus from '@/components/parts/AppStatus.vue'
 import CollectorSettings from '@/components/settings/CollectorSettings.vue'
+import Message from 'primevue/message'
 
 const { t } = useI18n()
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <SectionHeadline :title="t('collector-settings.title')">
+  <SectionHeadline :title="t('collector-settings.title')" class="mb-6">
     <template #description>
       <p>{{ t('collector-settings.description') }}</p>
     </template>

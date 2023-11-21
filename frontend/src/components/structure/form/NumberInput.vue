@@ -1,17 +1,16 @@
 <template>
-  <div class="field">
-    <div class="flex align-items-center">
-      <label :for="id" class="ml-2">{{ label }}</label>
-
-      <InputNumber
-        v-model="value"
-        :binary="true"
-        :class="{ 'p-invalid': !!errorMessage }"
-        :inputId="id"
-        :name="id"
-        v-bind="$attrs"
-      />
-    </div>
+  <div class="NumberInput field">
+    <label :for="id">{{ label }}</label>
+    <InputNumber
+      v-model="value"
+      :binary="true"
+      class="w-full"
+      :class="{ 'p-invalid': !!errorMessage }"
+      :inputId="id"
+      :name="id"
+      v-bind="$attrs"
+    />
+    <small v-if="props.help">{{ props.help }}</small>
     <small v-if="errorMessage" :id="`${id}-help`" class="p-error">{{ errorMessage }}</small>
   </div>
 </template>
@@ -26,6 +25,7 @@ const props = defineProps<{
   name: string
   label: string
   value?: number
+  help?: string
 }>()
 
 const id = createIdFrom(props.name)
@@ -36,3 +36,14 @@ defineExpose({
   errorMessage
 })
 </script>
+
+<style lang="scss">
+.NumberInput {
+  display: flex;
+  flex-direction: column;
+  label > small {
+    display: block;
+    margin-top: 0.5rem;
+  }
+}
+</style>

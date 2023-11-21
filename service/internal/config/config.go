@@ -12,8 +12,11 @@ import (
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
+var Version = 1
+
 func newConfig() *Config {
 	return &Config{
+		Version: Version,
 		Log: LogConfig{
 			Level:                  "info",
 			EnableRuntimeLogfile:   false,
@@ -29,15 +32,7 @@ func newConfig() *Config {
 		},
 
 		Collector: CollectorConfig{
-			SearchablePaths:      make([]string, 0, 100),
-			ExcludeSystemFolders: true,
-			WorkerCount:          5,
-			WorkerDelayInMs:      0,
-		},
-
-		Parser: ParserConfig{
-			WorkerCount:     5,
-			WorkerDelayInMs: 0,
+			Targets: make(map[string]CollectorTarget, 0),
 		},
 
 		Webservice: WebserviceConfig{
@@ -55,10 +50,25 @@ func LoadWithDefaults(path string) *Config {
 		// Create fallback configuration
 		c := newConfig()
 
-		// For the searchable paths, we prefer the users home directory as initial configuration
+		// Try to find a home directory or base path to hook into
 		homeDir, err := os.UserHomeDir()
-		if err == nil {
-			c.Collector.SearchablePaths = append(c.Collector.SearchablePaths, homeDir)
+		if err != nil {
+			Logger.Warn().Err(err).Msg("Failed to find home directory, falling back to working directory")
+			homeDir, err = os.Getwd()
+			if err != nil {
+				Logger.Warn().Err(err).Msg("Failed to find working directory, falling back to simple ./")
+				homeDir = "./"
+			}
+		}
+
+		c.Collector.Targets["user-home"] = CollectorTarget{
+			ID:                   "user-home",
+			Type:                 "filesystem",
+			Uri:                  homeDir,
+			ParserPerformance:    "default",
+			ParserWorkerDelay:    0,
+			ExcludeSystemFolders: true,
+			ExcludeDotFolders:    true,
 		}
 
 		return c
@@ -86,9 +96,16 @@ func Load(path string) (*Config, error) {
 		return nil, err
 	}
 
+	// Check that we have a configuration of the current version
+	// If not, return a default one for now, no time for handle migrations yet.
+	if c.Version != Version {
+		return newConfig(), nil
+	}
+
 	return c, nil
 }
 
+// Save tries to save the configuration near the executable.
 func (c *Config) Save() error {
 	b, err := yaml.Marshal(&c)
 	if err != nil {
@@ -96,6 +113,17 @@ func (c *Config) Save() error {
 	}
 
 	err = os.WriteFile(GetRelativeFilePath(".config.yaml"), b, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Remove tries to remove the configuration file from the system.
+// The active configuration stays untouched.
+func (c *Config) Remove() error {
+	err := os.Remove(GetRelativeFilePath(".config.yaml"))
 	if err != nil {
 		return err
 	}
@@ -111,7 +139,6 @@ func GetRelativeFilePath(sub string) string {
 		}
 
 		if strings.Contains(p, ".cache") && strings.Contains(p, "GoLand") {
-			Logger.Warn().Err(err).Msg("Detected developer IDE, falling back to working directory for for executable path")
 			return "", errors.New("developer")
 		}
 

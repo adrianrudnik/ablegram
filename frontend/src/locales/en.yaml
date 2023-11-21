@@ -513,6 +513,7 @@ search-examples:
           Wildcard works as well: {e1} search for all data. {e2} searches for all annotations with any
           value (but should be present).
     tag-api-link: Query the API for all found tags and their respective counts
+
 log-settings:
   title: Log settings
   description: >-
@@ -564,6 +565,65 @@ behavior-settings:
         Show the service GUI on startup.
         Used for debugging issues. Depending on the OS a log console will be shown.
 
+collector-settings:
+  title: Collector settings
+  description: >-
+    Collectors are responsible for finding and processing files.
+    A collector target is a mount point that is a separate source of files with its own scanning processes.
+    If a path can not be found or is offline, it will not be collected from.
+
+collector-target-form:
+  title: Target details
+  form:
+    target:
+      filesystem:
+        id:
+          title: Unique name / ID
+          help: >-
+            A unique ID for the source to collect information from.
+            Should be a simple string with that contains a-z, 0-9, _ or -.
+        uri:
+          title: Path
+          help: >-
+            The absolute path to collect files from.
+            This is the entry folder and the collector will traverse all sub paths.
+            Symlinks within the tree will not be followed.
+        performance:
+          title: Performance mode
+          help: >-
+            The performance of the collector. The higher, the more stress will be put on the system.
+          value:
+            low:
+              title: Low
+              help: >-
+                This mode is for older HDD or network shares that prefer sequential reads.
+            default:
+              title: Default
+              help: >-
+                SSDs on laptops or machines that run on limit energy or CPU capacity.
+            high:
+              title: High
+              help: >-
+                SSDs on desktop machines that have enough energy and CPU capacity.
+        delay:
+          title: Processing delay
+          help: >-
+            The delay between processing files in milliseconds. A delay of 0 means no pause between processing files.
+        exclude_system_folders:
+          title: Exclude system folders
+          help: >-
+            System folders that are commonly not used for user storage, i.e. temporary or vendor folders.
+        exclude_dot_folders:
+          title: Exclude dot folders
+          help: >-
+            Folders that start with a dot, i.e. hidden folders.
+
+collector-target-card:
+  confirm-delete:
+    header: Confirm deletion
+    message: >-
+      Are you sure you want to delete the target {id}?
+
 tag-overview:
   title: Tag overview
   intro: >-
@@ -579,6 +639,8 @@ settings-view:
   title: Settings
   description: >-
     Here you can customize the behavior of the software.
+  restart-notice: >-
+    Changes will be applied after a restart of the software.
   form:
     enable: Enable file based logging
     level:

@@ -10,52 +10,75 @@ import (
 )
 
 type WorkerPool struct {
-	config          *config.Config
-	tags            *tagger.TagCollector
-	inFilesChan     <-chan *workload.FilePayload
-	outDocumentChan chan<- *workload.DocumentPayload
-	pushChan        chan<- interface{}
+	config   *config.Config
+	stat     *stats.Statistics
+	progress *stats.ProcessProgress
+	tc       *tagger.TagCollector
+	target   *config.CollectorTarget
+
+	pathChan  <-chan *workload.FilePayload
+	indexChan chan<- *workload.DocumentPayload
+	pushChan  chan<- interface{}
 }
 
 func NewWorkerPool(
 	conf *config.Config,
-	tags *tagger.TagCollector,
+	stat *stats.Statistics,
+	progress *stats.ProcessProgress,
+	tc *tagger.TagCollector,
+	target *config.CollectorTarget,
+
 	pathChan <-chan *workload.FilePayload,
-	resultChan chan<- *workload.DocumentPayload,
+	indexChan chan<- *workload.DocumentPayload,
 	pushChan chan<- interface{},
 ) *WorkerPool {
 	return &WorkerPool{
-		config:          conf,
-		tags:            tags,
-		inFilesChan:     pathChan,
-		outDocumentChan: resultChan,
-		pushChan:        pushChan,
+		config:   conf,
+		stat:     stat,
+		progress: progress,
+		tc:       tc,
+		target:   target,
+
+		pathChan:  pathChan,
+		indexChan: indexChan,
+		pushChan:  pushChan,
 	}
 }
 
-func (p *WorkerPool) Run(
-	progress *stats.ProcessProgress,
-	stat *stats.Statistics,
-) {
+func (p *WorkerPool) Run() {
 	Logger.Info().
-		Int("count", p.config.Parser.WorkerCount).
-		Msg("Starting parser workers")
+		Str("performance-mode", p.target.ParserPerformance).
+		Str("collector-id", p.target.ID).
+		Str("collector-uri", p.target.Uri).
+		Msg("Starting parser workers for collector target")
 
-	for i := 0; i < p.config.Parser.WorkerCount; i++ {
-		go p.doWork(progress, stat)
+	// Decide on a worker count based on the requested performance mode
+	var c int
+
+	switch p.target.ParserPerformance {
+	case "low":
+		c = 1
+	case "high":
+		c = 5
+	default:
+		c = 3
+	}
+
+	for i := 0; i < c; i++ {
+		go p.doWork()
 	}
 }
 
-func (p *WorkerPool) doWork(progress *stats.ProcessProgress, stat *stats.Statistics) {
-	for msg := range p.inFilesChan {
+func (p *WorkerPool) doWork() {
+	for msg := range p.pathChan {
 		// Add possible delay, for debugging or to simulate a slower system
-		if p.config.Parser.WorkerDelayInMs > 0 {
-			time.Sleep(time.Duration(p.config.Parser.WorkerDelayInMs) * time.Millisecond)
+		if p.target.ParserWorkerDelay > 0 {
+			time.Sleep(time.Duration(p.target.ParserWorkerDelay) * time.Millisecond)
 		}
 
-		progress.Add()
-		docs, err := ParseAls(stat, p.tags, msg.AbsPath)
-		progress.Done()
+		p.progress.Add()
+		docs, err := ParseAls(p.stat, p.tc, msg.AbsPath)
+		p.progress.Done()
 
 		if err != nil {
 			Logger.Warn().Err(err).Str("path", msg.AbsPath).Msg("Failed to parse file")
@@ -77,7 +100,7 @@ func (p *WorkerPool) doWork(progress *stats.ProcessProgress, stat *stats.Statist
 				continue
 			}
 
-			p.outDocumentChan <- doc
+			p.indexChan <- doc
 		}
 	}
 }

@@ -1,7 +1,6 @@
 package tagger
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
@@ -11,8 +10,6 @@ import (
 )
 
 type TagCollector struct {
-	config *config.Config
-
 	baseTags  map[string]uint64
 	baseMutex sync.RWMutex
 
@@ -22,25 +19,32 @@ type TagCollector struct {
 	groupTags  map[string]map[string]uint64
 	groupMutex sync.RWMutex
 
-	TriggerUpdate func()
+	TriggerUpdate   func()
+	throttledUpdate func(key int64)
 }
 
-func NewTagCollector(conf *config.Config) *TagCollector {
+func NewTagCollector() *TagCollector {
 	b := &TagCollector{
-		config:        conf,
-		baseTags:      make(map[string]uint64, 500),
-		detailedTags:  make(map[string]uint64, 2000),
-		groupTags:     make(map[string]map[string]uint64, 500),
-		TriggerUpdate: func() {},
+		baseTags:        make(map[string]uint64, 500),
+		detailedTags:    make(map[string]uint64, 2000),
+		groupTags:       make(map[string]map[string]uint64, 500),
+		TriggerUpdate:   func() {},
+		throttledUpdate: func(key int64) {},
 	}
 
 	return b
 }
 
 func (c *TagCollector) WirePusher(pushChan chan<- workload.PushMessage) {
-	c.TriggerUpdate, _ = lo.NewDebounce(250*time.Millisecond, func() {
+	throttle := 1 * time.Second
+
+	c.throttledUpdate, _ = lo.NewDebounceBy(throttle, func(key int64, count int) {
 		pushChan <- pusher.NewTagUpdatePush(c.GetDetailedTags())
 	})
+
+	c.TriggerUpdate = func() {
+		c.throttledUpdate(time.Now().Round(throttle).UnixNano())
+	}
 }
 
 func (c *TagCollector) NewBucket() *TagBucket {

@@ -12,7 +12,11 @@ import (
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-func parseAlsV5(stat *stats.Statistics, tc *tagger.TagCollector, path string) ([]*workload.DocumentPayload, error) {
+func parseAlsV5(
+	stat *stats.Statistics,
+	tc *tagger.TagCollector,
+	path string,
+) ([]*workload.DocumentPayload, error) {
 	rawContent, err := extractGzip(path)
 	if err != nil {
 		return nil, err
@@ -56,12 +60,12 @@ func parseAlsV5(stat *stats.Statistics, tc *tagger.TagCollector, path string) ([
 
 func ParseAls(
 	stat *stats.Statistics,
-	tags *tagger.TagCollector,
+	tc *tagger.TagCollector,
 	path string,
 ) ([]*workload.DocumentPayload, error) {
 	Logger.Debug().Str("path", path).Msg("Start processing")
 
-	r, err := parseAlsV5(stat, tags, path)
+	r, err := parseAlsV5(stat, tc, path)
 	if err != nil {
 		stat.IncrementCounter(stats.FileInvalid)
 		return nil, err

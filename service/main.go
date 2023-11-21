@@ -39,7 +39,7 @@ var BuildDate = "unknown"
 func main() {
 	// Let's look for a configuration within one of the folders
 	config.Logger = log.With().Str("module", "config").Logger()
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
 
 	// Set up the app configuration with defaults for now
 	appConfig := config.LoadWithDefaults("")
@@ -80,11 +80,6 @@ func main() {
 	// Channel to push messages to the frontend
 	pushChan := make(chan workload.PushMessage, 5000)
 
-	// Channel to inject files for processing towards the process workers
-	// We go for 5k buffer, because the collector will push a lot of files into the channel
-	// as it is a simple directory walker per configured search entrypoint (i.e. folder/drive).
-	filesToProcessChan := make(chan *workload.FilePayload, 5000)
-
 	// Channel to inject parsed results to be indexed by the index workers
 	// We go for 20k buffer, as we will have at least 10 documents per parsed file
 	// but the indexer can only batch single threaded.
@@ -98,7 +93,7 @@ func main() {
 	// TagCollector is responsible for collecting all tags and pushing them to the frontend
 	// if the collector is wired to a push channel
 	tagger.Logger = log.With().Str("module", "tagger").Logger()
-	appTags := tagger.NewTagCollector(appConfig)
+	appTags := tagger.NewTagCollector()
 	appTags.WirePusher(pushChan)
 
 	// Kick of the webservice
@@ -118,15 +113,12 @@ func main() {
 		appPusher := webservice.NewPushChannel(pushChan)
 		go appPusher.Run()
 
+		parser.Logger = log.With().Str("module", "parser").Logger()
+
 		// Collector is responsible for finding files that could be parsed
 		collector.Logger = log.With().Str("module", "collector").Logger()
-		collectorWorkers := collector.NewWorkerPool(appConfig, filesToProcessChan, pushChan)
-		go collectorWorkers.Run(appProgress)
-
-		// Parser is responsible for parsing the files into results for the indexerWorker
-		parser.Logger = log.With().Str("module", "parser").Logger()
-		parserWorkers := parser.NewWorkerPool(appConfig, appTags, filesToProcessChan, resultsToIndexChan, pushChan)
-		go parserWorkers.Run(appProgress, appStats)
+		collectorWorkers := collector.NewWorkerPool(appConfig, appStats, appProgress, appTags, resultsToIndexChan, pushChan)
+		go collectorWorkers.Run()
 
 		// Create the indexerWorker
 		indexer.Logger = log.With().Str("module", "indexer").Logger()

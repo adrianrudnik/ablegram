@@ -109,14 +109,19 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		conf.Collector.Targets = append(conf.Collector.Targets, config.CollectorTarget{
+		_, exists := conf.Collector.Targets[input.ID]
+		if exists {
+			delete(conf.Collector.Targets, input.ID)
+		}
+
+		conf.Collector.Targets[input.ID] = config.CollectorTarget{
 			ID:                   input.ID,
 			Uri:                  input.Uri,
 			ParserPerformance:    input.ParserPerformance,
 			ParserWorkerDelay:    input.ParserWorkerDelay,
 			ExcludeSystemFolders: input.ExcludeSystemFolders,
 			ExcludeDotFolders:    input.ExcludeDotFolders,
-		})
+		}
 
 		err := conf.Save()
 		if err != nil {
@@ -134,6 +139,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 		type userInput struct {
 			Uri                  string `json:"uri"`
+			Type                 string `json:"type"`
 			ParserPerformance    string `json:"parser_performance"`
 			ParserWorkerDelay    int    `json:"parser_delay"`
 			ExcludeSystemFolders bool   `json:"exclude_system_folders"`
@@ -153,15 +159,14 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		for i, target := range conf.Collector.Targets {
-			if target.ID == id {
-				conf.Collector.Targets[i].Uri = input.Uri
-				conf.Collector.Targets[i].ParserPerformance = input.ParserPerformance
-				conf.Collector.Targets[i].ParserWorkerDelay = input.ParserWorkerDelay
-				conf.Collector.Targets[i].ExcludeSystemFolders = input.ExcludeSystemFolders
-				conf.Collector.Targets[i].ExcludeDotFolders = input.ExcludeDotFolders
-				break
-			}
+		conf.Collector.Targets[id] = config.CollectorTarget{
+			ID:                   id,
+			Uri:                  input.Uri,
+			Type:                 input.Type,
+			ParserPerformance:    input.ParserPerformance,
+			ParserWorkerDelay:    input.ParserWorkerDelay,
+			ExcludeSystemFolders: input.ExcludeSystemFolders,
+			ExcludeDotFolders:    input.ExcludeDotFolders,
 		}
 
 		err := conf.Save()
@@ -184,11 +189,8 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		for i, target := range conf.Collector.Targets {
-			if target.ID == id {
-				conf.Collector.Targets = append(conf.Collector.Targets[:i], conf.Collector.Targets[i+1:]...)
-				break
-			}
+		if _, exists := conf.Collector.Targets[id]; exists {
+			delete(conf.Collector.Targets, id)
 		}
 
 		err := conf.Save()

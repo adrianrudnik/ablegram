@@ -1,6 +1,7 @@
 package config
 
 type Config struct {
+	Version    int              `yaml:"version" json:"version"`
 	About      About            `yaml:"-" json:"-"`
 	Log        LogConfig        `yaml:"log" json:"log"`
 	Behaviour  BehaviourConfig  `yaml:"behaviour" json:"behaviour"`
@@ -31,7 +32,7 @@ type BehaviourConfig struct {
 }
 
 type CollectorConfig struct {
-	Targets []CollectorTarget `yaml:"targets" json:"targets"`
+	Targets map[string]CollectorTarget `yaml:"targets" json:"targets"`
 }
 
 type IndexerConfig struct {

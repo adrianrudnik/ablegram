@@ -12,8 +12,11 @@ import (
 
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
+var Version = 1
+
 func newConfig() *Config {
 	return &Config{
+		Version: Version,
 		Log: LogConfig{
 			Level:                  "info",
 			EnableRuntimeLogfile:   false,
@@ -29,7 +32,7 @@ func newConfig() *Config {
 		},
 
 		Collector: CollectorConfig{
-			Targets: make([]CollectorTarget, 0, 10),
+			Targets: make(map[string]CollectorTarget, 0),
 		},
 
 		Webservice: WebserviceConfig{
@@ -58,7 +61,7 @@ func LoadWithDefaults(path string) *Config {
 			}
 		}
 
-		c.Collector.Targets = append(c.Collector.Targets, CollectorTarget{
+		c.Collector.Targets["user-home"] = CollectorTarget{
 			ID:                   "user-home",
 			Type:                 "filesystem",
 			Uri:                  homeDir,
@@ -66,7 +69,7 @@ func LoadWithDefaults(path string) *Config {
 			ParserWorkerDelay:    0,
 			ExcludeSystemFolders: true,
 			ExcludeDotFolders:    true,
-		})
+		}
 
 		return c
 	}
@@ -91,6 +94,12 @@ func Load(path string) (*Config, error) {
 	err = yaml.Unmarshal(b, &c)
 	if err != nil {
 		return nil, err
+	}
+
+	// Check that we have a configuration of the current version
+	// If not, return a default one for now, no time for handle migrations yet.
+	if c.Version != Version {
+		return newConfig(), nil
 	}
 
 	return c, nil

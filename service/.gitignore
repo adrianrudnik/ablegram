@@ -6,3 +6,5 @@
 /Ablegram*
 /ablegram*
 /*.log
+
+http-client.private.env.json

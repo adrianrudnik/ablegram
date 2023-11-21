@@ -2,63 +2,80 @@ package collector
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
+	"github.com/adrianrudnik/ablegram/internal/parser"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/workload"
-	"time"
 )
 
 type WorkerPool struct {
-	config       *config.Config
-	paths        []string
-	inPathChan   chan string
-	outFilesChan chan<- *workload.FilePayload
-	pushChan     chan<- interface{}
+	config   *config.Config
+	stat     *stats.Statistics
+	progress *stats.ProcessProgress
+	tc       *tagger.TagCollector
+
+	indexChan chan<- *workload.DocumentPayload
+	pushChan  chan<- interface{}
 }
 
 func NewWorkerPool(
 	conf *config.Config,
-	filesChan chan<- *workload.FilePayload,
-	broadcastChan chan<- interface{},
+	stat *stats.Statistics,
+	progress *stats.ProcessProgress,
+	tc *tagger.TagCollector,
+
+	indexChan chan<- *workload.DocumentPayload,
+	pushChan chan<- interface{},
 ) *WorkerPool {
 	return &WorkerPool{
-		config:       conf,
-		inPathChan:   make(chan string, 100),
-		outFilesChan: filesChan,
-		pushChan:     broadcastChan,
+		config:   conf,
+		stat:     stat,
+		progress: progress,
+		tc:       tc,
+
+		indexChan: indexChan,
+		pushChan:  pushChan,
 	}
 }
 
-func (wp *WorkerPool) Run(p *stats.ProcessProgress) {
+// Run starts the worker pool, which will spawn workers for each target
+func (wp *WorkerPool) Run() {
 	Logger.Info().
-		Int("count", wp.config.Collector.WorkerCount).
-		Strs("paths", wp.config.Collector.SearchablePaths).
-		Msg("Starting collector workers")
+		Int("targets", len(wp.config.Collector.Targets)).
+		Msg("Starting collector working pool")
 
-	// Spool up workers first
-	for i := 0; i < wp.config.Collector.WorkerCount; i++ {
-		go wp.doWork(wp.config, p)
-	}
-
-	// Pipe in paths next
-	for _, path := range wp.config.Collector.SearchablePaths {
-		wp.inPathChan <- path
+	for _, t := range wp.config.Collector.Targets {
+		go wp.spawnTargetWorker(wp.config, t)
 	}
 }
 
-func (wp *WorkerPool) doWork(conf *config.Config, progress *stats.ProcessProgress) {
-	for path := range wp.inPathChan {
-		// Add possible delay, for debugging or to simulate a slower system
-		if wp.config.Collector.WorkerDelayInMs > 0 {
-			time.Sleep(time.Duration(wp.config.Collector.WorkerDelayInMs) * time.Millisecond)
-		}
+func (wp *WorkerPool) spawnTargetWorker(
+	conf *config.Config,
+	target config.CollectorTarget,
+) {
+	// Every target worker has its own file channel to collect files from
+	pathChan := make(chan *workload.FilePayload, 1000)
 
-		progress.Add()
+	// Every target worker has its own parser worker pool
+	pwp := parser.NewWorkerPool(
+		conf,
+		wp.stat,
+		wp.progress,
+		wp.tc,
+		&target,
 
-		err := Collect(conf, path, wp.outFilesChan, wp.pushChan)
-		if err != nil {
-			Logger.Warn().Err(err).Str("path", path).Msg("Failed to collect files")
-		}
+		pathChan,     // to receive files to parse from
+		wp.indexChan, // to send parsed results to the indexer
+		wp.pushChan,  // to notify the frontend about the progress
+	)
 
-		progress.Done()
+	pwp.Run()
+
+	// Start the collection process for this target
+	wp.progress.Add()
+	err := Collect(conf, &target, pathChan, wp.pushChan)
+	wp.progress.Done()
+	if err != nil {
+		Logger.Warn().Err(err).Str("path", target.Uri).Msg("Failed to collect files")
 	}
 }

@@ -53,5 +53,6 @@ $highlightFocusBg: rgba($primaryColor, 0.24) !default;
 }
 
 .p-dialog-mask {
-  backdrop-filter: blur(32px);
+  backdrop-filter: blur(16px);
+  animation: p-component-overlay-enter-animation 150ms forwards;
 }

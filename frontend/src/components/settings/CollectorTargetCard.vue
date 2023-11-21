@@ -27,8 +27,12 @@ import Button from 'primevue/button'
 import type { CollectorTargetConfig } from '@/stores/config'
 import { useConfirm } from 'primevue/useconfirm'
 import { useI18n } from 'vue-i18n'
+import { fetchApi } from '@/plugins/api'
+import { useConfigStore } from '@/stores/config'
 
 const { t } = useI18n()
+
+const configStore = useConfigStore()
 
 const props = defineProps<{
   target: CollectorTargetConfig
@@ -43,8 +47,12 @@ const confirmDelete = (event: Event) => {
     message: t('collector-target-card.confirm-delete.message', { id: props.target.id }),
     icon: 'pi pi-exclamation-triangle',
     acceptClass: 'p-button-danger',
-    accept: () => {
-      console.log('Y', props.target.id)
+    accept: async () => {
+      await fetchApi(`/api/config/collector/targets/${props.target.id}`, {
+        method: 'DELETE'
+      })
+
+      await configStore.load()
     },
     reject: () => {
       console.log('N', props.target.id)

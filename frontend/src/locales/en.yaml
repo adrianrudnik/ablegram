@@ -593,6 +593,53 @@ collector-settings:
           help: >-
             The delay between processing files. The lower, the faster the collector will run.
 
+collector-target-form:
+  title: Target details
+  form:
+    target:
+      filesystem:
+        id:
+          title: Target ID
+          help: >-
+            A unique ID for the source to collect information from.
+            Should be a simple string with that contains a-z, 0-9 or _.
+        uri:
+          title: Path
+          help: >-
+            The absolute path to collect files from.
+            This is the entry folder and the collector will traverse all sub paths.
+            Symlinks within the tree will not be followed.
+
+        performance:
+          title: Performance mode
+          help: >-
+            The performance of the collector. The higher, the more stress will be put on the system.
+          value:
+            low:
+              title: Low
+              help: >-
+                This mode is for older HDD or network shares that prefer sequential reads.
+            default:
+              title: Default
+              help: >-
+                SSDs on laptops or machines that run on limit energy or CPU capacity.
+            high:
+              title: High
+              help: >-
+                SSDs on desktop machines that have enough energy and CPU capacity.
+        delay:
+          title: Processing delay
+          help: >-
+            The delay between processing files. The lower, the faster the collector will run.
+        exclude_system_folders:
+          title: Exclude system folders
+          help: >-
+            System folders that are commonly not used for user storage, i.e. temporary or vendor folders.
+        exclude_dot_folders:
+          title: Exclude dot folders
+          help: >-
+            Folders that start with a dot, i.e. hidden folders.
+
 collector-target-card:
   confirm-delete:
     header: Confirm deletion

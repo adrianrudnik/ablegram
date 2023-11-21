@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div class="field flex-column">
     <div class="flex align-items-center">
       <Checkbox
         v-model="value"
@@ -10,7 +10,10 @@
         v-bind="$attrs"
       />
 
-      <label :for="id" class="ml-2">{{ label }}</label>
+      <label :for="id" class="ml-2 flex flex-column">
+        {{ label }}
+        <small v-if="props.help" class="mt-1">{{ props.help }}</small>
+      </label>
     </div>
     <small v-if="errorMessage" :id="`${id}-help`" class="p-error">{{ errorMessage }}</small>
   </div>
@@ -25,6 +28,7 @@ import { createIdFrom } from '@/plugins/id'
 const props = defineProps<{
   name: string
   label: string
+  help?: string
 }>()
 
 const id = createIdFrom(props.name)

@@ -46,3 +46,12 @@ $highlightFocusBg: rgba($primaryColor, 0.24) !default;
 .zoom-80 {
   zoom: 0.8;
 }
+
+.p-dialog {
+  max-height: 95%;
+  max-width: 95%;
+}
+
+.p-dialog-mask {
+  backdrop-filter: blur(32px);
+}

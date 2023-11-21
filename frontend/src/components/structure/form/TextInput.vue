@@ -1,18 +1,16 @@
 <template>
-  <div class="field">
-    <div class="flex flex-column gap-2">
-      <label :for="id">{{ label }}</label>
-
-      <InputText
-        v-model="value"
-        :binary="true"
-        class="w-full"
-        :class="{ 'p-invalid': !!errorMessage }"
-        :inputId="id"
-        :name="id"
-        v-bind="$attrs"
-      />
-    </div>
+  <div class="TextField field">
+    <label :for="id">{{ label }}</label>
+    <InputText
+      v-model="value"
+      :binary="true"
+      class="w-full"
+      :class="{ 'p-invalid': !!errorMessage }"
+      :inputId="id"
+      :name="id"
+      v-bind="$attrs"
+    />
+    <small v-if="props.help">{{ props.help }}</small>
     <small v-if="errorMessage" :id="`${id}-help`" class="p-error">{{ errorMessage }}</small>
   </div>
 </template>
@@ -27,6 +25,7 @@ const props = defineProps<{
   name: string
   label: string
   value?: string
+  help?: string
 }>()
 
 const id = createIdFrom(props.name)
@@ -37,3 +36,14 @@ defineExpose({
   errorMessage
 })
 </script>
+
+<style lang="scss">
+.TextField {
+  display: flex;
+  flex-direction: column;
+  label > small {
+    display: block;
+    margin-top: 0.5rem;
+  }
+}
+</style>

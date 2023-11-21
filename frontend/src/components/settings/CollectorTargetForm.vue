@@ -1,33 +1,45 @@
 <template>
   <FormGrid @submit="onFormSubmit" class="mb-3">
     <FormRow>
-      <TextInput name="id" :label="t('collector-settings.form.target.filesystem.id.title')" />
-      <p>{{ t('collector-settings.form.target.filesystem.id.help') }}</p>
+      <TextInput
+        name="id"
+        :label="t('collector-target-form.form.target.filesystem.id.title')"
+        :help="t('collector-target-form.form.target.filesystem.id.help')"
+      />
     </FormRow>
 
     <FormRow>
-      <TextInput name="uri" :label="t('collector-settings.form.target.filesystem.uri.title')" />
-      <p>{{ t('collector-settings.form.target.filesystem.uri.help') }}</p>
+      <TextInput
+        name="uri"
+        :label="t('collector-target-form.form.target.filesystem.uri.title')"
+        :help="t('collector-target-form.form.target.filesystem.uri.help')"
+      />
     </FormRow>
 
     <FormRow>
-      <FormRadioGroup :title="t('collector-settings.form.target.filesystem.performance.title')">
+      <RadioInputGroup
+          :title="t('collector-target-form.form.target.filesystem.performance.title')"
+          :help="t('collector-target-form.form.target.filesystem.performance.help')"
+      >
         <RadioInput
           name="parser_performance"
-          :label="t('collector-settings.form.target.filesystem.performance.value.low')"
+          :label="t('collector-target-form.form.target.filesystem.performance.value.low.title')"
+          :help="t('collector-target-form.form.target.filesystem.performance.value.low.help')"
           radio-value="low"
         />
         <RadioInput
           name="parser_performance"
-          :label="t('collector-settings.form.target.filesystem.performance.value.default')"
+          :label="t('collector-target-form.form.target.filesystem.performance.value.default.title')"
+          :help="t('collector-target-form.form.target.filesystem.performance.value.default.help')"
           radio-value="default"
         />
         <RadioInput
           name="parser_performance"
-          :label="t('collector-settings.form.target.filesystem.performance.value.high')"
+          :label="t('collector-target-form.form.target.filesystem.performance.value.high.title')"
+          :help="t('collector-target-form.form.target.filesystem.performance.value.high.help')"
           radio-value="high"
         />
-      </FormRadioGroup>
+      </RadioInputGroup>
     </FormRow>
 
     <FormRow>
@@ -38,14 +50,16 @@
     <FormRow>
       <CheckboxInput
         name="exclude_system_folders"
-        :label="t('behavior-settings.form.open_browser_on_start.title')"
+        :label="t('collector-target-form.form.target.filesystem.exclude_system_folders.title')"
+        :help="t('collector-target-form.form.target.filesystem.exclude_system_folders.help')"
       />
     </FormRow>
 
     <FormRow>
       <CheckboxInput
         name="exclude_dot_folders"
-        :label="t('behavior-settings.form.open_browser_on_start.title')"
+        :label="t('collector-target-form.form.target.filesystem.exclude_dot_folders.title')"
+        :help="t('collector-target-form.form.target.filesystem.exclude_dot_folders.help')"
       />
     </FormRow>
 
@@ -55,7 +69,7 @@
 
 <script setup lang="ts">
 import TextInput from '@/components/structure/form/TextInput.vue'
-import FormRadioGroup from '@/components/structure/form/FormRadioGroup.vue'
+import RadioInputGroup from '@/components/structure/form/RadioInputGroup.vue'
 import CheckboxInput from '@/components/structure/form/CheckboxInput.vue'
 import NumberInput from '@/components/structure/form/NumberInput.vue'
 import FormRow from '@/components/structure/form/FormRow.vue'
@@ -63,8 +77,8 @@ import RadioInput from '@/components/structure/form/RadioInput.vue'
 import FormGrid from '@/components/structure/form/FormGrid.vue'
 import SubmitButton from '@/components/structure/form/SubmitButton.vue'
 import { useForm } from 'vee-validate'
-import type { CollectorConfig } from '@/stores/config'
-import { useConfigStore } from '@/stores/config'
+import type { CollectorConfig, CollectorTargetConfig } from '@/stores/config'
+import { useConfigStore, defaultCollectorTargetConfig } from '@/stores/config'
 import { boolean, number, object, string } from 'yup'
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
@@ -73,12 +87,21 @@ const { t } = useI18n()
 
 const isSaved = ref<boolean>(false)
 
-const { handleSubmit, isSubmitting, values } = useForm<CollectorConfig>({
-  initialValues: useConfigStore().current.collector,
+const props = withDefaults(
+  defineProps<{
+    target?: CollectorTargetConfig
+  }>(),
+  {
+    target: () => defaultCollectorTargetConfig()
+  }
+)
+
+const { handleSubmit, isSubmitting, values } = useForm<CollectorTargetConfig>({
+  initialValues: props.target,
   validationSchema: object().shape({
     id: string()
       .required()
-      .matches(/^[\w-]+$/)
+      .matches(/^[\w_]+$/)
       .label(t('collector-settings.form.target.filesystem.id.title')),
     type: string().required(),
     uri: string().required().label(t('collector-settings.form.target.filesystem.uri.title')),
@@ -88,8 +111,8 @@ const { handleSubmit, isSubmitting, values } = useForm<CollectorConfig>({
     parser_delay: number()
       .required()
       .label(t('collector-settings.form.target.filesystem.delay.title')),
-    exclude_system_folders: boolean(),
-    exclude_dot_folders: boolean()
+    exclude_system_folders: boolean().default(true),
+    exclude_dot_folders: boolean().default(true)
   })
 })
 

@@ -10,6 +10,8 @@
       :key="target.id"
       class="surface-200 mb-3"
     />
+
+    <Button label="Filesystem target" icon="pi pi-plus" @click="addFilesystemTarget" />
   </SectionHeadline>
 </template>
 
@@ -19,8 +21,21 @@ import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import CollectorTargetCard from '@/components/settings/CollectorTargetCard.vue'
 import SectionHeadline from '@/components/structure/SectionHeadline.vue'
+import Button from 'primevue/button'
+import CollectorTargetForm from '@/components/settings/CollectorTargetForm.vue'
+import { useDialog } from 'primevue/usedialog'
 
 const { t } = useI18n()
 
 const { current } = storeToRefs(useConfigStore())
+
+const dialog = useDialog()
+
+const addFilesystemTarget = () => {
+  dialog.open(CollectorTargetForm, {
+    props: {
+      header: t('collector-target-form.title')
+    }
+  })
+}
 </script>

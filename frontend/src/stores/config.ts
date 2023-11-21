@@ -50,6 +50,18 @@ export interface CollectorTargetConfig {
   exclude_dot_folders: boolean
 }
 
+export function defaultCollectorTargetConfig(): CollectorTargetConfig {
+  return {
+    id: '',
+    type: 'filesystem',
+    uri: '',
+    parser_performance: 'default',
+    parser_delay: 0,
+    exclude_system_folders: true,
+    exclude_dot_folders: true
+  }
+}
+
 export const useConfigStore = defineStore('config', () => {
   // Initialize the current settings with a fallback config that will be replaced once we load the URL
   const current = ref<Config>({

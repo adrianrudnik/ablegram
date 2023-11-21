@@ -21,7 +21,7 @@
         </FormRow>
 
         <FormRow v-show="values.enable_runtime_logfile">
-          <FormRadioGroup>
+          <RadioInputGroup>
             <RadioInput
               name="level"
               :label="t('log-settings.form.level.info.title')"
@@ -32,7 +32,7 @@
               :label="t('log-settings.form.level.debug.title')"
               radio-value="debug"
             />
-          </FormRadioGroup>
+          </RadioInputGroup>
 
           <p v-if="values.level === 'info'">{{ t('log-settings.form.level.info.description') }}</p>
           <p v-if="values.level === 'debug'">
@@ -60,7 +60,7 @@
 import type { Config, LogConfig } from '@/stores/config'
 import { useConfigStore } from '@/stores/config'
 import FormRow from '@/components/structure/form/FormRow.vue'
-import FormRadioGroup from '@/components/structure/form/FormRadioGroup.vue'
+import RadioInputGroup from '@/components/structure/form/RadioInputGroup.vue'
 import RadioInput from '@/components/structure/form/RadioInput.vue'
 import { useForm } from 'vee-validate'
 import SubmitButton from '@/components/structure/form/SubmitButton.vue'

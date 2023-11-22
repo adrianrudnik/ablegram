@@ -59,39 +59,6 @@ It will then give up and exit with an error.
 
 This flag will disable all web endpoints and only start the file parser and service GUI. This is mainly used for and debugging purposes.
 
-## Collector flags
-
-The collector is responsible for finding all files that can be processed on your system.
-
-### `-collector-worker-count={number}`
-
-By default, `5` worker threads are spawned per collector.
-This means that `5` threads will process possible file locations in parallel.
-By passing a different number to this flag, you can change the number of of worker threads can be changed.
-This can be useful if you have a lot of files and folders to process on slower hardware.
-
-### `-collector-worker-delay={millis}`
-
-By default, no delay is set between file and folder searches.
-This means that all worker threads are constantly through the file system to find more possible files to send to the processors.
-The delay specified is in milliseconds.
-
-This introduces a pause between payloads, which can be helpful if you have a slower system.
-
-### `-parser-worker-count={number}`
-
-By default, `5` worker threads are spawned per collector.
-This means that `5` threads will process found files in parallel.
-By passing a different number to this flag, the number of worker threads can be changed. This can be useful if you have a lot of files to process on slower hardware that would drown in random access operations.
-
-### `-parser-worker-delay={millis}`
-
-By default, no delay is set between payloads that the worker threads process.
-This means that all worker threads process files continuously.
-The specified delay is defined in milliseconds.
-
-This introduces a pause between payload processing, which can be useful if you have a slower system.
-
 ## Indexer flags
 
 The indexer is responsible for moving the generated tags and possible search results into the search index.

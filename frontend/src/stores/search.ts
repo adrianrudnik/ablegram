@@ -38,7 +38,7 @@ export const useSearchStore = defineStore('search', () => {
   // Install a watcher that will retrigger when a tag is added to the active filters
   watch(activeFilters.value, async () => {
     // Also ensure we reset the lastSortKey to begin a fresh result
-    lastSortKey.value = []
+    lastSortKey.value = undefined
     await search(currentQueryInstance.value ?? createQueryInstanceWithDefaults(), true)
   })
 
@@ -123,7 +123,7 @@ export const useSearchStore = defineStore('search', () => {
   }
 
   const resetLoadMore = () => {
-    lastSortKey.value = []
+    lastSortKey.value = undefined
   }
 
   const loadMore = async () => {
@@ -153,7 +153,7 @@ export const useSearchStore = defineStore('search', () => {
     currentQueryInstance.value = undefined
     totalHits.value = 0
     isClean.value = true
-    lastSortKey.value = []
+    lastSortKey.value = undefined
   }
 
   return {

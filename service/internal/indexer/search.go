@@ -1,7 +1,7 @@
 package indexer
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/sourcer/abletonv5"
+	"github.com/adrianrudnik/ablegram/internal/sourcer/abletonsrc"
 	"github.com/blevesearch/bleve/v2"
 	"github.com/blevesearch/bleve/v2/analysis/analyzer/custom"
 	"github.com/blevesearch/bleve/v2/analysis/lang/en"
@@ -27,18 +27,18 @@ func NewSearch() *Search {
 		panic(err)
 	}
 
-	err = indexMapping.AddCustomTokenFilter("edgeNgram325",
+	err = indexMapping.AddCustomTokenFilter("edgeNgram225",
 		map[string]interface{}{
 			"type": edgengram.Name,
 			"min":  2.0,
 			"max":  25.0,
 		})
 	if err != nil {
-		Logger.Panic().Err(err).Msg("Failed to register edgeNgram325 token filter")
+		Logger.Panic().Err(err).Msg("Failed to register edgeNgram225 token filter")
 		panic(err)
 	}
 
-	err = indexMapping.AddCustomAnalyzer("enWithEdgeNgram325",
+	err = indexMapping.AddCustomAnalyzer("enWithEdgeNgram225",
 		map[string]interface{}{
 			"type":      custom.Name,
 			"tokenizer": unicode.Name,
@@ -46,17 +46,17 @@ func NewSearch() *Search {
 				en.PossessiveName,
 				lowercase.Name,
 				en.StopName,
-				"edgeNgram325",
+				"edgeNgram225",
 			},
 		})
 	if err != nil {
-		Logger.Panic().Err(err).Msg("Failed to register enWithEdgeNgram325 custom analyzer")
+		Logger.Panic().Err(err).Msg("Failed to register enWithEdgeNgram225 custom analyzer")
 		panic(err)
 	}
 
 	indexMapping.DefaultAnalyzer = en.AnalyzerName
 
-	abletonv5.RegisterDocumentMappings(indexMapping)
+	abletonsrc.RegisterDocumentMappings(indexMapping)
 
 	Logger.Info().Msg("Index documents mapped")
 

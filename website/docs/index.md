@@ -1,7 +1,7 @@
 ---
 title: Ablegram
 titleTemplate: Search Ableton projects
-# https://vitepress.dev/reference/default-theme-home-page
+
 layout: home
 
 hero:
@@ -33,3 +33,17 @@ features:
     details: All findings are tagged. Search your files using text components or tags. 
 
 ---
+
+<SchemaOrg>
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Ablegram",
+    "operatingSystem": ["Windows 10", "Windows 11", "MacOS", "Linux"],
+    "applicationCategory": "MultimediaApplication",
+    "offers": {
+        "@type": "Offer",
+        "price": "0"
+    }
+}
+</SchemaOrg>

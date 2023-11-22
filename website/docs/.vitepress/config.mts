@@ -57,6 +57,7 @@ export default defineConfig({
             link: '/search/parser/',
             items: [
               {text: 'Ableton Live Set', link: '/search/parser/ableton-live-set'},
+              {text: 'Ableton Info-Text', link: '/search/parser/ableton-info-text'},
             ]
           },
           {

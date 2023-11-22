@@ -86,6 +86,13 @@ The label of the software used to create the Live Set file. This is a end-user f
 
 ## Produced tags
 
+<IndexTag base="ableton-live-set">
+
+A type tag that matches all documents of this type.
+
+- `+tags:type:"ableton-live-set"` if the result document is of type `AbletonLiveSet`.
+</IndexTag>
+
 ### `bpm`
 
 <IndexTag base="bpm" value="int">

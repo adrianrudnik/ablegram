@@ -278,6 +278,7 @@ index:
     AbletonSampleReference: '@:common.label.ableton-sample-reference.s'
     AbletonAlsFile: 'Ableton Live Set (.ALS) file'
     AbletonMidiArpeggiatorDevice: 'MIDI Arpeggiator device'
+    AbletonInfoText: 'Ableton Info-Text'
 
 tag:
   example: Category
@@ -321,6 +322,7 @@ tag:
   type:ableton-midi-arpeggiator-device: MIDI Arpeggiator device
   type:ableton-midi-velocity-device: MIDI Velocity device
   type:ableton-sample-reference: '@:common.label.ableton-sample-reference.s'
+  type:ableton-info-text: Info-Text
   type:ableton-als-file: '@:index.type.AbletonAlsFile'
 
   ableton-live-set: '@:common.label.ableton-live-set.s'
@@ -678,6 +680,10 @@ settings-view:
         This option will collect all paths, decisions and 
         This option allows Ablegram to record information about the folders it scans. This is useful for
         understanding where your files are located and how they are organized.
+
+ableton-info-text-result-card:
+  found-in:
+    title: Found in
 
 color:
   ableton:

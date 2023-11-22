@@ -3,6 +3,7 @@ import type { AbletonMidiTrackResult } from '@/plugins/search/result/AbletonMidi
 import type { AbletonAudioTrackResult } from '@/plugins/search/result/AbletonAudioTrackResult'
 import type { AbletonSampleReferenceResult } from '@/plugins/search/result/AbletonSampleReferenceResult'
 import type { AbletonMdiClipResult } from '@/plugins/search/result/AbletonMdiClipResult'
+import type { AbletonInfoTextResult } from '@/plugins/search/result/AbletonInfoTextResult'
 
 export interface SearchResult {
   status: StatusNode
@@ -52,7 +53,8 @@ export enum ResultType {
   AbletonMixer = 'AbletonMixer',
   AbletonDeviceChain = 'AbletonDeviceChain',
   AbletonScene = 'AbletonScene',
-  AbletonSampleReference = 'AbletonSampleReference'
+  AbletonSampleReference = 'AbletonSampleReference',
+  AbletonInfotext = 'AbletonInfotext'
 }
 
 export type HitFieldset =
@@ -61,3 +63,4 @@ export type HitFieldset =
   | AbletonAudioTrackResult
   | AbletonSampleReferenceResult
   | AbletonMdiClipResult
+  | AbletonInfoTextResult

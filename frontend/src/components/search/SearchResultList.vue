@@ -37,6 +37,7 @@ import { useI18n } from 'vue-i18n'
 import AbletonSampleReference from '@/components/search/types/AbletonSampleReference.vue'
 import AbletonMidiClip from '@/components/search/types/AbletonMidiClip.vue'
 import AbletonLiveSet from '@/components/search/types/AbletonLiveSet.vue'
+import AbletonInfoText from '@/components/search/types/AbletonInfoText.vue'
 
 const { t } = useI18n()
 const { loadMore } = useSearchStore()
@@ -61,6 +62,8 @@ function resolveComponent(type: ResultType): any {
       return AbletonMidiClip
     case 'AbletonSampleReference':
       return AbletonSampleReference
+    case 'AbletonInfoText':
+      return AbletonInfoText
     default:
       return SearchResultCard
   }

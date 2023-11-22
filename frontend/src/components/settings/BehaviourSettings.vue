@@ -9,8 +9,8 @@
     <FormGrid @submit="onFormSubmit">
       <FormRow>
         <CheckboxInput
-            name="open_browser_on_start"
-            :label="t('behavior-settings.form.open_browser_on_start.title')"
+          name="open_browser_on_start"
+          :label="t('behavior-settings.form.open_browser_on_start.title')"
         />
 
         <p>{{ t('behavior-settings.form.open_browser_on_start.description') }}</p>
@@ -18,8 +18,8 @@
 
       <FormRow>
         <CheckboxInput
-            name="autostart_webservice"
-            :label="t('behavior-settings.form.autostart_webservice.title')"
+          name="autostart_webservice"
+          :label="t('behavior-settings.form.autostart_webservice.title')"
         />
 
         <p>{{ t('behavior-settings.form.autostart_webservice.description') }}</p>
@@ -27,8 +27,8 @@
 
       <FormRow>
         <CheckboxInput
-            name="show_service_gui"
-            :label="t('behavior-settings.form.show_service_gui.title')"
+          name="show_service_gui"
+          :label="t('behavior-settings.form.show_service_gui.title')"
         />
 
         <p>{{ t('behavior-settings.form.show_service_gui.description') }}</p>
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BehaviorConfig, Config,  } from '@/stores/config'
+import type { BehaviorConfig, Config } from '@/stores/config'
 import { useConfigStore } from '@/stores/config'
 import FormRow from '@/components/structure/form/FormRow.vue'
 import { useForm } from 'vee-validate'

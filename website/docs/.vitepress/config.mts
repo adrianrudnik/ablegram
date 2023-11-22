@@ -5,6 +5,11 @@ export default defineConfig({
   title: "Ablegram",
   description: "Search effortlessly through your Ableton project files.",
 
+  head: [
+    ['link', {rel: "shortcut icon", type: "image/x-icon", sizes: "16x16 32x32 48x48", href: "/favicon.ico"}],
+    ['link', {rel: "icon", type: "image/png", sizes: "192x192", href: "/favicon-192.png"}],
+  ],
+
   // Block shared snippets from becoming pages
   srcExclude: [
     './search/parser/shared'

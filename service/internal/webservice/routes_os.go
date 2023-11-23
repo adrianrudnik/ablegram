@@ -11,10 +11,13 @@ import (
 
 func registerOsRoutes(rg *gin.RouterGroup, conf *config.Config) {
 	rg.POST("/shutdown", func(c *gin.Context) {
-		c.Status(202)
-		c.JSON(200, gin.H{"message": "Shutting down"})
+		if ok := isAdmin(c); !ok {
+			return
+		}
 
-		if !conf.Behaviour.DemoMode {
+		c.JSON(http.StatusAccepted, gin.H{"message": "Shutting down"})
+
+		if conf.Behaviour.DemoMode {
 			return
 		}
 
@@ -25,6 +28,10 @@ func registerOsRoutes(rg *gin.RouterGroup, conf *config.Config) {
 	})
 
 	rg.POST("/open", func(c *gin.Context) {
+		if ok := isAdmin(c); !ok {
+			return
+		}
+
 		var json OpenInput
 		if err := c.ShouldBindJSON(&json); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -35,6 +42,6 @@ func registerOsRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			ui.OpenDefault(json.Path)
 		}
 
-		c.JSON(200, gin.H{"status": "ok"})
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 }

@@ -1,5 +1,5 @@
 <template>
-  <component :is="menu" :model="items" :pt="pt">
+  <Menubar :model="items" :pt="pt" breakpoint="560px">
     <template #item="{ label, item, props, hasSubmenu }">
       <RouterLink v-if="item.route" v-slot="{ navigate, href }" :to="item.route" custom>
         <a
@@ -23,7 +23,7 @@
     <template #end v-if="isMobile">
       <strong>{{ t(activeRoute.meta.title ?? '') }}</strong>
     </template>
-  </component>
+  </Menubar>
 </template>
 
 <script setup lang="ts">
@@ -32,7 +32,6 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import Menubar from 'primevue/menubar'
-import MegaMenu from 'primevue/megamenu'
 import { useConfirm } from 'primevue/useconfirm'
 import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
 import { fetchApi } from '@/plugins/api'
@@ -44,13 +43,8 @@ const { t } = useI18n()
 const confirm = useConfirm()
 const router = useRouter()
 
-// Ensure we use a menu bar that is responsive enough, to not too strict
 const breakpoints = useBreakpoints(breakpointsPrimeFlex)
 const isMobile = breakpoints.smaller('sm')
-
-const menu = computed(() => {
-  return isMobile.value ? Menubar : MegaMenu
-})
 
 const activeRoute = computed(() => useRoute())
 

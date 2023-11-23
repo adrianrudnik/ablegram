@@ -1,6 +1,6 @@
 <template>
   <div class="SearchQueryToolbar">
-    <MegaMenu :model="items" class="w-full" />
+    <MegaMenu :model="items" class="w-full" breakpoint="320px" />
   </div>
 </template>
 
@@ -22,22 +22,22 @@ const items = ref([
     items: [
       [
         {
-          label: t('search-query-toolbar.tools.filters.header'),
-          items: [
-            {
-              label: t('search-query-toolbar.tools.filters.clear-all'),
-              icon: 'pi pi-filter-slash',
-              command: () => resetFilters()
-            }
-          ]
-        },
-        {
           label: t('search-query-toolbar.tools.tags.header'),
           items: [
             {
               label: t('search-query-toolbar.tools.tags.add-random'),
               icon: 'pi pi-plus',
               command: () => addRandomTagFilter()
+            }
+          ]
+        },
+        {
+          label: t('search-query-toolbar.tools.filters.header'),
+          items: [
+            {
+              label: t('search-query-toolbar.tools.filters.clear-all'),
+              icon: 'pi pi-filter-slash',
+              command: () => resetFilters()
             }
           ]
         },

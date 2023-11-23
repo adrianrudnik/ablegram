@@ -16,17 +16,23 @@
 
         <Avatar
           icon="pi pi-user"
-          class="text-white mr-2"
-          :class="{ 'bg-black-alpha-90': isAdmin, 'bg-black-alpha-40': isGuest }"
+          class="mr-2"
+          :class="{ 'bg-black-alpha-90 text-white': isAdmin, 'text-black-alpha-90': isGuest }"
           @click="openUserPanel"
         />
         <OverlayPanel ref="userPanel">
           <div class="mb-3">
-            <p class="font-semibold">{{ username }} [{{ isAdmin ? 'Admin' : 'Guest' }}]</p>
-            <p>connecting from {{ ip }}</p>
+            <p class="font-semibold">
+              {{ username }} [{{ isAdmin ? t('role.admin') : t('role.guest') }}]
+            </p>
+            <i18n-t keypath="user-avatar.from-ip" tag="p">
+              <template v-slot:ip>
+                <code class="text-sm p-1 bg-black-alpha-10">{{ ip }}</code>
+              </template>
+            </i18n-t>
           </div>
 
-          <Button label="Logout" @click="goodbye" v-if="isAdmin" />
+          <Button :label="t('user-avatar.logout')" @click="goodbye" v-if="isAdmin" />
         </OverlayPanel>
         <ContextMenu ref="menu" :model="items" class="text-white background-black" />
       </div>
@@ -53,8 +59,9 @@ import Button from 'primevue/button'
 import { useSessionStore } from '@/stores/session'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import { fromPairs } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { username, ip, isGuest, isAdmin } = storeToRefs(useSessionStore())
 const { goodbye } = useSessionStore()
 

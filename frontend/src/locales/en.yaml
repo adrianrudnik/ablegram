@@ -75,6 +75,10 @@ datetime:
     dog: Dog
     pig: Pig
 
+role:
+  admin: Admin
+  guest: Guest
+
 donate:
   title:
     short: Donate
@@ -691,6 +695,10 @@ otp-auth-view:
     Please wait while the OTP code is being validated. You will be redirected to the main page afterwards.
   error: >-
     The OTP could not be validated, reason "{message}". Please try again.
+
+user-avatar:
+  from-ip: Connecting from IP {ip}.
+  logout: Logout
 
 color:
   ableton:

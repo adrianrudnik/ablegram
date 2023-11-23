@@ -2,7 +2,7 @@ package config
 
 import (
 	"errors"
-	"github.com/adrianrudnik/ablegram/internal/auth"
+	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/rs/zerolog"
 	"gopkg.in/yaml.v3"
 	"os"
@@ -16,7 +16,10 @@ var Version = 1
 
 func newConfig() *Config {
 	return &Config{
+		IsDevelopmentEnv: isDevelopmentMode(),
+
 		Version: Version,
+
 		Log: LogConfig{
 			Level:                  "info",
 			EnableRuntimeLogfile:   false,
@@ -36,7 +39,7 @@ func newConfig() *Config {
 		},
 
 		Webservice: WebserviceConfig{
-			OwnerPassword: auth.HashPassword(auth.GenerateRandomPassword()),
+			OwnerPassword: access.HashPassword(access.GenerateRandomPassword()),
 			TryPorts:      []int{10000, 20000, 30000, 40000, 50000, 10001},
 		},
 	}
@@ -138,7 +141,7 @@ func GetRelativeFilePath(sub string) string {
 			return "", err
 		}
 
-		if strings.Contains(p, ".cache") && strings.Contains(p, "GoLand") {
+		if isDevelopmentMode() {
 			return "", errors.New("developer")
 		}
 
@@ -161,4 +164,17 @@ func GetRelativeFilePath(sub string) string {
 	base += sub
 
 	return base
+}
+
+func isDevelopmentMode() bool {
+	p, err := os.Executable()
+	if err != nil {
+		return false
+	}
+
+	if strings.Contains(p, ".cache") && strings.Contains(p, "GoLand") {
+		return true
+	}
+
+	return false
 }

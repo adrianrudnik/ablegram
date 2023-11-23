@@ -8,6 +8,8 @@ type Config struct {
 	Collector  CollectorConfig  `yaml:"collector" json:"collector"`
 	Indexer    IndexerConfig    `yaml:"indexer" json:"indexer"`
 	Webservice WebserviceConfig `yaml:"webservice" json:"webservice"`
+
+	IsDevelopmentEnv bool `yaml:"-" json:"is_dev_env"`
 }
 
 type About struct {

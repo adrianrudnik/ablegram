@@ -2,9 +2,11 @@ package webservice
 
 import (
 	"embed"
+	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
+	"github.com/adrianrudnik/ablegram/internal/ui"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/logger"
@@ -12,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"os"
 )
@@ -31,6 +34,8 @@ var upgrader = websocket.Upgrader{
 
 func Serve(
 	conf *config.Config,
+	auth *access.Auth,
+	otp *access.Otp,
 	indexer *indexer.Search,
 	tc *tagger.TagCollector,
 	pushChan *PushChannel,
@@ -50,7 +55,8 @@ func Serve(
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(logger.SetLogger())
-	r.Use(CacheControl())
+	r.Use(CacheMiddleware())
+	r.Use(AccessMiddleware(auth))
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:10000", "http://localhost:5173"},
@@ -94,6 +100,9 @@ func Serve(
 	registerConfigRoutes(api, conf)
 	registerOsRoutes(api, conf)
 
+	// Boot up auth and otp services
+	registerAccessRoutes(api, auth, otp)
+
 	// Register the bleve HTTP router
 	search := r.Group("/search")
 	registerBleveRoutes(search, indexer)
@@ -105,6 +114,13 @@ func Serve(
 			"date":    conf.About.Date,
 		})
 	})
+
+	// Issue a single OTP and admin URL to the service console when we are in dev mode.
+	if conf.IsDevelopmentEnv {
+		log.Info().
+			Str("url", ui.GenerateLocalAdminUrl(conf, otp)).
+			Msg("Generated Admin OTP url")
+	}
 
 	// Register the fallback route to the frontend UI bootstrap
 	err = r.Run(bindAddr)

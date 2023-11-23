@@ -2,7 +2,7 @@
   <div class="layout">
     <div class="fullscreen">
       <div class="w-25rem">
-        <h1 class="text-3xl flex flex-row gap-2 font-medium">
+        <h1 class="text-3xl flex flex-row gap-2 font-medium" v-if="showLogo">
           <img src="@/assets/media/logo.svg" class="h-2rem" alt="Ablegram logo" />
           Ablegram
         </h1>
@@ -12,6 +12,17 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    showLogo?: boolean
+  }>(),
+  {
+    showLogo: true
+  }
+)
+</script>
 
 <style lang="scss">
 .layout {

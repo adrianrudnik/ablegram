@@ -68,12 +68,11 @@ func Serve(
 		},
 	}))
 
-	// No reason to support proxies yet
-	err := r.SetTrustedProxies([]string{})
-	if err != nil {
-		return err
-	}
+	// Set the trusted platform
+	// @see https://github.com/gin-gonic/gin/blob/44d0dd70924dd154e3b98bc340accc53484efa9c/gin.go#L73C1-L80C2
+	r.TrustedPlatform = conf.Webservice.TrustedPlatform
 
+	// Mount the embeded search frontend
 	frontendFS := EmbedFolder(frontendFs, ".frontend")
 
 	// Mount the Vue frontend
@@ -122,7 +121,7 @@ func Serve(
 	}
 
 	// Register the fallback route to the frontend UI bootstrap
-	err = r.Run(bindAddr)
+	err := r.Run(bindAddr)
 	if err != nil {
 		return err
 	}

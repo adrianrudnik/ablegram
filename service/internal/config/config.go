@@ -38,8 +38,9 @@ func newConfig() *Config {
 		},
 
 		Webservice: WebserviceConfig{
-			MasterPassword: "",
-			TryPorts:       []int{10000, 20000, 30000, 40000, 50000, 10001},
+			MasterPassword:  "",
+			TryPorts:        []int{10000, 20000, 30000, 40000, 50000, 10001},
+			TrustedPlatform: "",
 		},
 	}
 }

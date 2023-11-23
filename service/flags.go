@@ -19,6 +19,7 @@ func parseFlags(c *config.Config) {
 	indexerWorkerDelay := flag.Int("indexer-worker-delay", 0, "Set the delay in milliseconds between indexer workers tasks")
 
 	masterPassword := flag.String("master-password", "", "Set the master password for the webservice")
+	trustedPlatform := flag.String("trusted-platform", "", "Set the trusted platform for the webservice")
 
 	flag.Parse()
 
@@ -41,4 +42,6 @@ func parseFlags(c *config.Config) {
 
 		c.Webservice.MasterPassword = p
 	}
+
+	c.Webservice.TrustedPlatform = *trustedPlatform
 }

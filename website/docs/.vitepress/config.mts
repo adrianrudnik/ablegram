@@ -95,6 +95,10 @@ export default defineConfig({
         items: [
           {text: 'Web API', link: '/push3/web-api'},
         ]
+      },
+      {
+        text: 'Thanks',
+        link: '/thanks/',
       }
     ],
 

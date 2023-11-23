@@ -82,7 +82,7 @@ const shutdownConfirm = (event: MenuItemCommandEvent) => {
 
 const shutdown = async () => {
   try {
-    await fetchApi('/shutdown', {
+    await fetchApi('/api/shutdown', {
       method: 'POST'
     })
   } catch (e) {

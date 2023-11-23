@@ -54,7 +54,7 @@ export enum ResultType {
   AbletonDeviceChain = 'AbletonDeviceChain',
   AbletonScene = 'AbletonScene',
   AbletonSampleReference = 'AbletonSampleReference',
-  AbletonInfotext = 'AbletonInfotext'
+  AbletonInfoText = 'AbletonInfoText'
 }
 
 export type HitFieldset =

@@ -5,7 +5,7 @@
     :class="{ 'bg-black-alpha-90 text-white': isAdmin, 'text-black-alpha-90': isGuest }"
     @click="openUserPanel"
   />
-  <OverlayPanel ref="userPanel">
+  <OverlayPanel ref="userPanel" class="w-full md:w-24rem">
     <div class="mb-3">
       <p class="font-semibold">
         {{ username }} [{{ isAdmin ? t('role.admin') : t('role.guest') }}]

@@ -70,3 +70,11 @@ This means that the indexer will continuously move possible payloads into the se
 The specified delay is defined in milliseconds.
 
 This introduces a pause between indexing, which can be helpful if you have a slower system.
+
+## Webservice flags
+
+The webservice is responsible for providing the API and websocket endpoints.
+
+### `-master-password={password}`
+
+The master password is used to protect the API endpoints. It is used to authenticate admins.

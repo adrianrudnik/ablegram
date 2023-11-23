@@ -41,6 +41,7 @@ export default defineConfig({
           {text: 'Introduction', link: '/introduction'},
           {text: 'Installation', link: '/installation'},
           {text: 'Live Demo', link: '/live-demo'},
+          {text: 'Guests & server access', link: '/guests-and-server-access.md'},
           {text: 'Service arguments', link: '/service-arguments'},
         ]
       },

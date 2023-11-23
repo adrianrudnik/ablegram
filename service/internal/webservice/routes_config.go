@@ -8,10 +8,23 @@ import (
 
 func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 	rg.GET("/config", func(c *gin.Context) {
-		c.JSON(200, conf)
+		if ok := isAdmin(c); !ok {
+			return
+		}
+
+		if c.GetString("role") != "admin" {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+			return
+		}
+
+		c.JSON(http.StatusOK, conf)
 	})
 
 	rg.PUT("/config/log", func(c *gin.Context) {
+		if ok := isAdmin(c); !ok {
+			return
+		}
+
 		type userInput struct {
 			Level                  string `json:"level"`
 			EnableRuntimeLogfile   bool   `json:"enable_runtime_logfile"`
@@ -27,7 +40,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 		// Early exit in demo mode, we do not want to save anything
 		if conf.Behaviour.DemoMode {
-			c.JSON(200, conf)
+			c.JSON(http.StatusOK, conf)
 			return
 		}
 
@@ -47,10 +60,14 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		c.JSON(200, conf)
+		c.JSON(http.StatusOK, conf)
 	})
 
 	rg.PUT("/config/behaviour", func(c *gin.Context) {
+		if ok := isAdmin(c); !ok {
+			return
+		}
+
 		type userInput struct {
 			AutostartWebservice bool `json:"autostart_webservice"`
 			OpenBrowserOnStart  bool `json:"open_browser_on_start"`
@@ -66,7 +83,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 		// Early exit in demo mode, we do not want to save anything
 		if conf.Behaviour.DemoMode {
-			c.JSON(200, conf)
+			c.JSON(http.StatusOK, conf)
 			return
 		}
 
@@ -81,11 +98,15 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		c.JSON(200, conf)
+		c.JSON(http.StatusOK, conf)
 	})
 
 	// Register new collector
 	rg.POST("/config/collector/targets", func(c *gin.Context) {
+		if ok := isAdmin(c); !ok {
+			return
+		}
+
 		type userInput struct {
 			ID                   string `json:"id"`
 			Type                 string `json:"type"`
@@ -105,7 +126,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 		// Early exit in demo mode, we do not want to save anything
 		if conf.Behaviour.DemoMode {
-			c.JSON(200, conf)
+			c.JSON(http.StatusOK, conf)
 			return
 		}
 
@@ -135,6 +156,10 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 	// Update existing collector
 	rg.PUT("/config/collector/targets/:id", func(c *gin.Context) {
+		if ok := isAdmin(c); !ok {
+			return
+		}
+
 		id := c.Param("id")
 
 		type userInput struct {
@@ -155,7 +180,7 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 		// Early exit in demo mode, we do not want to save anything
 		if conf.Behaviour.DemoMode {
-			c.JSON(200, conf)
+			c.JSON(http.StatusOK, conf)
 			return
 		}
 
@@ -181,11 +206,15 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 
 	// Delete collector
 	rg.DELETE("/config/collector/targets/:id", func(c *gin.Context) {
+		if ok := isAdmin(c); !ok {
+			return
+		}
+
 		id := c.Param("id")
 
 		// Early exit in demo mode, we do not want to save anything
 		if conf.Behaviour.DemoMode {
-			c.JSON(200, conf)
+			c.JSON(http.StatusOK, conf)
 			return
 		}
 

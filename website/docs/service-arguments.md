@@ -70,3 +70,26 @@ This means that the indexer will continuously move possible payloads into the se
 The specified delay is defined in milliseconds.
 
 This introduces a pause between indexing, which can be helpful if you have a slower system.
+
+## Webservice flags
+
+The webservice is responsible for providing the API and websocket endpoints.
+
+### `-master-password={password}`
+
+The master password is used to protect the API endpoints. It is used to authenticate admins.
+
+### `-trusted-platform={header}`
+
+The service will attempt to identify the client's IP address for guest access.
+
+If the service is running behind a reverse proxy, the client's IP address will most likely be in a separate header.
+
+The service should handle most common `X-Forwarded-For` headers, but if you are using a different header, you can specify it using this flag.
+
+For example, if you need to host the service behind [Cloudflare](https://developers.cloudflare.com/fundamentals/reference/http-request-headers/#cf-connecting-ip), you could select their `CF-Connecting-IP` header.
+
+For [Google App Engine](https://cloud.google.com/appengine/docs/flexible/reference/request-headers#app_engine-specific_headers), you could select their `X-Appengine-User-Ip` header.
+
+This will allow the owning guest and all Admins to see the associated IP address of the Client.
+Guests will not be able to see the IP address of other guests.

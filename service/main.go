@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/adrianrudnik/ablegram/internal/collector"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
@@ -96,6 +97,10 @@ func main() {
 	appTags := tagger.NewTagCollector()
 	appTags.WirePusher(pushChan)
 
+	// Start up the auth and otp services
+	appOtp := access.NewOtp()
+	appAuth := access.NewAuth(appOtp)
+
 	// Kick of the webservice
 	go func() {
 		if !appConfig.Behaviour.AutostartWebservice {
@@ -133,13 +138,15 @@ func main() {
 			}
 
 			time.Sleep(50 * time.Millisecond)
-			ui.OpenFrontend(appConfig)
+			ui.OpenFrontendAsAdmin(appConfig, appOtp)
 		}()
 
 		for _, port := range appConfig.Webservice.TryPorts {
 			appConfig.Webservice.ChosenPort = port
 			err := webservice.Serve(
 				appConfig,
+				appAuth,
+				appOtp,
 				appIndexer,
 				appTags,
 				appPusher,
@@ -177,7 +184,7 @@ func main() {
 
 		statusTxt := canvas.NewText("The service is processing files...", theme.ForegroundColor())
 		quitBtn := widget.NewButton("Shutdown", func() { a.Quit() })
-		startBtn := widget.NewButton("Open search", func() { ui.OpenFrontend(appConfig) })
+		startBtn := widget.NewButton("Open search", func() { ui.OpenFrontendAsAdmin(appConfig, appOtp) })
 
 		progressBar := widget.NewProgressBarInfinite()
 

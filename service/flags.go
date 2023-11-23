@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/adrianrudnik/ablegram/crypt"
 	"github.com/adrianrudnik/ablegram/internal/config"
 )
 
@@ -17,6 +18,9 @@ func parseFlags(c *config.Config) {
 
 	indexerWorkerDelay := flag.Int("indexer-worker-delay", 0, "Set the delay in milliseconds between indexer workers tasks")
 
+	masterPassword := flag.String("master-password", "", "Set the master password for the webservice")
+	trustedPlatform := flag.String("trusted-platform", "", "Set the trusted platform for the webservice")
+
 	flag.Parse()
 
 	c.Log.Level = *logLevel
@@ -29,4 +33,15 @@ func parseFlags(c *config.Config) {
 	c.Behaviour.AutostartWebservice = !*noWebserviceFlag
 
 	c.Indexer.WorkerDelayInMs = *indexerWorkerDelay
+
+	if *masterPassword != "" {
+		p, err := crypt.Encrypt([]byte(*masterPassword))
+		if err != nil {
+			panic(err)
+		}
+
+		c.Webservice.MasterPassword = p
+	}
+
+	c.Webservice.TrustedPlatform = *trustedPlatform
 }

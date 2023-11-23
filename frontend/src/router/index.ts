@@ -6,6 +6,7 @@ import TagsOverviewView from '@/views/TagsOverviewView.vue'
 import FilesView from '@/views/FilesView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import GoodbyeView from '@/views/GoodbyeView.vue'
+import OtpAuthView from '@/views/OtpAuthView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 
 import { bootApp } from '@/router/middleware/bootApp'
@@ -60,6 +61,18 @@ const router = createRouter({
           name: 'goodbye',
           component: GoodbyeView,
           meta: { title: 'menu.quit.label' }
+        }
+      ]
+    },
+    {
+      path: '/auth',
+      component: FullscreenLayout,
+      props: { showLogo: false },
+      children: [
+        {
+          path: 'otp',
+          name: 'otp',
+          component: OtpAuthView
         }
       ]
     },

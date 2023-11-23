@@ -5,7 +5,7 @@
         <ProgressLogo />
         <h1 class="text-3xl p-0 m-0">Ablegram</h1>
       </div>
-      <div class="flex gap-3 mt-1 OutLinks">
+      <div class="flex gap-3 mt-1 align-items-center OutLinks">
         <a href="https://www.ablegram.app/" target="_blank">
           <i class="pi pi-fw pi-book text-xl"></i>
         </a>
@@ -13,6 +13,8 @@
         <a href="https://github.com/adrianrudnik/ablegram" target="_blank">
           <i class="pi pi-fw pi-github text-xl"></i>
         </a>
+
+        <UserAvatar />
       </div>
     </div>
 
@@ -30,6 +32,7 @@ import MenuBar from '@/components/parts/MenuBar.vue'
 import ProgressLogo from '@/components/parts/ProgressLogo.vue'
 import DynamicDialog from 'primevue/dynamicdialog'
 import ConfirmDialog from 'primevue/confirmdialog'
+import UserAvatar from '@/components/auth/UserAvatar.vue'
 </script>
 
 <style lang="scss">

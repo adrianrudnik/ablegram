@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func CacheControl() gin.HandlerFunc {
+func CacheMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cacheableSuffixes := []string{
 			".css",

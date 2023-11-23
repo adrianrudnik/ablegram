@@ -8,6 +8,8 @@ type Config struct {
 	Collector  CollectorConfig  `yaml:"collector" json:"collector"`
 	Indexer    IndexerConfig    `yaml:"indexer" json:"indexer"`
 	Webservice WebserviceConfig `yaml:"webservice" json:"webservice"`
+
+	IsDevelopmentEnv bool `yaml:"-" json:"is_dev_env"`
 }
 
 type About struct {
@@ -40,9 +42,10 @@ type IndexerConfig struct {
 }
 
 type WebserviceConfig struct {
-	TryPorts      []int  `yaml:"try_ports" json:"-"`
-	ChosenPort    int    `yaml:"-" json:"-"`
-	OwnerPassword string `yaml:"owner_password" json:"owner_password"`
+	TryPorts        []int  `yaml:"try_ports" json:"-"`
+	ChosenPort      int    `yaml:"-" json:"-"`
+	MasterPassword  string `yaml:"master_password" json:"master_password"`
+	TrustedPlatform string `yaml:"trusted_platform" json:"trusted_platform"`
 }
 
 type CollectorTarget struct {

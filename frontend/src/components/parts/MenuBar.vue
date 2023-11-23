@@ -1,5 +1,5 @@
 <template>
-  <component :is="menu" :model="items" :pt="pt">
+  <Menubar :model="items" :pt="pt" breakpoint="560px">
     <template #item="{ label, item, props, hasSubmenu }">
       <RouterLink v-if="item.route" v-slot="{ navigate, href }" :to="item.route" custom>
         <a
@@ -23,32 +23,28 @@
     <template #end v-if="isMobile">
       <strong>{{ t(activeRoute.meta.title ?? '') }}</strong>
     </template>
-  </component>
+  </Menubar>
 </template>
 
 <script setup lang="ts">
+import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import Menubar from 'primevue/menubar'
-import MegaMenu from 'primevue/megamenu'
 import { useConfirm } from 'primevue/useconfirm'
 import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
 import { fetchApi } from '@/plugins/api'
-
-import { useBreakpoints, breakpointsPrimeFlex } from '@vueuse/core'
+import { breakpointsPrimeFlex, useBreakpoints } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
+import { useSessionStore } from '@/stores/session'
 
 const { t } = useI18n()
 const confirm = useConfirm()
 const router = useRouter()
 
-// Ensure we use a menu bar that is responsive enough, to not too strict
 const breakpoints = useBreakpoints(breakpointsPrimeFlex)
 const isMobile = breakpoints.smaller('sm')
-
-const menu = computed(() => {
-  return isMobile.value ? Menubar : MegaMenu
-})
 
 const activeRoute = computed(() => useRoute())
 
@@ -80,7 +76,7 @@ const shutdownConfirm = (event: MenuItemCommandEvent) => {
 
 const shutdown = async () => {
   try {
-    await fetchApi('/shutdown', {
+    await fetchApi('/api/shutdown', {
       method: 'POST'
     })
   } catch (e) {
@@ -90,33 +86,45 @@ const shutdown = async () => {
   await router.push({ name: 'goodbye' })
 }
 
-const items: MenuItem[] = [
-  {
+const { isAdmin } = storeToRefs(useSessionStore())
+
+const items: ComputedRef<MenuItem[]> = computed(() => {
+  const out = []
+
+  out.push({
     label: t('menu.search.label'),
     icon: 'pi pi-fw pi-search',
     route: { name: 'search' }
-  },
-  {
+  })
+
+  out.push({
     label: t('menu.tags.label'),
     icon: 'pi pi-fw pi-tag',
     route: { name: 'tags' }
-  },
-  {
-    label: t('menu.files.label'),
-    icon: 'pi pi-fw pi-file',
-    route: { name: 'files' }
-  },
-  {
-    label: t('menu.settings.label'),
-    icon: 'pi pi-fw pi-cog',
-    route: { name: 'settings' }
-  },
-  {
-    label: t('menu.quit.label'),
-    icon: 'pi pi-fw pi-power-off',
-    command: shutdownConfirm
+  })
+
+  if (isAdmin.value) {
+    out.push({
+      label: t('menu.files.label'),
+      icon: 'pi pi-fw pi-file',
+      route: { name: 'files' }
+    })
+
+    out.push({
+      label: t('menu.settings.label'),
+      icon: 'pi pi-fw pi-cog',
+      route: { name: 'settings' }
+    })
+
+    out.push({
+      label: t('menu.quit.label'),
+      icon: 'pi pi-fw pi-power-off',
+      command: shutdownConfirm
+    })
   }
-]
+
+  return out
+})
 </script>
 
 <style lang="scss">

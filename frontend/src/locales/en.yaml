@@ -75,6 +75,10 @@ datetime:
     dog: Dog
     pig: Pig
 
+role:
+  admin: Admin
+  guest: Guest
+
 donate:
   title:
     short: Donate
@@ -684,6 +688,30 @@ settings-view:
 ableton-info-text-result-card:
   found-in:
     title: Found in
+
+otp-auth-view:
+  title: Authentication via OTP
+  description: >-
+    Please wait while the OTP code is being validated. You will be redirected to the main page afterwards.
+  error: >-
+    The OTP could not be validated, reason "{message}". Please try again.
+
+user-avatar:
+  from-ip: Connecting from IP {ip}.
+  login: Login
+  logout: Logout
+  form:
+    master-password:
+      title: Master password
+      help: >-
+        Login with your master password to gain admin privileges.
+  errors:
+    password-invalid: >-
+      The password is invalid.
+    master-password-not-set: >-
+      The master password is not set. Please set it in the settings.
+    unknown: >-
+      An unknown error occurred.
 
 color:
   ableton:

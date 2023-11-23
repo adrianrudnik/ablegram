@@ -122,3 +122,9 @@
       box-shadow $transitionDuration;
   }
 }
+
+/* fix background for Menubar and MegaMenu in mobile view */
+.p-menubar-root-list,
+.p-megamenu-panel {
+  background-color: white;
+}

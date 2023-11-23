@@ -1,3 +1,13 @@
+export class ApiError extends Error {
+  public statusCode: number
+
+  constructor(message: string, statusCode: number) {
+    super(message)
+    this.statusCode = statusCode
+    this.name = 'ApiError'
+  }
+}
+
 export async function fetchApi<T>(
   url: string,
   config: RequestInit = {},
@@ -13,7 +23,7 @@ export async function fetchApi<T>(
   })
 
   if (throwOnError && !r.ok) {
-    throw new Error(r.statusText)
+    throw new ApiError(r.statusText, r.status)
   }
 
   return r.json()

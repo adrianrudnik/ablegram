@@ -59,7 +59,6 @@ func Serve(
 	r.Use(AccessMiddleware(auth))
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:10000", "http://localhost:5173"},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Accept-Encoding"},
 		ExposeHeaders:    []string{"*"},

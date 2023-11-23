@@ -3,7 +3,7 @@ module github.com/adrianrudnik/ablegram
 go 1.21
 
 require (
-	fyne.io/fyne/v2 v2.4.1
+	fyne.io/fyne/v2 v2.4.2
 	github.com/antchfx/xmlquery v1.3.18
 	github.com/blevesearch/bleve/v2 v2.3.10
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -24,7 +24,7 @@ require (
 )
 
 require (
-	fyne.io/systray v1.10.1-0.20230722100817-88df1e0ffa9a // indirect
+	fyne.io/systray v1.10.1-0.20231115130155-104f5ef7839e // indirect
 	github.com/RoaringBitmap/roaring v1.6.0 // indirect
 	github.com/antchfx/xpath v1.2.5 // indirect
 	github.com/bits-and-blooms/bitset v1.11.0 // indirect

@@ -101,7 +101,7 @@ func Serve(
 	registerOsRoutes(api, conf)
 
 	// Boot up auth and otp services
-	registerAccessRoutes(api, auth, otp)
+	registerAccessRoutes(api, conf, auth, otp)
 
 	// Register the bleve HTTP router
 	search := r.Group("/search")

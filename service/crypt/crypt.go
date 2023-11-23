@@ -1,4 +1,4 @@
-package access
+package crypt
 
 import (
 	"crypto/aes"
@@ -31,7 +31,6 @@ func GetUniqueKey() []byte {
 
 	_, err = rand.Read(id)
 	if err != nil {
-		Logger.Panic().Err(err).Msg("Could not generate machine ID for encryption")
 		panic(err)
 	}
 
@@ -53,7 +52,7 @@ func getMachineId() ([]byte, error) {
 	return dec, nil
 }
 
-func encrypt(v []byte) (string, error) {
+func Encrypt(v []byte) (string, error) {
 	c, err := aes.NewCipher(GetUniqueKey())
 	if err != nil {
 		return "", err
@@ -61,8 +60,7 @@ func encrypt(v []byte) (string, error) {
 
 	gcm, err := cipher.NewGCM(c)
 	if err != nil {
-		Logger.Panic().Err(err).Msg("Could not create AES GCM")
-		panic(err)
+		return "", err
 	}
 
 	nonce := make([]byte, gcm.NonceSize())
@@ -76,7 +74,7 @@ func encrypt(v []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(out), nil
 }
 
-func decrypt(v string) (string, error) {
+func Decrypt(v string) (string, error) {
 	c, err := aes.NewCipher(GetUniqueKey())
 	if err != nil {
 		return "", err

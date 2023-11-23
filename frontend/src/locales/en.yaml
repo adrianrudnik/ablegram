@@ -690,7 +690,7 @@ otp-auth-view:
   description: >-
     Please wait while the OTP code is being validated. You will be redirected to the main page afterwards.
   error: >-
-    The OTP could not be validated, reason "{message}". Please try again.    
+    The OTP could not be validated, reason "{message}". Please try again.
 
 color:
   ableton:

@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-column sm:flex-row gap-4">
-    <ProgressSpinner v-if="!errorMessage"/>
+    <ProgressSpinner v-if="!errorMessage" />
 
     <SectionHeadline :title="t('otp-auth-view.title')">
       <template #description>
         <p v-if="!errorMessage">{{ t('otp-auth-view.description') }}</p>
 
         <Message severity="error" v-if="errorMessage" :closable="false">
-          {{ t('otp-auth-view.error', { message: errorMessage}) }}
+          {{ t('otp-auth-view.error', { message: errorMessage }) }}
         </Message>
       </template>
     </SectionHeadline>
@@ -25,7 +25,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 const { t } = useI18n()
 
-const errorMessage = ref<string|null>(null)
+const errorMessage = ref<string | null>(null)
 
 const route = useRoute()
 const router = useRouter()
@@ -40,7 +40,7 @@ onMounted(async () => {
       })
     })
 
-    await router.push({name: 'app'})
+    await router.replace({ name: 'app' })
   } catch (e: any) {
     errorMessage.value = e.message
   }

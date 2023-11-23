@@ -42,9 +42,9 @@ type IndexerConfig struct {
 }
 
 type WebserviceConfig struct {
-	TryPorts      []int  `yaml:"try_ports" json:"-"`
-	ChosenPort    int    `yaml:"-" json:"-"`
-	OwnerPassword string `yaml:"owner_password" json:"owner_password"`
+	TryPorts       []int  `yaml:"try_ports" json:"-"`
+	ChosenPort     int    `yaml:"-" json:"-"`
+	MasterPassword string `yaml:"master_password" json:"master_password"`
 }
 
 type CollectorTarget struct {

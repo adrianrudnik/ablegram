@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/rs/zerolog"
 	"gopkg.in/yaml.v3"
 	"os"
@@ -39,8 +38,8 @@ func newConfig() *Config {
 		},
 
 		Webservice: WebserviceConfig{
-			OwnerPassword: access.HashPassword(access.GenerateRandomPassword()),
-			TryPorts:      []int{10000, 20000, 30000, 40000, 50000, 10001},
+			MasterPassword: "",
+			TryPorts:       []int{10000, 20000, 30000, 40000, 50000, 10001},
 		},
 	}
 }

@@ -2,8 +2,12 @@ package access
 
 import (
 	"encoding/json"
+	"github.com/adrianrudnik/ablegram/crypt"
 	"time"
 )
+
+const AdminRole = "admin"
+const GuestRole = "guest"
 
 type Auth struct {
 	otp *Otp
@@ -16,31 +20,37 @@ func NewAuth(otp *Otp) *Auth {
 }
 
 func (a *Auth) ValidateToken(v string) bool {
-	_, err := decrypt(v)
+	_, err := crypt.Decrypt(v)
 
 	// As long as we can decrypt the payload, we are fine for now, nothing else of
 	// interest is stored in the token.
 	return err == nil
 }
 
-func (a *Auth) ConvertOtp(v string) (string, error) {
+func (a *Auth) ConvertOtpToToken(v string) (string, error) {
 	if !a.otp.ValidateOtp(v) {
 		return "", ErrInvalidOtp
 	}
 
-	b, err := json.Marshal(NewAuthToken())
+	defer a.otp.InvalidateOtp(v)
+
+	return a.CreateToken()
+}
+
+func (a *Auth) CreateToken() (string, error) {
+	b, err := json.Marshal(newAuthToken())
 	if err != nil {
 		return "", ErrTokenGenerationFailed
 	}
 
-	return encrypt(b)
+	return crypt.Encrypt(b)
 }
 
 type AuthToken struct {
 	Time time.Time `json:"time"`
 }
 
-func NewAuthToken() *AuthToken {
+func newAuthToken() *AuthToken {
 	return &AuthToken{
 		Time: time.Now(),
 	}

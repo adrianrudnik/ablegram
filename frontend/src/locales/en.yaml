@@ -698,7 +698,20 @@ otp-auth-view:
 
 user-avatar:
   from-ip: Connecting from IP {ip}.
+  login: Login
   logout: Logout
+  form:
+    master-password:
+      title: Master password
+      help: >-
+        Login with your master password to gain admin privileges.
+  errors:
+    password-invalid: >-
+      The password is invalid.
+    master-password-not-set: >-
+      The master password is not set. Please set it in the settings.
+    unknown: >-
+      An unknown error occurred.
 
 color:
   ableton:

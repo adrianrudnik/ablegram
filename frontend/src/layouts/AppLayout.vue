@@ -14,27 +14,7 @@
           <i class="pi pi-fw pi-github text-xl"></i>
         </a>
 
-        <Avatar
-          icon="pi pi-user"
-          class="mr-2"
-          :class="{ 'bg-black-alpha-90 text-white': isAdmin, 'text-black-alpha-90': isGuest }"
-          @click="openUserPanel"
-        />
-        <OverlayPanel ref="userPanel">
-          <div class="mb-3">
-            <p class="font-semibold">
-              {{ username }} [{{ isAdmin ? t('role.admin') : t('role.guest') }}]
-            </p>
-            <i18n-t keypath="user-avatar.from-ip" tag="p">
-              <template v-slot:ip>
-                <code class="text-sm p-1 bg-black-alpha-10">{{ ip }}</code>
-              </template>
-            </i18n-t>
-          </div>
-
-          <Button :label="t('user-avatar.logout')" @click="goodbye" v-if="isAdmin" />
-        </OverlayPanel>
-        <ContextMenu ref="menu" :model="items" class="text-white background-black" />
+        <UserAvatar />
       </div>
     </div>
 
@@ -52,30 +32,7 @@ import MenuBar from '@/components/parts/MenuBar.vue'
 import ProgressLogo from '@/components/parts/ProgressLogo.vue'
 import DynamicDialog from 'primevue/dynamicdialog'
 import ConfirmDialog from 'primevue/confirmdialog'
-import ContextMenu from 'primevue/contextmenu'
-import OverlayPanel from 'primevue/overlaypanel'
-import Avatar from 'primevue/avatar'
-import Button from 'primevue/button'
-import { useSessionStore } from '@/stores/session'
-import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
-const { username, ip, isGuest, isAdmin } = storeToRefs(useSessionStore())
-const { goodbye } = useSessionStore()
-
-const menu = ref()
-const items = ref([
-  { label: 'Copy', icon: 'pi pi-copy' },
-  { label: 'Rename', icon: 'pi pi-file-edit' }
-])
-
-const userPanel = ref()
-
-const openUserPanel = (event: Event) => {
-  userPanel.value.toggle(event)
-}
+import UserAvatar from '@/components/auth/UserAvatar.vue'
 </script>
 
 <style lang="scss">

@@ -1,6 +1,10 @@
 <template>
   <FormGrid @submit="onFormSubmit" class="mb-3">
     <FormRow>
+      <!-- Password forms should have (optionally hidden) username fields for accessibility: (More info: https://goo.gl/9p2vKq) -->
+      <!-- @see https://stackoverflow.com/a/77542473/7527858 -->
+      <input type="text" name="username" autocomplete="username" class="hidden" />
+
       <PasswordInput
         :disabled="isSubmitting"
         name="password"
@@ -24,9 +28,11 @@ import { ref } from 'vue'
 import { ApiError, fetchApi } from '@/plugins/api'
 import { useSessionStore } from '@/stores/session'
 import PasswordInput from '@/components/structure/form/PasswordInput.vue'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 const { hello } = useSessionStore()
+const router = useRouter()
 
 const isSaved = ref<boolean>(false)
 
@@ -47,6 +53,8 @@ const onFormSubmit = handleSubmit(async (v) => {
     })
 
     await hello()
+
+    await router.push({ name: 'app' })
   } catch (e) {
     if (e instanceof ApiError) {
       switch (e.statusCode) {

@@ -48,7 +48,6 @@ const openUserPanel = (event: Event) => {
 const logout = async () => {
   await goodbye()
   await router.push({ name: 'app' })
-  userPanel.value.hide()
 }
 </script>
 

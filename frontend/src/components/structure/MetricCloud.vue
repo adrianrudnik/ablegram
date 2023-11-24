@@ -1,9 +1,9 @@
 <template>
   <div class="grid nested-grid mx-1 sm:mx-2 md:mx-4 lg:mx-8 text-gray-400">
-    <div class="col-12 md:col-6 lg:col-4" v-for="metric in metrics" :key="metric['k']">
+    <div class="col-12 sm:col-6 md:col-4 lg:col-4" v-for="metric in metrics" :key="metric['k']">
       <div class="grid text-sm">
-        <div class="col-5 md:col-3 text-right p-1">{{ n(metric['v']) }}</div>
-        <div class="col-7 md:col-9 p-1">{{ t('index.type.' + metric['k']) }}</div>
+        <div class="col-5 sm:col-4 md:col-3 text-right p-1">{{ n(metric['v']) }}</div>
+        <div class="col-7 sm:col-8 md:col-9 p-1">{{ t('index.type.' + metric['k']) }}</div>
       </div>
     </div>
   </div>

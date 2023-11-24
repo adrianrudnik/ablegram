@@ -15,7 +15,6 @@
       v-model="currentQueryString"
       class="w-full"
       :placeholder="t('search-query-input.placeholder')"
-      v-focus
     />
   </div>
 </template>

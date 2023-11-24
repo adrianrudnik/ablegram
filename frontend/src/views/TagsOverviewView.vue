@@ -5,7 +5,7 @@
       <p>{{ t('tag-overview.filtering') }}</p>
     </template>
 
-    <InputText v-model="filter" placeholder="Filter" class="w-full mb-3" v-focus />
+    <InputText v-model="filter" placeholder="Filter" class="w-full mb-3" />
 
     <SearchTag
       class="cursor-pointer mb-1 mr-1"

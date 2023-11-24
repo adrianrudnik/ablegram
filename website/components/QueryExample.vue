@@ -1,15 +1,12 @@
 <template>
   <div class="QueryExample">
-
     <slot/>
-
     <div class="language-text vp-adaptive-theme">
       <button title="Copy Code" class="copy"></button>
       <span class="lang">query</span>
       <!--  @formatter:off -->
-      <pre class="shiki github-dark vp-code-dark"><code><span class="line"><span style="color:#e1e4e8;">{{ written }}</span></span></code></pre>
-      <pre class="shiki github-light vp-code-light"><code><span class="line"><span style="color:#24292e;">{{ written }}</span></span></code></pre>
-    <!--  @formatter:on -->
+      <pre class="shiki shiki-themes github-light github-dark vp-code"><code><span class="line"><span>{{ written }}</span></span></code></pre>
+      <!--  @formatter:on -->
     </div>
 
     <div v-if="demo" class="DemoLink">
@@ -23,6 +20,7 @@
 .QueryExample {
   display: flex;
   flex-direction: column-reverse;
+
   .language-text.vp-adaptive-theme {
     margin: 0 !important;
   }

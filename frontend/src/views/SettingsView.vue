@@ -24,8 +24,12 @@ import BehaviourSettings from '@/components/settings/BehaviourSettings.vue'
 import AppStatus from '@/components/parts/AppStatus.vue'
 import CollectorSettings from '@/components/settings/CollectorSettings.vue'
 import Message from 'primevue/message'
+import { useConfigStore } from '@/stores/config'
 
 const { t } = useI18n()
+
+// Ensure the config is loaded
+useConfigStore().load()
 </script>
 
 <style scoped>

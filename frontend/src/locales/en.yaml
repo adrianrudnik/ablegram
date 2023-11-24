@@ -268,6 +268,7 @@ common:
 
 index:
   type:
+    IndexDoc: 'Data point'
     AbletonLiveSet: '@:common.label.ableton-live-set.s'
     AbletonMidiTrack: '@:common.label.midi-track.s'
     AbletonAudioTrack: '@:common.label.audio-track.s'
@@ -282,7 +283,11 @@ index:
     AbletonSampleReference: '@:common.label.ableton-sample-reference.s'
     AbletonAlsFile: 'Ableton Live Set (.ALS) file'
     AbletonMidiArpeggiatorDevice: 'MIDI Arpeggiator device'
+    AbletonMidiPitcherDevice: 'MIDI Pitcher device'
+    AbletonMidiVelocityDevice: 'MIDI Velocity device'
     AbletonInfoText: 'Ableton Info-Text'
+    FileValid: 'Valid file'
+    FileInvalid: 'Invalid file'
 
 tag:
   example: Category

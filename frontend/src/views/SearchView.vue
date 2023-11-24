@@ -3,6 +3,7 @@
   <SearchQueryToolbar class="mb-3 z-1 relative" />
   <ActiveFilterBar class="mb-3 z-0" />
   <SearchResultList />
+  <MetricCloud v-if="isClean" />
 </template>
 
 <script setup lang="ts">
@@ -16,11 +17,12 @@ import { storeToRefs } from 'pinia'
 import { useSearchStore } from '@/stores/search'
 import { createTagFromString } from '@/stores/tags'
 import { ActiveFilterMode, ActiveFilterType, useActiveFiltersStore } from '@/stores/search-filters'
+import MetricCloud from '@/components/structure/MetricCloud.vue'
 
 const router = useRouter()
 const route = useRoute()
 
-const { currentQueryString } = storeToRefs(useSearchStore())
+const { currentQueryString, isClean } = storeToRefs(useSearchStore())
 
 const { update: addActiveFilter } = useActiveFiltersStore()
 

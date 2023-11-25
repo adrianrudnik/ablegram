@@ -17,38 +17,27 @@
       </i18n-t>
     </div>
 
-    <Button :label="t('user-avatar.logout')" @click="logout" v-if="isAdmin" />
     <LoginWithPasswordForm v-if="isGuest" />
+    <LogoutForm v-if="!isGuest" />
   </OverlayPanel>
 </template>
 
 <script setup lang="ts">
 import OverlayPanel from 'primevue/overlaypanel'
 import LoginWithPasswordForm from '@/components/auth/LoginWithPasswordForm.vue'
-import Button from 'primevue/button'
+import LogoutForm from '@/components/auth/LogoutForm.vue'
 import Avatar from 'primevue/avatar'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useSessionStore } from '@/stores/session'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
 const { username, ip, isGuest, isAdmin } = storeToRefs(useSessionStore())
-const { goodbye } = useSessionStore()
 
 const userPanel = ref()
-
-const router = useRouter()
 
 const openUserPanel = (event: Event) => {
   userPanel.value.toggle(event)
 }
-
-const logout = async () => {
-  await goodbye()
-  await router.push({ name: 'app' })
-}
 </script>
-
-<style scoped lang="scss"></style>

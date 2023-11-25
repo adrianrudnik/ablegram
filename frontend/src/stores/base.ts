@@ -58,9 +58,7 @@ export function setupStore<T extends StoreResource>() {
 
     const count = computed(() => entries.value.length)
 
-    function clear(): void {
-      entries.value.splice(0, entries.value.length)
-    }
+    const clear = () => entries.value.splice(0, entries.value.length)
 
     return {
       all,

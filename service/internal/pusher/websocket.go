@@ -2,6 +2,7 @@ package pusher
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"net/http"
 )
@@ -15,12 +16,19 @@ var upgrader = websocket.Upgrader{
 }
 
 func (c *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
-	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
+	// Generate a unique client ID and communicate it back to the client.
+	clientId := uuid.New()
+
+	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, http.Header{
+		"X-You-Are": []string{clientId.String()},
+	})
+	ctx.Header("X", clientId.String())
+
 	if err != nil {
 		Logger.Error().Err(err).Msg("Failed to upgrade client to websocket")
 		return
 	}
-	client := NewPushClient(ws, c)
+	client := NewPushClient(clientId, ws, c)
 
 	client.DisplayName = ctx.GetString("displayName")
 	client.Role = ctx.GetString("role")

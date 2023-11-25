@@ -5,6 +5,8 @@ import type { ForceNavigatePushMessage } from '@/websocket/messages/force_naviga
 import type { TagUpdatePushMessage } from '@/websocket/messages/tag_update'
 import type { UserWelcomePushMessage } from '@/websocket/messages/user_welcome'
 import type { UserGoodbyePushMessage } from '@/websocket/messages/user_goodbye'
+import type { AboutYouPushMessage } from '@/websocket/messages/about_you'
+import type { UserCurrentPushMessage } from '@/websocket/messages/user_current'
 
 // TypeScript discriminator hell
 // for websocket messages, anything to satisfy the god of types.
@@ -16,7 +18,9 @@ export enum PushMessageType {
   ProcessingStatus = 'processing_status',
   ForceNavigate = 'force_navigate',
   UserWelcome = 'user_welcome',
-  UserGoodbye = 'user_goodbye'
+  UserGoodbye = 'user_goodbye',
+  UserCurrent = 'user_current',
+  AboutYou = 'about_you'
 }
 
 export type PushMessage =
@@ -27,3 +31,5 @@ export type PushMessage =
   | ForceNavigatePushMessage
   | UserWelcomePushMessage
   | UserGoodbyePushMessage
+  | UserCurrentPushMessage
+  | AboutYouPushMessage

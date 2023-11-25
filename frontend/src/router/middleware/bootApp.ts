@@ -8,10 +8,12 @@ export async function bootApp(
   next: NavigationGuardNext
 ) {
   console.debug('Booting app')
-  console.debug('Booting index: ' + websocket.status.value)
 
   // Ensure we say hello to the server to identify us
   await useSessionStore().hello()
+
+  // Ensure we open the websocket connection
+  websocket.open()
 
   return next()
 }

@@ -43,7 +43,6 @@ onMounted(() => {
       const tags = q.getAll('tag')
 
       for (let tagId of tags) {
-        console.log('tag', tagId)
         // Extract the binary expression, if available
         let match = ActiveFilterMode.SHOULD
         switch (tagId.charAt(0)) {

@@ -6,6 +6,7 @@ import { PushMessageType } from '@/websocket/messages/global'
 import router from '@/router'
 import { createTagFromString, useTagStore } from '@/stores/tags'
 import { useUserStore } from '@/stores/users'
+import { useSessionStore } from '@/stores/session'
 
 export function getWebsocketUrl() {
   if (import.meta.env.VITE_WEBSOCKET_URL ?? null) {
@@ -20,6 +21,7 @@ export function getWebsocketUrl() {
 }
 
 export const websocket = useWebSocket(getWebsocketUrl(), {
+  immediate: false,
   autoReconnect: true,
   async onMessage(ws, event) {
     const payload = JSON.parse(event.data) as PushMessage
@@ -50,12 +52,17 @@ export const websocket = useWebSocket(getWebsocketUrl(), {
         await router.push({ name: payload.target })
         break
 
+      case PushMessageType.UserCurrent:
       case PushMessageType.UserWelcome:
         useUserStore().update(payload)
         break
 
       case PushMessageType.UserGoodbye:
         useUserStore().removeById(payload.id)
+        break
+
+      case PushMessageType.AboutYou:
+        useSessionStore().id = payload.id
         break
     }
   }

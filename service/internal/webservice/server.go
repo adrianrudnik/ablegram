@@ -52,8 +52,8 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	r.TrustedPlatform = conf.Webservice.TrustedPlatform
 
 	pusher.Logger = Logger.With().Str("module", "pusher").Logger()
-	pushChannel := pusher.NewPushManager(conf, pushChan)
-	go pushChannel.Run()
+	pushManager := pusher.NewPushManager(conf, pushChan)
+	go pushManager.Run()
 
 	// Mount the embeded search frontend
 	frontendFS := EmbedFolder(frontendFs, ".frontend")
@@ -71,7 +71,7 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
 
 	r.GET("/ws", func(c *gin.Context) {
-		pushChannel.ConnectClientWebsocket(c)
+		pushManager.ConnectClientWebsocket(c)
 	})
 
 	// Register common API routes

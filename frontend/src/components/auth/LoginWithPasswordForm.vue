@@ -31,8 +31,8 @@ import PasswordInput from '@/components/structure/form/PasswordInput.vue'
 import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
-const { hello } = useSessionStore()
 const router = useRouter()
+const { reconsider } = useSessionStore()
 
 const isSaved = ref<boolean>(false)
 
@@ -52,7 +52,7 @@ const onFormSubmit = handleSubmit(async (v) => {
       body: JSON.stringify(v)
     })
 
-    await hello()
+    await reconsider()
 
     await router.push({ name: 'app' })
   } catch (e) {

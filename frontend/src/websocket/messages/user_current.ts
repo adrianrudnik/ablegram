@@ -1,8 +1,8 @@
 import { PushMessageType } from '@/websocket/messages/global'
 import type { UserRoles } from '@/stores/users'
 
-export interface UserWelcomePushMessage {
-  type: PushMessageType.UserWelcome
+export interface UserCurrentPushMessage {
+  type: PushMessageType.UserCurrent
   id: string
   display_name: string
   role: UserRoles

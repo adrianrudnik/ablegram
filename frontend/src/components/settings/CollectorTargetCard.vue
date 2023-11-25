@@ -67,9 +67,6 @@ const confirmDelete = (event: Event) => {
       })
 
       await configStore.load()
-    },
-    reject: () => {
-      console.log('N', props.target.id)
     }
   })
 }

@@ -17,9 +17,7 @@ type PushClient struct {
 
 var writeTimeout = 5 * time.Second
 
-func NewPushClient(connection *websocket.Conn, pushChan *PushManager) *PushClient {
-	id := uuid.New()
-
+func NewPushClient(id uuid.UUID, connection *websocket.Conn, pushChan *PushManager) *PushClient {
 	return &PushClient{
 		ID:   id.String(),
 		Conn: connection,

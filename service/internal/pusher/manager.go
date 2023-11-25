@@ -48,10 +48,23 @@ func (c *PushManager) Run() {
 			}
 
 			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName, ip))
+			c.Broadcast(pushermsg.NewAboutYouPush(client.ID))
+
+			// Send a current list of active users towards the newly connected one
+			c.clientsLock.RLock()
+			for kClient := range c.clients {
+				kIp := client.Conn.RemoteAddr().String()
+				if c.config.Behaviour.DemoMode {
+					kIp = "127.0.0.129"
+				}
+
+				c.Broadcast(pushermsg.NewUserCurrentPush(client.ID, kClient.ID, kClient.Role, kClient.DisplayName, kIp))
+			}
+			c.clientsLock.RUnlock()
 
 		case client := <-c.removeClient:
-			c.RemoveClient(client)
 			c.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
+			c.RemoveClient(client)
 
 		case message := <-c.broadcast:
 			c.Broadcast(message)
@@ -94,7 +107,6 @@ func (c *PushManager) AddClient(client *PushClient) {
 	c.historyLock.RUnlock()
 
 	Logger.Info().Int("messages", count).Str("client", client.ID).Msg("Websocket client received history")
-
 }
 
 func (c *PushManager) RemoveClient(client *PushClient) {

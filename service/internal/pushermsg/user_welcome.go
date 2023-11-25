@@ -18,6 +18,11 @@ func (p *UserWelcomePush) FilteredVariant() interface{} {
 	}
 }
 
+// KeepInHistory ensures the message is not kept in history, as we can send the idempotent list on connect
+func (p *UserWelcomePush) KeepInHistory() bool {
+	return false
+}
+
 func NewUserWelcomePush(id, role, displayName, ip string) *UserWelcomePush {
 	return &UserWelcomePush{
 		Type:        "user_welcome",

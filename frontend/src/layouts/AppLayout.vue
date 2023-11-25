@@ -10,11 +10,12 @@
           <i class="pi pi-fw pi-book text-xl"></i>
         </a>
 
-        <a href="https://github.com/adrianrudnik/ablegram" target="_blank">
+        <a href="https://github.com/adrianrudnik/ablegram" target="_blank" v-if="sm">
           <i class="pi pi-fw pi-github text-xl"></i>
         </a>
 
-        <UserAvatar />
+        <ActiveUsers />
+        <MyAvatar />
       </div>
     </div>
 
@@ -32,7 +33,11 @@ import MenuBar from '@/components/parts/MenuBar.vue'
 import ProgressLogo from '@/components/parts/ProgressLogo.vue'
 import DynamicDialog from 'primevue/dynamicdialog'
 import ConfirmDialog from 'primevue/confirmdialog'
-import UserAvatar from '@/components/auth/UserAvatar.vue'
+import MyAvatar from '@/components/auth/MyAvatar.vue'
+import ActiveUsers from '@/components/parts/ActiveUsers.vue'
+import { breakpointsPrimeFlex, useBreakpoints } from '@vueuse/core'
+
+const { sm } = useBreakpoints(breakpointsPrimeFlex)
 </script>
 
 <style lang="scss">

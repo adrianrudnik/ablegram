@@ -37,6 +37,14 @@ export function setupStore<T extends StoreResource>() {
       }
     }
 
+    function removeById(id: string) {
+      const idx = entries.value.findIndex((entry) => id === entry.id)
+
+      if (idx !== -1) {
+        entries.value.splice(idx, 1)
+      }
+    }
+
     function get(id: string): T | undefined {
       return entries.value.find((entry) => entry.id === id)
     }
@@ -61,6 +69,7 @@ export function setupStore<T extends StoreResource>() {
       update,
       updateBatch,
       remove,
+      removeById,
       get,
       getRandomElement,
       count,

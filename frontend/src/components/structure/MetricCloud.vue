@@ -1,5 +1,5 @@
 <template>
-  <div class="grid nested-grid mx-1 sm:mx-2 md:mx-4 lg:mx-8 text-gray-400">
+  <div class="grid nested-grid mx-1 sm:mx-2 md:mx-4 lg:mx-8 text-gray-400 mb-5">
     <div class="col-12 sm:col-6 md:col-4 lg:col-4" v-for="metric in metrics" :key="metric['k']">
       <div class="grid text-sm">
         <div class="col-5 sm:col-4 md:col-3 text-right p-1">{{ n(metric['v']) }}</div>
@@ -17,7 +17,13 @@ import { orderBy } from 'lodash'
 
 const { counters } = useStatStore()
 
-const metrics = computed(() => orderBy(Object.entries(counters).map(([k, v]) => ({ k, v })), ['v'], ['desc']))
+const metrics = computed(() =>
+  orderBy(
+    Object.entries(counters).map(([k, v]) => ({ k, v })),
+    ['v'],
+    ['desc']
+  )
+)
 
 const { t, n } = useI18n()
 </script>

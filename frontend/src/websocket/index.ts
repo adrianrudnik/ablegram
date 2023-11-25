@@ -5,6 +5,7 @@ import type { PushMessage } from '@/websocket/messages/global'
 import { PushMessageType } from '@/websocket/messages/global'
 import router from '@/router'
 import { createTagFromString, useTagStore } from '@/stores/tags'
+import { useUserStore } from '@/stores/users'
 
 export function getWebsocketUrl() {
   if (import.meta.env.VITE_WEBSOCKET_URL ?? null) {
@@ -47,6 +48,14 @@ export const websocket = useWebSocket(getWebsocketUrl(), {
 
       case PushMessageType.ForceNavigate:
         await router.push({ name: payload.target })
+        break
+
+      case PushMessageType.UserWelcome:
+        useUserStore().update(payload)
+        break
+
+      case PushMessageType.UserGoodbye:
+        useUserStore().removeById(payload.id)
         break
     }
   }

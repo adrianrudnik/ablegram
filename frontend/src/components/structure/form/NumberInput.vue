@@ -30,7 +30,7 @@ const props = defineProps<{
 
 const id = createIdFrom(props.name)
 
-const { errorMessage, value } = useField(toRef(props, 'name'))
+const { errorMessage, value } = useField<number>(toRef(props, 'name'))
 
 defineExpose({
   errorMessage

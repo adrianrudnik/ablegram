@@ -2,7 +2,7 @@ package parser
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/workload"
@@ -84,12 +84,12 @@ func (p *WorkerPool) doWork() {
 			Logger.Warn().Err(err).Str("path", msg.AbsPath).Msg("Failed to parse file")
 
 			// Notify the UI about the failure
-			p.pushChan <- pusher.NewFileStatusPush(msg.AbsPath, "failed", err.Error())
+			p.pushChan <- pushermsg.NewFileStatusPush(msg.AbsPath, "failed", err.Error())
 			continue
 		}
 
 		// Notify the UI about the file progress
-		p.pushChan <- pusher.NewFileStatusPush(msg.AbsPath, "processed", "")
+		p.pushChan <- pushermsg.NewFileStatusPush(msg.AbsPath, "processed", "")
 
 		Logger.Debug().Str("path", msg.AbsPath).Msg("Finished processing")
 

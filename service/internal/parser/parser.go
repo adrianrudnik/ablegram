@@ -6,11 +6,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/workload"
-	"github.com/rs/zerolog"
-	"os"
 )
-
-var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
 func parseAlsV5(
 	stat *stats.Statistics,

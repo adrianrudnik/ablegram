@@ -5,42 +5,21 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
+	"github.com/adrianrudnik/ablegram/internal/pusher"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
+	"github.com/adrianrudnik/ablegram/internal/workload"
 	bleveHttp "github.com/blevesearch/bleve/v2/http"
 	"github.com/gin-contrib/cors"
-	"github.com/gin-contrib/logger"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"net/http"
-	"os"
 )
-
-var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
 
 //go:embed .frontend/*
 var frontendFs embed.FS
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
-
-func Serve(
-	conf *config.Config,
-	auth *access.Auth,
-	otp *access.Otp,
-	indexer *indexer.Search,
-	tc *tagger.TagCollector,
-	pushChan *PushChannel,
-	bindAddr string,
-) error {
+func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *indexer.Search, tc *tagger.TagCollector, pushChan chan workload.PushMessage, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -54,7 +33,7 @@ func Serve(
 
 	r := gin.New()
 	r.Use(gin.Recovery())
-	r.Use(logger.SetLogger())
+	r.Use(LoggerMiddleware())
 	r.Use(CacheMiddleware())
 	r.Use(AccessMiddleware(auth))
 
@@ -72,6 +51,10 @@ func Serve(
 	// @see https://github.com/gin-gonic/gin/blob/44d0dd70924dd154e3b98bc340accc53484efa9c/gin.go#L73C1-L80C2
 	r.TrustedPlatform = conf.Webservice.TrustedPlatform
 
+	pusher.Logger = Logger.With().Str("module", "pusher").Logger()
+	pushChannel := pusher.NewPushChannel(pushChan)
+	go pushChannel.Run()
+
 	// Mount the embeded search frontend
 	frontendFS := EmbedFolder(frontendFs, ".frontend")
 
@@ -88,7 +71,7 @@ func Serve(
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
 
 	r.GET("/ws", func(c *gin.Context) {
-		connectClientWebsocket(c, pushChan)
+		pusher.ConnectClientWebsocket(c, pushChannel)
 	})
 
 	// Register common API routes
@@ -99,7 +82,7 @@ func Serve(
 	registerOsRoutes(api, conf)
 
 	// Boot up auth and otp services
-	registerAccessRoutes(api, conf, auth, otp)
+	registerAccessRoutes(api, conf, auth)
 
 	// Register the bleve HTTP router
 	search := r.Group("/search")

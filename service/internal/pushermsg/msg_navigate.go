@@ -1,4 +1,4 @@
-package pusher
+package pushermsg
 
 type ForceNavigatePush struct {
 	Type   string `json:"type"`

@@ -1,7 +1,7 @@
-package webservice
+package pusher
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
 	"sync"
@@ -64,11 +64,11 @@ func (c *PushChannel) AddClient(client *PushClient) {
 	// Send over the channels history to the client, to get the frontend into the correct state
 	c.historyLock.RLock()
 	for _, msg := range c.history {
-		if canClientReceive(msg, client) {
+		if CanClientReceive(msg, client) {
 			continue
 		}
 
-		client.tx <- msg
+		client.Tx <- msg
 	}
 
 	count := len(c.history)
@@ -82,7 +82,7 @@ func (c *PushChannel) RemoveClient(client *PushClient) {
 	c.clientsLock.Lock()
 	if _, ok := c.clients[client]; ok {
 		delete(c.clients, client)
-		close(client.tx)
+		close(client.Tx)
 
 		Logger.Info().Str("id", client.ID).Msg("Websocket client unregistered")
 	}
@@ -92,7 +92,7 @@ func (c *PushChannel) RemoveClient(client *PushClient) {
 func (c *PushChannel) Broadcast(message interface{}) {
 	// Append the message to the history, it the interface tells us to, or if the interface is missing
 	record := false
-	if v, ok := message.(pusher.RecordMessage); ok && v.KeepInHistory() {
+	if v, ok := message.(RecordMessage); ok && v.KeepInHistory() {
 		record = true
 	}
 
@@ -107,7 +107,7 @@ func (c *PushChannel) Broadcast(message interface{}) {
 	clients := c.clients
 	for client := range clients {
 		select {
-		case client.tx <- message:
+		case client.Tx <- message:
 		}
 	}
 	c.clientsLock.RUnlock()
@@ -128,26 +128,26 @@ func (c *PushChannel) StartHistoryCompactor() {
 		lo.Reverse(c.history)
 
 		// Only keep the newest processing update
-		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-			_, ok := v.(*pusher.ProcessingStatusPush)
+		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pushermsg.ProcessingStatusPush)
 			return ok
 		})
 
 		// Only keep the newest tag update
-		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-			_, ok := v.(*pusher.TagUpdatePush)
+		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pushermsg.TagUpdatePush)
 			return ok
 		})
 
 		// Only keep the newest metrics update
-		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-			_, ok := v.(*pusher.MetricUpdatePush)
+		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pushermsg.MetricUpdatePush)
 			return ok
 		})
 
 		// Filter all file updates, keep the newest one per file
 		m := lo.Uniq(lo.FilterMap(c.history, func(v interface{}, _ int) (string, bool) {
-			x, ok := v.(*pusher.FileStatusPush)
+			x, ok := v.(*pushermsg.FileStatusPush)
 			if !ok {
 				return "", false
 			}
@@ -156,8 +156,8 @@ func (c *PushChannel) StartHistoryCompactor() {
 		}))
 
 		for _, hit := range m {
-			c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-				x, ok := v.(*pusher.FileStatusPush)
+			c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+				x, ok := v.(*pushermsg.FileStatusPush)
 				return ok && x.ID == hit
 			})
 		}

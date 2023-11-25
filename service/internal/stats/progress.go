@@ -1,7 +1,7 @@
 package stats
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
 	"sync/atomic"
@@ -25,7 +25,7 @@ func NewProcessProgress(pushChan chan<- workload.PushMessage) *ProcessProgress {
 	}
 
 	p.pushTrigger, _ = lo.NewDebounce(50*time.Millisecond, func() {
-		p.pushChan <- pusher.NewProcessingStatusPush(p.progressCount.Load())
+		p.pushChan <- pushermsg.NewProcessingStatusPush(p.progressCount.Load())
 		Logger.Debug().Int64("routines", p.progressCount.Load()).Msg("Processing progress updated")
 
 		if p.progressCount.Load() == 0 {

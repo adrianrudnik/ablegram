@@ -1,4 +1,4 @@
-package pusher
+package pushermsg
 
 import (
 	"crypto/md5"

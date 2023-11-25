@@ -1,7 +1,7 @@
 package tagger
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
 	"strings"
@@ -39,7 +39,7 @@ func (c *TagCollector) WirePusher(pushChan chan<- workload.PushMessage) {
 	throttle := 1 * time.Second
 
 	c.throttledUpdate, _ = lo.NewDebounceBy(throttle, func(key int64, count int) {
-		pushChan <- pusher.NewTagUpdatePush(c.GetDetailedTags())
+		pushChan <- pushermsg.NewTagUpdatePush(c.GetDetailedTags())
 	})
 
 	c.TriggerUpdate = func() {

@@ -4,6 +4,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/adrianrudnik/ablegram/internal/util"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func AccessMiddleware(auth *access.Auth) gin.HandlerFunc {
@@ -27,4 +28,15 @@ func AccessMiddleware(auth *access.Auth) gin.HandlerFunc {
 		c.Set("displayName", util.SanitizeDisplayName(displayName))
 		c.Set("role", role)
 	}
+}
+
+func isAdmin(c *gin.Context) bool {
+	if c.GetString("role") != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+		c.Abort()
+
+		return false
+	}
+
+	return true
 }

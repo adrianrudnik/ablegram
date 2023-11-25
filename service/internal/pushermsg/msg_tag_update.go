@@ -1,4 +1,4 @@
-package pusher
+package pushermsg
 
 type TagUpdatePush struct {
 	Type   string            `json:"type"`

@@ -1,4 +1,4 @@
-package pusher
+package pushermsg
 
 type ProcessingStatusPush struct {
 	Type   string `json:"type"`

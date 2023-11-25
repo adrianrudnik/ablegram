@@ -1,4 +1,4 @@
-package pusher
+package pushermsg
 
 type MetricUpdatePush struct {
 	Type   string            `json:"type"`

@@ -9,7 +9,7 @@ hero:
   text: Search through your Ableton project files.
   # tagline: Search effortlessly through your Ableton project files.
   image:
-    src: ./assets/screenshots/overview-v1.4.0.png
+    src: ./assets/screenshots/overview-v1.5.1.png
     alt: Overview of the Ablegram application
   actions:
     - theme: brand

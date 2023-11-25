@@ -36,7 +36,7 @@ func (c *PushChannel) Run() {
 		select {
 		case client := <-c.addClient:
 			c.AddClient(client)
-			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName))
+			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName, client.Conn.RemoteAddr().String()))
 		case client := <-c.removeClient:
 			c.RemoveClient(client)
 			c.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
@@ -68,6 +68,10 @@ func (c *PushChannel) AddClient(client *PushClient) {
 	for _, msg := range c.history {
 		if !CanClientReceive(msg, client) {
 			continue
+		}
+
+		if v, ok := msg.(FilteredMessage); ok && client.Role == GuestRole {
+			msg = v.FilteredVariant()
 		}
 
 		client.Tx <- msg
@@ -106,10 +110,15 @@ func (c *PushChannel) Broadcast(message interface{}) {
 
 	// Distribute message to all connected clients
 	c.clientsLock.RLock()
-	clients := c.clients
-	for client := range clients {
-		select {
-		case client.Tx <- message:
+	for client := range c.clients {
+		if !CanClientReceive(message, client) {
+			continue
+		}
+
+		if v, ok := message.(FilteredMessage); ok && client.Role == GuestRole {
+			client.Tx <- v.FilteredVariant()
+		} else {
+			client.Tx <- message
 		}
 	}
 	c.clientsLock.RUnlock()

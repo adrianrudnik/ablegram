@@ -11,3 +11,7 @@ type UserRouterMessage interface {
 type RecordMessage interface {
 	KeepInHistory() bool
 }
+
+type FilteredMessage interface {
+	FilteredVariant() interface{}
+}

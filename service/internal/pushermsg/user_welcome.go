@@ -5,13 +5,25 @@ type UserWelcomePush struct {
 	ID          string `json:"id"`
 	Role        string `json:"role"`
 	DisplayName string `json:"display_name"`
+	IP          string `json:"ip"`
 }
 
-func NewUserWelcomePush(id, role, displayName string) *UserWelcomePush {
+func (p *UserWelcomePush) FilteredVariant() interface{} {
+	return &UserWelcomePush{
+		Type:        p.Type,
+		ID:          p.ID,
+		Role:        p.Role,
+		DisplayName: p.DisplayName,
+		IP:          "",
+	}
+}
+
+func NewUserWelcomePush(id, role, displayName, ip string) *UserWelcomePush {
 	return &UserWelcomePush{
 		Type:        "user_welcome",
 		ID:          id,
 		Role:        role,
 		DisplayName: displayName,
+		IP:          ip,
 	}
 }

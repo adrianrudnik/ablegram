@@ -12,12 +12,12 @@ type PushClient struct {
 	Role        string
 	Conn        *websocket.Conn
 	Tx          chan interface{}
-	pushChan    *PushChannel
+	pushChan    *PushManager
 }
 
 var writeTimeout = 5 * time.Second
 
-func NewPushClient(connection *websocket.Conn, pushChan *PushChannel) *PushClient {
+func NewPushClient(connection *websocket.Conn, pushChan *PushManager) *PushClient {
 	id := uuid.New()
 
 	return &PushClient{

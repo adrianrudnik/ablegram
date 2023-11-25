@@ -1,6 +1,7 @@
 package pusher
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
@@ -8,7 +9,8 @@ import (
 	"time"
 )
 
-type PushChannel struct {
+type PushManager struct {
+	config                *config.Config
 	clients               map[*PushClient]bool
 	clientsLock           sync.RWMutex
 	addClient             chan *PushClient
@@ -19,8 +21,9 @@ type PushChannel struct {
 	triggerHistoryCleanup func()
 }
 
-func NewPushChannel(pushChan <-chan workload.PushMessage) *PushChannel {
-	return &PushChannel{
+func NewPushManager(conf *config.Config, pushChan <-chan workload.PushMessage) *PushManager {
+	return &PushManager{
+		config:       conf,
 		clients:      make(map[*PushClient]bool),
 		addClient:    make(chan *PushClient),
 		removeClient: make(chan *PushClient),
@@ -29,24 +32,34 @@ func NewPushChannel(pushChan <-chan workload.PushMessage) *PushChannel {
 	}
 }
 
-func (c *PushChannel) Run() {
+func (c *PushManager) Run() {
 	c.StartHistoryCompactor()
 
 	for {
 		select {
 		case client := <-c.addClient:
 			c.AddClient(client)
-			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName, client.Conn.RemoteAddr().String()))
+
+			// Admins get the IP detail, though we do not want it for demo mode,
+			// as anyone could become admin and there is no need to expose the real IP to other demo admins.
+			ip := client.Conn.RemoteAddr().String()
+			if c.config.Behaviour.DemoMode {
+				ip = "127.0.0.128"
+			}
+
+			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName, ip))
+
 		case client := <-c.removeClient:
 			c.RemoveClient(client)
 			c.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
+
 		case message := <-c.broadcast:
 			c.Broadcast(message)
 		}
 	}
 }
 
-func (c *PushChannel) AddClient(client *PushClient) {
+func (c *PushManager) AddClient(client *PushClient) {
 	// Ensure the client is not already registered
 	c.clientsLock.RLock()
 	if _, ok := c.clients[client]; ok {
@@ -84,7 +97,7 @@ func (c *PushChannel) AddClient(client *PushClient) {
 
 }
 
-func (c *PushChannel) RemoveClient(client *PushClient) {
+func (c *PushManager) RemoveClient(client *PushClient) {
 	c.clientsLock.Lock()
 	if _, ok := c.clients[client]; ok {
 		delete(c.clients, client)
@@ -95,7 +108,7 @@ func (c *PushChannel) RemoveClient(client *PushClient) {
 	c.clientsLock.Unlock()
 }
 
-func (c *PushChannel) Broadcast(message interface{}) {
+func (c *PushManager) Broadcast(message interface{}) {
 	// Append the message to the history, it the interface tells us to, or if the interface is missing
 	record := true // we keep everything that has no details about a specific behaviour
 	if v, ok := message.(RecordMessage); ok {
@@ -128,7 +141,7 @@ func (c *PushChannel) Broadcast(message interface{}) {
 	}
 }
 
-func (c *PushChannel) StartHistoryCompactor() {
+func (c *PushManager) StartHistoryCompactor() {
 	// Establish a debounced history cleaner
 	c.triggerHistoryCleanup, _ = lo.NewDebounce(250*time.Millisecond, func() {
 		c.historyLock.Lock()

@@ -14,7 +14,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (c *PushChannel) ConnectClientWebsocket(ctx *gin.Context) {
+func (c *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
 		Logger.Error().Err(err).Msg("Failed to upgrade client to websocket")

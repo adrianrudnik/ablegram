@@ -52,7 +52,7 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	r.TrustedPlatform = conf.Webservice.TrustedPlatform
 
 	pusher.Logger = Logger.With().Str("module", "pusher").Logger()
-	pushChannel := pusher.NewPushChannel(pushChan)
+	pushChannel := pusher.NewPushManager(conf, pushChan)
 	go pushChannel.Run()
 
 	// Mount the embeded search frontend

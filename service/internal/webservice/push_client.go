@@ -8,10 +8,12 @@ import (
 import "github.com/google/uuid"
 
 type PushClient struct {
-	ID       string
-	Conn     *websocket.Conn
-	tx       chan interface{}
-	pushChan *PushChannel
+	ID          string
+	DisplayName string
+	Role        string
+	Conn        *websocket.Conn
+	tx          chan interface{}
+	pushChan    *PushChannel
 }
 
 var writeTimeout = 5 * time.Second
@@ -53,6 +55,11 @@ func (c *PushClient) Send() {
 				return
 			}
 
+			if canClientReceive(msg, c) {
+				continue
+			}
+
+			// We made it here, we can broadcast it to the client
 			err = c.Conn.WriteJSON(msg)
 			if err != nil {
 				Logger.Debug().Err(err).Msg("Could not write JSON message to client")
@@ -105,6 +112,9 @@ func connectClientWebsocket(ctx *gin.Context, pushChan *PushChannel) {
 	}
 
 	c := NewPushClient(ws, pushChan)
+
+	c.DisplayName = ctx.GetString("displayName")
+	c.Role = ctx.GetString("role")
 
 	pushChan.addClient <- c
 

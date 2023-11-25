@@ -206,7 +206,7 @@ func main() {
 		w.ShowAndRun()
 
 		// Say goodbye in the browser window, if available.
-		pushChan <- pusher.NewNavigatePush("goodbye")
+		pushChan <- pusher.NewForceNavigatePush("goodbye")
 		time.Sleep(100 * time.Millisecond)
 	}
 }

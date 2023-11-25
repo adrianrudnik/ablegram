@@ -64,8 +64,13 @@ func (c *PushChannel) AddClient(client *PushClient) {
 	// Send over the channels history to the client, to get the frontend into the correct state
 	c.historyLock.RLock()
 	for _, msg := range c.history {
+		if canClientReceive(msg, client) {
+			continue
+		}
+
 		client.tx <- msg
 	}
+
 	count := len(c.history)
 	c.historyLock.RUnlock()
 
@@ -85,9 +90,17 @@ func (c *PushChannel) RemoveClient(client *PushClient) {
 }
 
 func (c *PushChannel) Broadcast(message interface{}) {
-	c.historyLock.Lock()
-	c.history = append(c.history, message)
-	c.historyLock.Unlock()
+	// Append the message to the history, it the interface tells us to, or if the interface is missing
+	record := false
+	if v, ok := message.(pusher.RecordMessage); ok && v.KeepInHistory() {
+		record = true
+	}
+
+	if record {
+		c.historyLock.Lock()
+		c.history = append(c.history, message)
+		c.historyLock.Unlock()
+	}
 
 	// Distribute message to all connected clients
 	c.clientsLock.RLock()
@@ -99,7 +112,9 @@ func (c *PushChannel) Broadcast(message interface{}) {
 	}
 	c.clientsLock.RUnlock()
 
-	c.triggerHistoryCleanup()
+	if record {
+		c.triggerHistoryCleanup()
+	}
 }
 
 func (c *PushChannel) StartHistoryCompactor() {

@@ -9,7 +9,7 @@ hero:
   text: Search through your Ableton project files.
   # tagline: Search effortlessly through your Ableton project files.
   image:
-    src: ./assets/screenshots/overview-v1.4.0.png
+    src: ./assets/screenshots/overview-v1.5.1.png
     alt: Overview of the Ablegram application
   actions:
     - theme: brand
@@ -25,13 +25,14 @@ hero:
 features:
   - title: Cross-platform
     details: Built to work across Windows, MacOS and Linux platforms.
-  - title: Completely offline
-    details: No Internet connection required, no subscription plans to worry about. 
+  - title: Open source
+    details: No subscription fees, no internet connection required.
   - title: Comprehensive indexing
     details: Full text index of your Ableton files - covering their internal structure.
   - title: Content tagging
-    details: All findings are tagged. Search your files using text components or tags. 
-
+    details: All findings are tagged. Search your files using text components or tags.
+  - title: Share and collaborate
+    details: Make your search available to your mobile device or other guests while you work on your current project.
 ---
 
 <SchemaOrg>

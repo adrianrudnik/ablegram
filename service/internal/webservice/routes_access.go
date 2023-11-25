@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func registerAccessRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.Auth, otp *access.Otp) {
+func registerAccessRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.Auth) {
 	// Used to identify the current session against the server
 	rg.GET("/auth/hello", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"username": c.MustGet("username").(string),
+			"username": c.MustGet("displayName").(string),
 			"ip":       c.ClientIP(),
 			"role":     c.MustGet("role").(string),
 		})

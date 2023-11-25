@@ -1,15 +1,22 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, nextTick } from 'vue'
 import { fetchApi } from '@/plugins/api'
+import { useUserStore } from '@/stores/users'
+import { useFilesStore } from '@/stores/files'
+import { websocket } from '@/websocket'
 
 const DefaultUsername = 'Unknown user'
 const DefaultIp = 'Unknown IP'
 
 export const useSessionStore = defineStore('session', () => {
+  const id = ref<string | undefined>(undefined)
   const username = ref(DefaultUsername)
   const ip = ref(DefaultIp)
   const isAdmin = ref(false)
   const isGuest = computed(() => !isAdmin.value)
+
+  const { clear: clearUsers } = useUserStore()
+  const { clear: clearFiles } = useFilesStore()
 
   const hello = async () => {
     try {
@@ -43,9 +50,22 @@ export const useSessionStore = defineStore('session', () => {
     await hello()
   }
 
+  const reconsider = async () => {
+    websocket.close()
+
+    clearUsers()
+    clearFiles()
+
+    await hello()
+
+    websocket.open()
+  }
+
   return {
     hello,
     goodbye,
+    reconsider,
+    id,
     username,
     ip,
     isAdmin,

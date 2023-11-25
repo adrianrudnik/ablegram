@@ -2,7 +2,7 @@ package stats
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/samber/lo"
 	"sync/atomic"
 	"time"
@@ -25,7 +25,7 @@ func NewStatistics(conf *config.Config, pushChan chan<- interface{}) *Statistics
 	// Create a debounced trigger that broadcasts the current statistics
 	// towards the frontend
 	m.TriggerUpdate, _ = lo.NewDebounce(50*time.Millisecond, func() {
-		pushChan <- pusher.NewMetricUpdatePush(m.CollectCounters())
+		pushChan <- pushermsg.NewMetricUpdatePush(m.CollectCounters())
 	})
 
 	return m

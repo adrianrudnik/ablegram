@@ -4,19 +4,21 @@ Ablegram is a free and independent tool designed with Ableton users in mind, alt
 
 As a standalone application, Ablegram requires no installation or online connectivity. It's designed to work effectively across Windows, MacOS and Linux platforms.
 
-![Screenshot of the search result view](website/docs/public/assets/screenshots/overview-v1.4.0.png "Screenshot of the search result view")
+![Screenshot of the search result view](website/docs/public/assets/screenshots/overview-v1.5.1.png "Screenshot of the search result view")
 
 ## Features
 
 - Cross-platform: Ablegram is designed to be platform independent. Whether you're using Windows, MacOS or Linux, you can use the tool with ease.
 
-- No installation required: Just download and run. No installation steps are required, ensuring a hassle-free experience (as far as the OS allows).
+- Open source, no subscription fees. No Internet connection or subscription required.
 
-- Offline functionality: Use Ablegram completely offline. No Internet connection or subscription plans are required.
+- No installation required: Just download and run. No installation steps are required, ensuring a hassle-free experience (as far as the operating system allows).
 
-- Comprehensive indexing: Ablegram creates a full text index of your Ableton files - covering Live Sets, audio tracks and MIDI tracks.
+- Comprehensive indexing: Ablegram creates a full-text index of your Ableton files - including Live Sets, audio and MIDI tracks, and many other elements.
 
-- Search Flexibility: Search your files using text components or tags. Ablegram makes it easy to find what you're looking for in your projects.
+- Search flexibility: Search your files by text components or tags. Ablegram makes it easy to find what you're looking for in your projects.
+
+- Share or collaborate, make your search available to your mobile device or other guests while you work on your current project.
 
 ## Getting Started
 

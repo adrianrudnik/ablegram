@@ -1,14 +1,16 @@
-package webservice
+package pusher
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/config"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/samber/lo"
 	"sync"
 	"time"
 )
 
-type PushChannel struct {
+type PushManager struct {
+	config                *config.Config
 	clients               map[*PushClient]bool
 	clientsLock           sync.RWMutex
 	addClient             chan *PushClient
@@ -19,8 +21,9 @@ type PushChannel struct {
 	triggerHistoryCleanup func()
 }
 
-func NewPushChannel(pushChan <-chan workload.PushMessage) *PushChannel {
-	return &PushChannel{
+func NewPushManager(conf *config.Config, pushChan <-chan workload.PushMessage) *PushManager {
+	return &PushManager{
+		config:       conf,
 		clients:      make(map[*PushClient]bool),
 		addClient:    make(chan *PushClient),
 		removeClient: make(chan *PushClient),
@@ -29,22 +32,47 @@ func NewPushChannel(pushChan <-chan workload.PushMessage) *PushChannel {
 	}
 }
 
-func (c *PushChannel) Run() {
+func (c *PushManager) Run() {
 	c.StartHistoryCompactor()
 
 	for {
 		select {
 		case client := <-c.addClient:
 			c.AddClient(client)
+
+			// Admins get the IP detail, though we do not want it for demo mode,
+			// as anyone could become admin and there is no need to expose the real IP to other demo admins.
+			ip := client.Conn.RemoteAddr().String()
+			if c.config.Behaviour.DemoMode {
+				ip = "127.0.0.128"
+			}
+
+			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName, ip))
+			c.Broadcast(pushermsg.NewAboutYouPush(client.ID))
+
+			// Send a current list of active users towards the newly connected one
+			c.clientsLock.RLock()
+			for kClient := range c.clients {
+				kIp := client.Conn.RemoteAddr().String()
+				if c.config.Behaviour.DemoMode {
+					kIp = "127.0.0.129"
+				}
+
+				c.Broadcast(pushermsg.NewUserCurrentPush(client.ID, kClient.ID, kClient.Role, kClient.DisplayName, kIp))
+			}
+			c.clientsLock.RUnlock()
+
 		case client := <-c.removeClient:
+			c.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
 			c.RemoveClient(client)
+
 		case message := <-c.broadcast:
 			c.Broadcast(message)
 		}
 	}
 }
 
-func (c *PushChannel) AddClient(client *PushClient) {
+func (c *PushManager) AddClient(client *PushClient) {
 	// Ensure the client is not already registered
 	c.clientsLock.RLock()
 	if _, ok := c.clients[client]; ok {
@@ -64,45 +92,68 @@ func (c *PushChannel) AddClient(client *PushClient) {
 	// Send over the channels history to the client, to get the frontend into the correct state
 	c.historyLock.RLock()
 	for _, msg := range c.history {
-		client.tx <- msg
+		if !CanClientReceive(msg, client) {
+			continue
+		}
+
+		if v, ok := msg.(FilteredMessage); ok && client.Role == GuestRole {
+			msg = v.FilteredVariant()
+		}
+
+		client.Tx <- msg
 	}
+
 	count := len(c.history)
 	c.historyLock.RUnlock()
 
 	Logger.Info().Int("messages", count).Str("client", client.ID).Msg("Websocket client received history")
-
 }
 
-func (c *PushChannel) RemoveClient(client *PushClient) {
+func (c *PushManager) RemoveClient(client *PushClient) {
 	c.clientsLock.Lock()
 	if _, ok := c.clients[client]; ok {
 		delete(c.clients, client)
-		close(client.tx)
+		close(client.Tx)
 
 		Logger.Info().Str("id", client.ID).Msg("Websocket client unregistered")
 	}
 	c.clientsLock.Unlock()
 }
 
-func (c *PushChannel) Broadcast(message interface{}) {
-	c.historyLock.Lock()
-	c.history = append(c.history, message)
-	c.historyLock.Unlock()
+func (c *PushManager) Broadcast(message interface{}) {
+	// Append the message to the history, it the interface tells us to, or if the interface is missing
+	record := true // we keep everything that has no details about a specific behaviour
+	if v, ok := message.(RecordMessage); ok {
+		record = v.KeepInHistory()
+	}
+
+	if record {
+		c.historyLock.Lock()
+		c.history = append(c.history, message)
+		c.historyLock.Unlock()
+	}
 
 	// Distribute message to all connected clients
 	c.clientsLock.RLock()
-	clients := c.clients
-	for client := range clients {
-		select {
-		case client.tx <- message:
+	for client := range c.clients {
+		if !CanClientReceive(message, client) {
+			continue
+		}
+
+		if v, ok := message.(FilteredMessage); ok && client.Role == GuestRole {
+			client.Tx <- v.FilteredVariant()
+		} else {
+			client.Tx <- message
 		}
 	}
 	c.clientsLock.RUnlock()
 
-	c.triggerHistoryCleanup()
+	if record {
+		c.triggerHistoryCleanup()
+	}
 }
 
-func (c *PushChannel) StartHistoryCompactor() {
+func (c *PushManager) StartHistoryCompactor() {
 	// Establish a debounced history cleaner
 	c.triggerHistoryCleanup, _ = lo.NewDebounce(250*time.Millisecond, func() {
 		c.historyLock.Lock()
@@ -113,26 +164,26 @@ func (c *PushChannel) StartHistoryCompactor() {
 		lo.Reverse(c.history)
 
 		// Only keep the newest processing update
-		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-			_, ok := v.(*pusher.ProcessingStatusPush)
+		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pushermsg.ProcessingStatusPush)
 			return ok
 		})
 
 		// Only keep the newest tag update
-		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-			_, ok := v.(*pusher.TagUpdatePush)
+		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pushermsg.TagUpdatePush)
 			return ok
 		})
 
 		// Only keep the newest metrics update
-		c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-			_, ok := v.(*pusher.MetricUpdatePush)
+		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			_, ok := v.(*pushermsg.MetricUpdatePush)
 			return ok
 		})
 
 		// Filter all file updates, keep the newest one per file
 		m := lo.Uniq(lo.FilterMap(c.history, func(v interface{}, _ int) (string, bool) {
-			x, ok := v.(*pusher.FileStatusPush)
+			x, ok := v.(*pushermsg.FileStatusPush)
 			if !ok {
 				return "", false
 			}
@@ -141,8 +192,8 @@ func (c *PushChannel) StartHistoryCompactor() {
 		}))
 
 		for _, hit := range m {
-			c.history = pusher.FilterAllExceptFirst(c.history, func(v interface{}) bool {
-				x, ok := v.(*pusher.FileStatusPush)
+			c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+				x, ok := v.(*pushermsg.FileStatusPush)
 				return ok && x.ID == hit
 			})
 		}

@@ -3,8 +3,11 @@ package access
 import (
 	"encoding/json"
 	"github.com/adrianrudnik/ablegram/crypt"
+	"github.com/google/uuid"
 	"time"
 )
+
+const TokenVersion = 1
 
 const AdminRole = "admin"
 const GuestRole = "guest"
@@ -20,11 +23,24 @@ func NewAuth(otp *Otp) *Auth {
 }
 
 func (a *Auth) ValidateToken(v string) bool {
-	_, err := crypt.Decrypt(v)
+	bv, err := crypt.Decrypt(v)
+	if err != nil {
+		return false
+	}
 
-	// As long as we can decrypt the payload, we are fine for now, nothing else of
-	// interest is stored in the token.
-	return err == nil
+	// Ensure we can unmarshal the token
+	t := AuthToken{}
+	err = json.Unmarshal([]byte(bv), &t)
+	if err != nil {
+		return false
+	}
+
+	// Ensure the token version is up-to-date
+	if t.Version != TokenVersion {
+		return false
+	}
+
+	return true
 }
 
 func (a *Auth) ConvertOtpToToken(v string) (string, error) {
@@ -47,11 +63,15 @@ func (a *Auth) CreateToken() (string, error) {
 }
 
 type AuthToken struct {
-	Time time.Time `json:"time"`
+	Version int       `json:"version"`
+	Time    time.Time `json:"time"`
+	ID      uuid.UUID `json:"id"`
 }
 
 func newAuthToken() *AuthToken {
 	return &AuthToken{
-		Time: time.Now(),
+		Version: TokenVersion,
+		Time:    time.Now(),
+		ID:      uuid.New(),
 	}
 }

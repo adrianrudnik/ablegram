@@ -14,7 +14,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/parser"
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/stats"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
@@ -115,8 +115,6 @@ func main() {
 
 		// Start the frontend push worker
 		webservice.Logger = log.With().Str("module", "webservice").Logger()
-		appPusher := webservice.NewPushChannel(pushChan)
-		go appPusher.Run()
 
 		parser.Logger = log.With().Str("module", "parser").Logger()
 
@@ -149,7 +147,7 @@ func main() {
 				appOtp,
 				appIndexer,
 				appTags,
-				appPusher,
+				pushChan,
 				fmt.Sprintf(":%d", port),
 			)
 			if err != nil && strings.Contains(err.Error(), "bind: permission denied") {
@@ -206,7 +204,7 @@ func main() {
 		w.ShowAndRun()
 
 		// Say goodbye in the browser window, if available.
-		pushChan <- pusher.NewNavigatePush("goodbye")
+		pushChan <- pushermsg.NewForceNavigatePush("goodbye")
 		time.Sleep(100 * time.Millisecond)
 	}
 }

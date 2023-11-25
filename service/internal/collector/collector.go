@@ -2,7 +2,7 @@ package collector
 
 import (
 	"github.com/adrianrudnik/ablegram/internal/config"
-	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
 	"github.com/rs/zerolog"
 	"io/fs"
@@ -96,7 +96,7 @@ func findFilesByExtension(
 				Logger.Debug().Str("file", s).Msg("Found file for processing")
 
 				// Notify the UI about this file
-				pushChan <- pusher.NewFileStatusPush(s, "pending", "")
+				pushChan <- pushermsg.NewFileStatusPush(s, "pending", "")
 
 				// Move it over to the processing pipeline
 				fileChan <- workload.NewFilePayload(s)

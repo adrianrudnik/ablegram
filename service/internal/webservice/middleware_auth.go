@@ -1,10 +1,10 @@
 package webservice
 
 import (
-	"fmt"
 	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/util"
 	"github.com/gin-gonic/gin"
-	"strings"
+	"net/http"
 )
 
 func AccessMiddleware(auth *access.Auth) gin.HandlerFunc {
@@ -25,7 +25,18 @@ func AccessMiddleware(auth *access.Auth) gin.HandlerFunc {
 			displayName = username
 		}
 
-		c.Set("username", fmt.Sprintf("%.16s", strings.TrimSpace(displayName)))
+		c.Set("displayName", util.SanitizeDisplayName(displayName))
 		c.Set("role", role)
 	}
+}
+
+func isAdmin(c *gin.Context) bool {
+	if c.GetString("role") != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+		c.Abort()
+
+		return false
+	}
+
+	return true
 }

@@ -705,6 +705,7 @@ user-avatar:
   from-ip: Connecting from IP {ip}.
   login: Login
   logout: Logout
+  you: This is you
   form:
     master-password:
       title: Master password

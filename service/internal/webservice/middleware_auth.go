@@ -1,10 +1,9 @@
 package webservice
 
 import (
-	"fmt"
 	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/util"
 	"github.com/gin-gonic/gin"
-	"strings"
 )
 
 func AccessMiddleware(auth *access.Auth) gin.HandlerFunc {
@@ -25,7 +24,7 @@ func AccessMiddleware(auth *access.Auth) gin.HandlerFunc {
 			displayName = username
 		}
 
-		c.Set("username", fmt.Sprintf("%.16s", strings.TrimSpace(displayName)))
+		c.Set("displayName", util.SanitizeDisplayName(displayName))
 		c.Set("role", role)
 	}
 }

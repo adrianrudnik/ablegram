@@ -71,7 +71,7 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
 
 	r.GET("/ws", func(c *gin.Context) {
-		pusher.ConnectClientWebsocket(c, pushChannel)
+		pushChannel.ConnectClientWebsocket(c)
 	})
 
 	// Register common API routes

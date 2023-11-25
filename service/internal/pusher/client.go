@@ -54,7 +54,7 @@ func (c *PushClient) Send() {
 				return
 			}
 
-			if CanClientReceive(msg, c) {
+			if !CanClientReceive(msg, c) {
 				continue
 			}
 

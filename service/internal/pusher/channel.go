@@ -36,8 +36,10 @@ func (c *PushChannel) Run() {
 		select {
 		case client := <-c.addClient:
 			c.AddClient(client)
+			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName))
 		case client := <-c.removeClient:
 			c.RemoveClient(client)
+			c.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
 		case message := <-c.broadcast:
 			c.Broadcast(message)
 		}
@@ -64,7 +66,7 @@ func (c *PushChannel) AddClient(client *PushClient) {
 	// Send over the channels history to the client, to get the frontend into the correct state
 	c.historyLock.RLock()
 	for _, msg := range c.history {
-		if CanClientReceive(msg, client) {
+		if !CanClientReceive(msg, client) {
 			continue
 		}
 
@@ -91,9 +93,9 @@ func (c *PushChannel) RemoveClient(client *PushClient) {
 
 func (c *PushChannel) Broadcast(message interface{}) {
 	// Append the message to the history, it the interface tells us to, or if the interface is missing
-	record := false
-	if v, ok := message.(RecordMessage); ok && v.KeepInHistory() {
-		record = true
+	record := true // we keep everything that has no details about a specific behaviour
+	if v, ok := message.(RecordMessage); ok {
+		record = v.KeepInHistory()
 	}
 
 	if record {

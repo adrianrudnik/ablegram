@@ -14,20 +14,19 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func ConnectClientWebsocket(ctx *gin.Context, pushChan *PushChannel) {
+func (c *PushChannel) ConnectClientWebsocket(ctx *gin.Context) {
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
 		Logger.Error().Err(err).Msg("Failed to upgrade client to websocket")
 		return
 	}
+	client := NewPushClient(ws, c)
 
-	c := NewPushClient(ws, pushChan)
+	client.DisplayName = ctx.GetString("displayName")
+	client.Role = ctx.GetString("role")
 
-	c.DisplayName = ctx.GetString("displayName")
-	c.Role = ctx.GetString("role")
+	c.addClient <- client
 
-	pushChan.addClient <- c
-
-	go c.Send()
-	go c.Receive()
+	go client.Send()
+	go client.Receive()
 }

@@ -32,14 +32,18 @@ func registerOsRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		var json OpenInput
-		if err := c.ShouldBindJSON(&json); err != nil {
+		type userInput struct {
+			Path string `json:"path" binding:"required"`
+		}
+
+		var input userInput
+		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
 		if !conf.Behaviour.DemoMode {
-			ui.OpenDefault(json.Path)
+			ui.OpenDefault(input.Path)
 		}
 
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})

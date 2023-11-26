@@ -24,7 +24,7 @@ func registerAccessRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access
 
 	rg.POST("/auth/otp", func(c *gin.Context) {
 		type userInput struct {
-			OtpToken string `json:"token"`
+			OtpToken string `json:"token" binding:"required"`
 		}
 
 		var input userInput
@@ -55,7 +55,7 @@ func registerAccessRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access
 
 	rg.POST("/auth/password", func(c *gin.Context) {
 		type userInput struct {
-			Password string `json:"password"`
+			Password string `json:"password" binding:"required"`
 		}
 
 		var input userInput

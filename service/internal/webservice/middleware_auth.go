@@ -40,3 +40,25 @@ func isAdmin(c *gin.Context) bool {
 
 	return true
 }
+
+func isGuest(c *gin.Context) bool {
+	if c.GetString("role") != "guest" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+		c.Abort()
+
+		return false
+	}
+
+	return true
+}
+
+func isSomeone(c *gin.Context) bool {
+	if c.GetString("role") == "" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+		c.Abort()
+
+		return false
+	}
+
+	return true
+}

@@ -9,6 +9,6 @@ npm run docs:build
 find ./docs/.vitepress/dist -type f \
     -regex ".*\.\(css\|html\|js\|json\|svg\|xml\)$" \
     -exec brotli --best {} \+ \
-    -exec gzip --best -k {} \+
+    -exec zopfli --i100 {} \+
 
 rsync -avh --delete ./docs/.vitepress/dist/ chinchilla-prod:/home/deploy/docker/ablegram.app/webroot

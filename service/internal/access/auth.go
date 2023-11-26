@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const TokenVersion = 1
+const TokenVersion = 2
 
 const AdminRole = "admin"
 const GuestRole = "guest"
@@ -22,56 +22,82 @@ func NewAuth(otp *Otp) *Auth {
 	}
 }
 
-func (a *Auth) ValidateToken(v string) bool {
+func (a *Auth) ValidateToken(v string) (*AuthToken, bool) {
 	bv, err := crypt.Decrypt(v)
 	if err != nil {
-		return false
+		return nil, false
 	}
 
 	// Ensure we can unmarshal the token
 	t := AuthToken{}
 	err = json.Unmarshal([]byte(bv), &t)
 	if err != nil {
-		return false
+		return nil, false
 	}
 
 	// Ensure the token version is up-to-date
 	if t.Version != TokenVersion {
-		return false
+		return nil, false
 	}
 
-	return true
+	return &t, true
 }
 
-func (a *Auth) ConvertOtpToToken(v string) (string, error) {
+func (a *Auth) ConvertOtpToAdminToken(v string) (*AuthToken, error) {
 	if !a.otp.ValidateOtp(v) {
-		return "", ErrInvalidOtp
+		return nil, ErrInvalidOtp
 	}
 
 	defer a.otp.InvalidateOtp(v)
 
-	return a.CreateToken()
-}
+	t := NewGuestAuthToken()
+	t.Role = AdminRole
+	t.DisplayName = "Admin"
 
-func (a *Auth) CreateToken() (string, error) {
-	b, err := json.Marshal(newAuthToken())
-	if err != nil {
-		return "", ErrTokenGenerationFailed
-	}
-
-	return crypt.Encrypt(b)
+	return t, nil
 }
 
 type AuthToken struct {
+	// Token specifics
 	Version int       `json:"version"`
 	Time    time.Time `json:"time"`
-	ID      uuid.UUID `json:"id"`
+
+	// User specifics
+	ID          uuid.UUID `json:"id"`
+	Role        string    `json:"role"`
+	DisplayName string    `json:"display_name"`
 }
 
-func newAuthToken() *AuthToken {
+func (t *AuthToken) Encrypt() string {
+	b, err := json.Marshal(t)
+	if err != nil {
+		panic(err)
+	}
+
+	v, err := crypt.Encrypt(b)
+	if err != nil {
+		panic(err)
+	}
+
+	return v
+}
+
+func NewGuestAuthToken() *AuthToken {
 	return &AuthToken{
 		Version: TokenVersion,
 		Time:    time.Now(),
-		ID:      uuid.New(),
+
+		ID:          uuid.New(),
+		Role:        GuestRole,
+		DisplayName: "Guest",
 	}
+}
+
+func NewAdminToken() *AuthToken {
+	t := NewGuestAuthToken()
+
+	t.Role = AdminRole
+	t.DisplayName = "Admin"
+
+	return t
 }

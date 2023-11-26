@@ -19,19 +19,16 @@ func (c *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
 	// Generate a unique client ID and communicate it back to the client.
 	clientId := uuid.New()
 
-	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, http.Header{
-		"X-You-Are": []string{clientId.String()},
-	})
-	ctx.Header("X", clientId.String())
-
+	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
 		Logger.Error().Err(err).Msg("Failed to upgrade client to websocket")
 		return
 	}
+
 	client := NewPushClient(clientId, ws, c)
 
-	client.DisplayName = ctx.GetString("displayName")
-	client.Role = ctx.GetString("role")
+	client.DisplayName = ctx.GetString("userDisplayName")
+	client.Role = ctx.GetString("userRole")
 
 	c.addClient <- client
 

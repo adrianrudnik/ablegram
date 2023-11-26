@@ -1,6 +1,39 @@
+### Initialize session
+// @no-log
+// @no-redirect
+
+POST {{webservice}}/api/auth
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+### Set session display name
+// @no-log
+// @no-redirect
+
+POST {{webservice}}/api/auth/iam
+Content-Type: application/json
+Accept: application/json
+
+{
+  "display_name": "test"
+}
+
+### End session
+// @no-log
+// @no-redirect
+
+DELETE {{webservice}}/api/auth
+Content-Type: application/json
+Accept: application/json
+
+{}
+
 ### Auth with password
 // @no-log
 // @no-redirect
+
 POST {{webservice}}/api/auth/password
 Content-Type: application/json
 Accept: application/json
@@ -10,6 +43,9 @@ Accept: application/json
 }
 
 ### Log config
+// @no-log
+// @no-redirect
+
 PUT {{webservice}}/api/config/log
 Content-Type: application/json
 Accept: application/json
@@ -21,6 +57,9 @@ Accept: application/json
 }
 
 ### Behaviors config
+// @no-log
+// @no-redirect
+
 PUT {{webservice}}/api/config/behaviour
 Content-Type: application/json
 Accept: application/json
@@ -32,6 +71,9 @@ Accept: application/json
 }
 
 ### Add collector target
+// @no-log
+// @no-redirect
+
 POST {{webservice}}/api/config/collector/targets
 Content-Type: application/json
 Accept: application/json
@@ -47,6 +89,9 @@ Accept: application/json
 }
 
 ### Update collector target
+// @no-log
+// @no-redirect
+
 PUT {{webservice}}/api/config/collector/targets/test
 Content-Type: application/json
 Accept: application/json
@@ -61,6 +106,9 @@ Accept: application/json
 }
 
 ### Delete collector target
+// @no-log
+// @no-redirect
+
 DELETE {{webservice}}/api/config/collector/targets/test
 Content-Type: application/json
 Accept: application/json

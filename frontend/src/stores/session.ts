@@ -21,11 +21,14 @@ export const useSessionStore = defineStore('session', () => {
   const hello = async () => {
     try {
       const r = await fetchApi<{
-        username: string
+        id: string,
         ip: string
+        display_name: string,
         role: 'admin' | 'guest'
-      }>('/api/auth/hello')
-      username.value = r.username
+      }>('/api/auth', {
+        method: 'POST',
+      })
+      username.value = r.display_name
       ip.value = r.ip
       isAdmin.value = r.role === 'admin'
     } catch (e) {
@@ -39,8 +42,8 @@ export const useSessionStore = defineStore('session', () => {
 
   const goodbye = async () => {
     try {
-      await fetchApi('/api/auth/goodbye', {
-        method: 'POST'
+      await fetchApi('/api/auth', {
+        method: 'DELETE'
       })
     } catch (e) {
       console.error('Server goodbye failed', e)

@@ -16,6 +16,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/parser"
 	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"github.com/adrianrudnik/ablegram/internal/suggest"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/webservice"
@@ -101,6 +102,9 @@ func main() {
 	appOtp := access.NewOtp()
 	appAuth := access.NewAuth(appOtp)
 
+	// Start the suggestion service that allows guests to suggest stuff to admins
+	appSuggest := suggest.NewList()
+
 	// Kick of the webservice
 	go func() {
 		if !appConfig.Behaviour.AutostartWebservice {
@@ -147,6 +151,7 @@ func main() {
 				appOtp,
 				appIndexer,
 				appTags,
+				appSuggest,
 				pushChan,
 				fmt.Sprintf(":%d", port),
 			)

@@ -6,6 +6,7 @@ import (
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/suggest"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/workload"
@@ -19,7 +20,7 @@ import (
 //go:embed .frontend/*
 var frontendFs embed.FS
 
-func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *indexer.Search, tc *tagger.TagCollector, pushChan chan workload.PushMessage, bindAddr string) error {
+func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -80,6 +81,7 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	registerTagRoutes(api, tc)
 	registerConfigRoutes(api, conf)
 	registerOsRoutes(api, conf)
+	registerSuggestRoutes(api, conf, suggest)
 
 	// Boot up auth and otp services
 	registerAccessRoutes(api, conf, auth)

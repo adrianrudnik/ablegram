@@ -12,11 +12,6 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		if c.GetString("role") != "admin" {
-			c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
-			return
-		}
-
 		c.JSON(http.StatusOK, conf)
 	})
 

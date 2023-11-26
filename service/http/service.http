@@ -1,0 +1,66 @@
+### Auth with password
+// @no-log
+// @no-redirect
+POST {{webservice}}/api/auth/password
+Content-Type: application/json
+Accept: application/json
+
+{
+  "password": "test"
+}
+
+### Log config
+PUT {{webservice}}/api/config/log
+Content-Type: application/json
+Accept: application/json
+
+{
+  "level": "debug",
+  "enable_runtime_logfile": false,
+  "enable_processed_logfile": false
+}
+
+### Behaviors config
+PUT {{webservice}}/api/config/behaviour
+Content-Type: application/json
+Accept: application/json
+
+{
+  "autostart_webservice": true,
+  "open_browser_on_start": false,
+  "show_service_gui": false
+}
+
+### Add collector target
+POST {{webservice}}/api/config/collector/targets
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "test",
+  "Type": "filesystem",
+  "Uri": "/tmp",
+  "parser_performance": "high",
+  "parser_delay": 0,
+  "exclude_system_folders": true,
+  "exclude_dot_folders": true
+}
+
+### Update collector target
+PUT {{webservice}}/api/config/collector/targets/test
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Type": "filesystem",
+  "Uri": "/tmp",
+  "parser_performance": "default",
+  "parser_delay": 0,
+  "exclude_system_folders": true,
+  "exclude_dot_folders": true
+}
+
+### Delete collector target
+DELETE {{webservice}}/api/config/collector/targets/test
+Content-Type: application/json
+Accept: application/json

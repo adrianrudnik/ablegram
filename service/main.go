@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/adrianrudnik/ablegram/internal/collector"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
@@ -99,9 +99,9 @@ func main() {
 	appTags.WirePusher(pushChan)
 
 	// Start up the auth and otp services
-	appOtp := access.NewOtp()
-	appAuth := access.NewAuth(appOtp)
-	appUsers := access.NewUserList()
+	appOtp := auth.NewOtpManager()
+	appAuth := auth.NewTokenManager(appOtp)
+	appUsers := auth.NewUserList()
 
 	// Start the suggestion service that allows guests to suggest stuff to admins
 	appSuggest := suggest.NewList()

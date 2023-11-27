@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func AuthMiddleware(auth *auth.Auth) gin.HandlerFunc {
+func AuthMiddleware(auth *auth.TokenManager) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Try to read the raw token, if present
 		rawToken, err := getAuthCookie(c)

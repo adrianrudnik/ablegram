@@ -9,20 +9,20 @@ import (
 
 const OtpDefaultLifetime = 5 * time.Minute
 
-// Otp offers a simple way for the app to announce one-time-passes for use on the API.
+// OtpManager offers a simple way for the app to announce one-time-passes for use on the API.
 // It circumvents the need for a configured password to gain admin access.
-type Otp struct {
+type OtpManager struct {
 	tokens    map[string]time.Time
 	tokenLock sync.RWMutex
 }
 
-func NewOtp() *Otp {
-	return &Otp{
+func NewOtpManager() *OtpManager {
+	return &OtpManager{
 		tokens: make(map[string]time.Time),
 	}
 }
 
-func (o *Otp) CreateOtp() string {
+func (o *OtpManager) CreateOtp() string {
 	buf := make([]byte, 64)
 	_, err := rand.Read(buf)
 	if err != nil {
@@ -39,7 +39,7 @@ func (o *Otp) CreateOtp() string {
 	return token
 }
 
-func (o *Otp) ValidateOtp(token string) bool {
+func (o *OtpManager) ValidateOtp(token string) bool {
 	o.tokenLock.RLock()
 	defer o.tokenLock.RUnlock()
 
@@ -56,7 +56,7 @@ func (o *Otp) ValidateOtp(token string) bool {
 	return true
 }
 
-func (o *Otp) InvalidateOtp(token string) {
+func (o *OtpManager) InvalidateOtp(token string) {
 	o.tokenLock.Lock()
 	defer o.tokenLock.Unlock()
 

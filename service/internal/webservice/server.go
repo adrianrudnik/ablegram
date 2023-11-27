@@ -20,7 +20,7 @@ import (
 //go:embed .frontend/*
 var frontendFs embed.FS
 
-func Serve(conf *config.Config, auth *auth.Auth, otp *auth.Otp, users *auth.UserList, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
+func Serve(conf *config.Config, auth *auth.TokenManager, otp *auth.OtpManager, users *auth.UserList, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {

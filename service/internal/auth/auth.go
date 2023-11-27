@@ -9,17 +9,17 @@ import (
 
 const TokenVersion = 3
 
-type Auth struct {
-	otp *Otp
+type TokenManager struct {
+	otp *OtpManager
 }
 
-func NewAuth(otp *Otp) *Auth {
-	return &Auth{
+func NewTokenManager(otp *OtpManager) *TokenManager {
+	return &TokenManager{
 		otp: otp,
 	}
 }
 
-func (a *Auth) ValidateToken(v string) (*AuthToken, bool) {
+func (a *TokenManager) ValidateToken(v string) (*AuthToken, bool) {
 	bv, err := crypt.Decrypt(v)
 	if err != nil {
 		return nil, false
@@ -40,7 +40,7 @@ func (a *Auth) ValidateToken(v string) (*AuthToken, bool) {
 	return &t, true
 }
 
-func (a *Auth) ConvertOtpToAdminToken(v string) (*AuthToken, error) {
+func (a *TokenManager) ConvertOtpToAdminToken(v string) (*AuthToken, error) {
 	if !a.otp.ValidateOtp(v) {
 		return nil, ErrInvalidOtp
 	}

@@ -8,7 +8,7 @@ import (
 	"net/url"
 )
 
-func GenerateLocalAdminUrl(c *config.Config, otp *auth.Otp) string {
+func GenerateLocalAdminUrl(c *config.Config, otp *auth.OtpManager) string {
 	port := c.Webservice.ChosenPort
 
 	if c.IsDevelopmentEnv {
@@ -19,7 +19,7 @@ func GenerateLocalAdminUrl(c *config.Config, otp *auth.Otp) string {
 	return fmt.Sprintf("http://localhost:%d/auth/otp?token=%s", port, url.QueryEscape(otpToken))
 }
 
-func OpenFrontendAsAdmin(c *config.Config, otp *auth.Otp) {
+func OpenFrontendAsAdmin(c *config.Config, otp *auth.OtpManager) {
 	err := osx.OpenDefault(GenerateLocalAdminUrl(c, otp))
 	if err != nil {
 		Logger.Warn().Err(err).Msg("Could not open default browser")

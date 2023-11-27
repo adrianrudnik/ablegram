@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, authMgr *auth.Auth) {
+func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, authMgr *auth.TokenManager) {
 	// Every client needs to say hello.
 	// The service will issue a cookie that the client needs to serve on every other request.
 	rg.POST("/auth", func(c *gin.Context) {

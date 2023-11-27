@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Client represents a single connection to the system.
 type Client struct {
 	ID     uuid.UUID
 	UserID uuid.UUID
@@ -15,6 +16,14 @@ type Client struct {
 	Conn     *websocket.Conn
 	Tx       chan interface{}
 	pushChan *PushManager
+}
+
+// UserClient represents a user that is currently connected to the system.
+// A client can have multiple connections (e.g. multiple tabs).
+type UserClient struct {
+	ClientId uuid.UUID `json:"id"`
+	ClientIP net.IP    `json:"ip"`
+	UserId   uuid.UUID `json:"user_id"`
 }
 
 const writeTimeout = 10 * time.Second

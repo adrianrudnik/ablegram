@@ -1,5 +1,7 @@
 package pushermsg
 
+import "github.com/google/uuid"
+
 type UserGoodbyePush struct {
 	Type string `json:"type"`
 	ID   string `json:"id"`
@@ -11,9 +13,9 @@ func (p *UserGoodbyePush) KeepInHistory() bool {
 	return false
 }
 
-func NewUserGoodbyePush(id string) *UserGoodbyePush {
+func NewUserGoodbyePush(id uuid.UUID) *UserGoodbyePush {
 	return &UserGoodbyePush{
 		Type: "user_goodbye",
-		ID:   id,
+		ID:   id.String(),
 	}
 }

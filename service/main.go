@@ -101,6 +101,7 @@ func main() {
 	// Start up the auth and otp services
 	appOtp := access.NewOtp()
 	appAuth := access.NewAuth(appOtp)
+	appUsers := access.NewUserList()
 
 	// Start the suggestion service that allows guests to suggest stuff to admins
 	appSuggest := suggest.NewList()
@@ -149,6 +150,7 @@ func main() {
 				appConfig,
 				appAuth,
 				appOtp,
+				appUsers,
 				appIndexer,
 				appTags,
 				appSuggest,

@@ -7,10 +7,7 @@ import (
 	"time"
 )
 
-const TokenVersion = 2
-
-const AdminRole = "admin"
-const GuestRole = "guest"
+const TokenVersion = 3
 
 type Auth struct {
 	otp *Otp

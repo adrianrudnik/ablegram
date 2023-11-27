@@ -1,3 +1,13 @@
+### End / destroy current session
+// @no-log
+// @no-redirect
+
+DELETE {{webservice}}/api/auth
+Content-Type: application/json
+Accept: application/json
+
+{}
+
 ### Initialize session
 // @no-log
 // @no-redirect
@@ -12,23 +22,13 @@ Accept: application/json
 // @no-log
 // @no-redirect
 
-POST {{webservice}}/api/auth/iam
+PUT {{webservice}}/api/auth/display-name
 Content-Type: application/json
 Accept: application/json
 
 {
   "display_name": "test"
 }
-
-### End session
-// @no-log
-// @no-redirect
-
-DELETE {{webservice}}/api/auth
-Content-Type: application/json
-Accept: application/json
-
-{}
 
 ### Auth with password
 // @no-log
@@ -41,6 +41,23 @@ Accept: application/json
 {
   "password": "test"
 }
+
+### List all active clients
+// @no-log
+// @no-redirect
+
+GET {{webservice}}/api/clients
+Content-Type: application/json
+Accept: application/json
+
+### List all active users
+// @no-log
+// @no-redirect
+
+GET {{webservice}}/api/users
+Content-Type: application/json
+Accept: application/json
+
 
 ### Log config
 // @no-log
@@ -112,3 +129,4 @@ Accept: application/json
 DELETE {{webservice}}/api/config/collector/targets/test
 Content-Type: application/json
 Accept: application/json
+

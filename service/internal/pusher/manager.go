@@ -1,6 +1,7 @@
 package pusher
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
@@ -10,117 +11,143 @@ import (
 )
 
 type PushManager struct {
-	config                *config.Config
-	clients               map[*PushClient]bool
-	clientsLock           sync.RWMutex
-	addClient             chan *PushClient
-	removeClient          chan *PushClient
-	broadcast             <-chan workload.PushMessage
+	config *config.Config
+
+	clients     map[*Client]bool
+	clientsLock sync.RWMutex
+
+	users *access.UserList
+
+	addClient    chan *Client
+	removeClient chan *Client
+	broadcast    <-chan workload.PushMessage
+
 	history               []workload.PushMessage
 	historyLock           sync.RWMutex
 	triggerHistoryCleanup func()
 }
 
-func NewPushManager(conf *config.Config, pushChan <-chan workload.PushMessage) *PushManager {
+func NewPushManager(conf *config.Config, ul *access.UserList, pushChan <-chan workload.PushMessage) *PushManager {
 	return &PushManager{
 		config:       conf,
-		clients:      make(map[*PushClient]bool),
-		addClient:    make(chan *PushClient),
-		removeClient: make(chan *PushClient),
+		clients:      make(map[*Client]bool),
+		users:        ul,
+		addClient:    make(chan *Client),
+		removeClient: make(chan *Client),
 		broadcast:    pushChan,
 		history:      make([]interface{}, 0, 500),
 	}
 }
 
-func (c *PushManager) Run() {
-	c.StartHistoryCompactor()
+func (pm *PushManager) Run() {
+	pm.StartHistoryCompactor()
 
 	for {
 		select {
-		case client := <-c.addClient:
-			c.AddClient(client)
+		case client := <-pm.addClient:
+			pm.AddClient(client)
 
 			// Admins get the IP detail, though we do not want it for demo mode,
 			// as anyone could become admin and there is no need to expose the real IP to other demo admins.
-			ip := client.Conn.RemoteAddr().String()
-			if c.config.Behaviour.DemoMode {
-				ip = "127.0.0.128"
+			ip := client.GetIP(!pm.config.Behaviour.DemoMode)
+			user := pm.users.Get(client.UserID)
+
+			// Notify all clients about the new user
+			pm.Broadcast(pushermsg.NewUserWelcomePush(
+				ip, client.UserID, user.Role, user.DisplayName,
+			))
+
+			//// Notify the
+			//c.Broadcast(pushermsg.NewAboutYouPush(client.ID))
+			//
+
+			// Send over a list of all currently connected clients
+			for _, connClient := range pm.GetClients() {
+				pm.Broadcast(pushermsg.NewUserCurrentPush(
+					user.UserID,
+					connClient.ID,
+					connClient.GetIP(!pm.config.Behaviour.DemoMode),
+					connClient.UserID,
+					user.Role,
+					user.DisplayName,
+				))
 			}
 
-			c.Broadcast(pushermsg.NewUserWelcomePush(client.ID, client.Role, client.DisplayName, ip))
-			c.Broadcast(pushermsg.NewAboutYouPush(client.ID))
+		case client := <-pm.removeClient:
+			pm.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
+			pm.RemoveClient(client)
 
-			// Send a current list of active users towards the newly connected one
-			c.clientsLock.RLock()
-			for kClient := range c.clients {
-				kIp := client.Conn.RemoteAddr().String()
-				if c.config.Behaviour.DemoMode {
-					kIp = "127.0.0.129"
-				}
-
-				c.Broadcast(pushermsg.NewUserCurrentPush(client.ID, kClient.ID, kClient.Role, kClient.DisplayName, kIp))
-			}
-			c.clientsLock.RUnlock()
-
-		case client := <-c.removeClient:
-			c.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
-			c.RemoveClient(client)
-
-		case message := <-c.broadcast:
-			c.Broadcast(message)
+		case message := <-pm.broadcast:
+			pm.Broadcast(message)
 		}
 	}
 }
 
-func (c *PushManager) AddClient(client *PushClient) {
+func (pm *PushManager) AddClient(client *Client) {
 	// Ensure the client is not already registered
-	c.clientsLock.RLock()
-	if _, ok := c.clients[client]; ok {
-		Logger.Warn().Str("client", client.ID).Msg("Websocket client already registered")
-		c.clientsLock.RUnlock()
+	pm.clientsLock.RLock()
+	if _, ok := pm.clients[client]; ok {
+		Logger.Warn().Str("client", client.ID.String()).Msg("Websocket client already registered")
+		pm.clientsLock.RUnlock()
 		return
 	}
-	c.clientsLock.RUnlock()
+	pm.clientsLock.RUnlock()
 
 	// Register the new client
-	c.clientsLock.Lock()
-	c.clients[client] = true
-	c.clientsLock.Unlock()
+	pm.clientsLock.Lock()
+	pm.clients[client] = true
+	pm.clientsLock.Unlock()
 
-	Logger.Info().Str("client", client.ID).Msg("Websocket client registered")
+	Logger.Info().Str("client", client.ID.String()).Msg("Websocket client registered")
 
 	// Send over the channels history to the client, to get the frontend into the correct state
-	c.historyLock.RLock()
-	for _, msg := range c.history {
-		if !CanClientReceive(msg, client) {
+	pm.historyLock.RLock()
+	for _, msg := range pm.history {
+		if !pm.canClientReceive(msg, client) {
 			continue
 		}
 
-		if v, ok := msg.(FilteredMessage); ok && client.Role == GuestRole {
-			msg = v.FilteredVariant()
-		}
-
-		client.Tx <- msg
+		client.Tx <- pm.reduceMessageForClient(msg, client)
 	}
 
-	count := len(c.history)
-	c.historyLock.RUnlock()
+	count := len(pm.history)
+	pm.historyLock.RUnlock()
 
-	Logger.Info().Int("messages", count).Str("client", client.ID).Msg("Websocket client received history")
+	Logger.Info().
+		Int("messages", count).
+		Str("client", client.ID.String()).
+		Msg("Websocket client received history")
 }
 
-func (c *PushManager) RemoveClient(client *PushClient) {
-	c.clientsLock.Lock()
-	if _, ok := c.clients[client]; ok {
-		delete(c.clients, client)
+func (pm *PushManager) RemoveClient(client *Client) {
+	pm.clientsLock.Lock()
+	defer pm.clientsLock.Unlock()
+
+	userId := client.UserID
+
+	// Remove the client, end the send channel
+	if _, ok := pm.clients[client]; ok {
+		delete(pm.clients, client)
 		close(client.Tx)
 
-		Logger.Info().Str("id", client.ID).Msg("Websocket client unregistered")
+		Logger.Info().Str("id", client.ID.String()).Msg("Websocket client unregistered")
 	}
-	c.clientsLock.Unlock()
+
+	// If this was the last connected client with the given user ID, remove the user from the list
+	// as he no longer has any active connections.
+	wasLast := true
+	for c, _ := range pm.clients {
+		if c.UserID == userId {
+			wasLast = false
+		}
+	}
+
+	if wasLast {
+		pm.users.Delete(userId)
+	}
 }
 
-func (c *PushManager) Broadcast(message interface{}) {
+func (pm *PushManager) Broadcast(message interface{}) {
 	// Append the message to the history, it the interface tells us to, or if the interface is missing
 	record := true // we keep everything that has no details about a specific behaviour
 	if v, ok := message.(RecordMessage); ok {
@@ -128,61 +155,57 @@ func (c *PushManager) Broadcast(message interface{}) {
 	}
 
 	if record {
-		c.historyLock.Lock()
-		c.history = append(c.history, message)
-		c.historyLock.Unlock()
+		pm.historyLock.Lock()
+		pm.history = append(pm.history, message)
+		pm.historyLock.Unlock()
 	}
 
 	// Distribute message to all connected clients
-	c.clientsLock.RLock()
-	for client := range c.clients {
-		if !CanClientReceive(message, client) {
+	pm.clientsLock.RLock()
+	for client := range pm.clients {
+		if !pm.canClientReceive(message, client) {
 			continue
 		}
 
-		if v, ok := message.(FilteredMessage); ok && client.Role == GuestRole {
-			client.Tx <- v.FilteredVariant()
-		} else {
-			client.Tx <- message
-		}
+		client.Tx <- pm.reduceMessageForClient(message, client)
 	}
-	c.clientsLock.RUnlock()
+	pm.clientsLock.RUnlock()
 
 	if record {
-		c.triggerHistoryCleanup()
+		pm.triggerHistoryCleanup()
 	}
 }
 
-func (c *PushManager) StartHistoryCompactor() {
+func (pm *PushManager) StartHistoryCompactor() {
 	// Establish a debounced history cleaner
-	c.triggerHistoryCleanup, _ = lo.NewDebounce(250*time.Millisecond, func() {
-		c.historyLock.Lock()
+	pm.triggerHistoryCleanup, _ = lo.NewDebounce(250*time.Millisecond, func() {
+		pm.historyLock.Lock()
 
-		startCount := len(c.history)
+		startCount := len(pm.history)
 
 		// Make the latest messages to first ones in the slice
-		lo.Reverse(c.history)
+		lo.Reverse(pm.history)
 
 		// Only keep the newest processing update
-		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+		pm.history = FilterAllExceptFirst(pm.history, func(v interface{}) bool {
 			_, ok := v.(*pushermsg.ProcessingStatusPush)
 			return ok
 		})
 
 		// Only keep the newest tag update
-		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+		pm.history = FilterAllExceptFirst(pm.history, func(v interface{}) bool {
 			_, ok := v.(*pushermsg.TagUpdatePush)
 			return ok
 		})
 
 		// Only keep the newest metrics update
-		c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+		pm.history = FilterAllExceptFirst(pm.history, func(v interface{}) bool {
 			_, ok := v.(*pushermsg.MetricUpdatePush)
 			return ok
 		})
 
 		// Filter all file updates, keep the newest one per file
-		m := lo.Uniq(lo.FilterMap(c.history, func(v interface{}, _ int) (string, bool) {
+		m := lo.Uniq(lo.FilterMap(pm.history, func(v interface{}, _ int) (string, bool) {
 			x, ok := v.(*pushermsg.FileStatusPush)
 			if !ok {
 				return "", false
@@ -192,19 +215,32 @@ func (c *PushManager) StartHistoryCompactor() {
 		}))
 
 		for _, hit := range m {
-			c.history = FilterAllExceptFirst(c.history, func(v interface{}) bool {
+			pm.history = FilterAllExceptFirst(pm.history, func(v interface{}) bool {
 				x, ok := v.(*pushermsg.FileStatusPush)
 				return ok && x.ID == hit
 			})
 		}
 
-		lo.Reverse(c.history)
+		lo.Reverse(pm.history)
 
 		// Increase capacity again
-		c.history = append(make([]any, 0, len(c.history)+500), c.history...)
+		pm.history = append(make([]any, 0, len(pm.history)+500), pm.history...)
 
-		Logger.Debug().Int("before", startCount).Int("after", len(c.history)).Msg("Websocket history compacted")
+		Logger.Debug().Int("before", startCount).Int("after", len(pm.history)).Msg("Websocket history compacted")
 
-		c.historyLock.Unlock()
+		pm.historyLock.Unlock()
 	})
+}
+
+func (pm *PushManager) GetClients() []Client {
+	pm.clientsLock.RLock()
+	defer pm.clientsLock.RUnlock()
+
+	// Create a static list of clients, so we can release the lock again
+	clients := make([]Client, 0, len(pm.clients))
+	for client := range pm.clients {
+		clients = append(clients, *client)
+	}
+
+	return clients
 }

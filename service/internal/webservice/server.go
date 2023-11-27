@@ -20,7 +20,7 @@ import (
 //go:embed .frontend/*
 var frontendFs embed.FS
 
-func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
+func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, users *access.UserList, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -53,10 +53,10 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	r.TrustedPlatform = conf.Webservice.TrustedPlatform
 
 	pusher.Logger = Logger.With().Str("module", "pusher").Logger()
-	pushManager := pusher.NewPushManager(conf, pushChan)
+	pushManager := pusher.NewPushManager(conf, users, pushChan)
 	go pushManager.Run()
 
-	// Mount the embeded search frontend
+	// Mount the embedded search frontend
 	frontendFS := EmbedFolder(frontendFs, ".frontend")
 
 	// Mount the Vue frontend
@@ -71,7 +71,12 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	// @see https://medium.com/@abhishekranjandev/building-a-production-grade-websocket-for-notifications-with-golang-and-gin-a-detailed-guide-5b676dcfbd5a
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
 
+	// Register the common websocket route
 	r.GET("/ws", func(c *gin.Context) {
+		if ok := isSomeone(c); !ok {
+			return
+		}
+
 		pushManager.ConnectClientWebsocket(c)
 	})
 
@@ -82,9 +87,9 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	registerConfigRoutes(api, conf)
 	registerOsRoutes(api, conf)
 	registerSuggestRoutes(api, conf, suggest)
-
-	// Boot up auth and otp services
-	registerAccessRoutes(api, conf, auth)
+	registerAuthRoutes(api, conf, auth)
+	registerUserRoutes(api, users)
+	registerPusherRoutes(api, pushManager)
 
 	// Register the bleve HTTP router
 	search := r.Group("/search")

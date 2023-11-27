@@ -1,6 +1,7 @@
 package pusher
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/access"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -15,8 +16,9 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (c *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
+func (pm *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
 	// Generate a unique client ID and communicate it back to the client.
+	// Same user might connect multiple times (e.g. multiple tabs), so we need to distinguish them.
 	clientId := uuid.New()
 
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
@@ -25,12 +27,13 @@ func (c *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
 		return
 	}
 
-	client := NewPushClient(clientId, ws, c)
+	client := NewClient(clientId, ctx.MustGet("userId").(uuid.UUID), ws, pm)
+	client.UserID = ctx.MustGet("userId").(uuid.UUID)
 
-	client.DisplayName = ctx.GetString("userDisplayName")
-	client.Role = ctx.GetString("userRole")
+	// Add the user to the known list
+	pm.users.Add(access.NewUser(client.UserID, ctx.GetString("userDisplayName"), ctx.GetString("userRole")))
 
-	c.addClient <- client
+	pm.addClient <- client
 
 	go client.Send()
 	go client.Receive()

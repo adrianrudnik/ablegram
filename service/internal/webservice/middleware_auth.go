@@ -42,7 +42,7 @@ func setContext(token *access.AuthToken, c *gin.Context) {
 }
 
 func isAdmin(c *gin.Context) bool {
-	if c.GetString("role") != "admin" {
+	if c.GetString("userRole") != access.AdminRole {
 		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
 		c.Abort()
 

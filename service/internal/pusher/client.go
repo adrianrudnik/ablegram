@@ -1,25 +1,29 @@
 package pusher
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/util"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"net"
 	"time"
 )
 
-type PushClient struct {
-	ID          string
-	DisplayName string
-	Role        string
-	Conn        *websocket.Conn
-	Tx          chan interface{}
-	pushChan    *PushManager
+type Client struct {
+	ID     uuid.UUID
+	UserID uuid.UUID
+
+	Conn     *websocket.Conn
+	Tx       chan interface{}
+	pushChan *PushManager
 }
 
 var writeTimeout = 5 * time.Second
 
-func NewPushClient(id uuid.UUID, connection *websocket.Conn, pushChan *PushManager) *PushClient {
-	return &PushClient{
-		ID:   id.String(),
+func NewClient(id uuid.UUID, userId uuid.UUID, connection *websocket.Conn, pushChan *PushManager) *Client {
+	return &Client{
+		ID:     id,
+		UserID: userId,
+
 		Conn: connection,
 
 		pushChan: pushChan,
@@ -27,7 +31,7 @@ func NewPushClient(id uuid.UUID, connection *websocket.Conn, pushChan *PushManag
 	}
 }
 
-func (c *PushClient) Send() {
+func (c *Client) Send() {
 	// Set up a ticker to produce the ping message in intervals
 	pingTicker := time.NewTicker(5 * time.Second)
 
@@ -52,7 +56,7 @@ func (c *PushClient) Send() {
 				return
 			}
 
-			if !CanClientReceive(msg, c) {
+			if !c.pushChan.canClientReceive(msg, c) {
 				continue
 			}
 
@@ -76,7 +80,7 @@ func (c *PushClient) Send() {
 	}
 }
 
-func (c *PushClient) Receive() {
+func (c *Client) Receive() {
 	// Ensure a failing routine cleans up the client
 	defer func() {
 		c.pushChan.removeClient <- c
@@ -99,4 +103,12 @@ func (c *PushClient) Receive() {
 			break
 		}
 	}
+}
+
+func (c *Client) GetIP(real bool) net.IP {
+	if !real {
+		return util.GetFakeClientIP()
+	}
+
+	return c.Conn.RemoteAddr().(*net.TCPAddr).IP
 }

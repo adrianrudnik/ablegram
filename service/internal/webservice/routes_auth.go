@@ -9,17 +9,17 @@ import (
 	"github.com/google/uuid"
 )
 
-func registerAccessRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.Auth) {
+func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.Auth) {
 	// Every client needs to say hello.
-	// The service will issue a token that the client needs to serve on every other request.
+	// The service will issue a cookie that the client needs to serve on every other request.
 	rg.POST("/auth", func(c *gin.Context) {
 		// Users that we identify through a token will receive their info back and some.
 		if c.GetBool("user") {
-			c.JSON(200, gin.H{
-				"id":           c.MustGet("userId").(uuid.UUID),
-				"role":         c.GetString("userRole"),
-				"display_name": c.GetString("userDisplayName"),
-				"ip":           c.ClientIP(),
+
+			c.JSON(200, access.User{
+				UserID:      c.MustGet("userId").(uuid.UUID),
+				DisplayName: c.GetString("userDisplayName"),
+				Role:        c.GetString("userRole"),
 			})
 
 			return
@@ -30,16 +30,15 @@ func registerAccessRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access
 
 		setAuthCookie(c, token)
 
-		c.JSON(200, gin.H{
-			"id":           token.ID,
-			"display_name": token.DisplayName,
-			"role":         token.Role,
-			"ip":           c.ClientIP(),
+		c.JSON(200, access.User{
+			UserID:      token.ID,
+			DisplayName: token.DisplayName,
+			Role:        token.Role,
 		})
 	})
 
 	// Allows a current user to set a custom display name
-	rg.POST("/auth/iam", func(c *gin.Context) {
+	rg.PUT("/auth/display-name", func(c *gin.Context) {
 		if !isSomeone(c) {
 			return
 		}

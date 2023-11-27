@@ -1,40 +1,43 @@
 import { defineStore } from 'pinia'
-import { computed, ref, nextTick } from 'vue'
+import { computed, ref } from 'vue'
 import { fetchApi } from '@/plugins/api'
-import { useUserStore } from '@/stores/users'
+import { GuestRole, useUserClientStore } from '@/stores/users'
 import { useFilesStore } from '@/stores/files'
 import { websocket } from '@/websocket'
+import type { UserRoles } from '@/stores/users'
 
 const DefaultUsername = 'Unknown user'
 const DefaultIp = 'Unknown IP'
 
 export const useSessionStore = defineStore('session', () => {
-  const id = ref<string | undefined>(undefined)
-  const username = ref(DefaultUsername)
-  const ip = ref(DefaultIp)
-  const isAdmin = ref(false)
-  const isGuest = computed(() => !isAdmin.value)
+  const clientId = ref<string | undefined>(undefined)
 
-  const { clear: clearUsers } = useUserStore()
+  const userId = ref<string | undefined>(undefined)
+  const displayName = ref(DefaultUsername)
+  const role = ref<'admin' | 'guest'>('guest')
+  const ip = ref(DefaultIp)
+
+  const isAdmin = computed(() => role.value === 'admin')
+  const isGuest = computed(() => role.value === 'guest')
+
+  const { clear: clearUsers } = useUserClientStore()
   const { clear: clearFiles } = useFilesStore()
 
   const hello = async () => {
     try {
       const r = await fetchApi<{
-        id: string,
-        ip: string
-        display_name: string,
-        role: 'admin' | 'guest'
+        id: string
+        display_name: string
+        role: UserRoles
       }>('/api/auth', {
-        method: 'POST',
+        method: 'POST'
       })
-      username.value = r.display_name
-      ip.value = r.ip
-      isAdmin.value = r.role === 'admin'
+      userId.value = r.id
+      displayName.value = r.display_name
+      role.value = r.role
     } catch (e) {
-      username.value = DefaultUsername
-      ip.value = DefaultIp
-      isAdmin.value = false
+      displayName.value = DefaultUsername
+      role.value = GuestRole
 
       console.error('Server hello failed', e)
     }
@@ -68,8 +71,10 @@ export const useSessionStore = defineStore('session', () => {
     hello,
     goodbye,
     reconsider,
-    id,
-    username,
+    clientId,
+    userId,
+    displayName,
+    role,
     ip,
     isAdmin,
     isGuest

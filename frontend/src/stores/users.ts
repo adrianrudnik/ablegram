@@ -2,19 +2,26 @@ import { defineStore } from 'pinia'
 import { setupStore } from '@/stores/base'
 import uniqolor from 'uniqolor'
 
-export type UserRoles = 'admin' | 'user'
+export const AdminRole = 'admin'
+export type AdminRole = typeof AdminRole
+export const GuestRole = 'guest'
+export type GuestRole = typeof GuestRole
 
-export interface User {
+export type UserRoles = AdminRole | GuestRole
+
+export interface UserClient {
   id: string
-  display_name: string
-  role: UserRoles
   ip?: string
+
+  user_id: string
+  user_display_name: string
+  user_role: UserRoles
 }
 
-export const useUserStore = defineStore('users', setupStore<User>())
+export const useUserClientStore = defineStore('clients', setupStore<UserClient>())
 
-export const colorizeUser = (
-  user: User
+export const colorizeUserClient = (
+  user: UserClient
 ): {
   color: string
   isLight: boolean

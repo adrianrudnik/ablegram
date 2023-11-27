@@ -13,7 +13,6 @@ func registerPusherRoutes(rg *gin.RouterGroup, pm *pusher.PushManager) {
 			return
 		}
 
-		// @todo Liste aller nutzer mit einer Liste aller verbindungen
 		c.JSON(http.StatusOK, lo.Map(pm.GetClients(), func(client pusher.Client, _ int) pusher.UserClient {
 			return pusher.UserClient{
 				ClientId: client.ID,

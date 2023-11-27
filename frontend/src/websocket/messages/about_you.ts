@@ -1,6 +1,6 @@
 import { PushMessageType } from '@/websocket/messages/global'
 
-export interface AboutYouPushMessage {
-  type: PushMessageType.AboutYou
+export interface ClientIdPushMessage {
+  type: PushMessageType.ClientId
   id: string
 }

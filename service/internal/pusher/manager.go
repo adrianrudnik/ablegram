@@ -53,17 +53,16 @@ func (pm *PushManager) Run() {
 			user := pm.users.Get(client.UserID)
 
 			// Notify all clients about the new user
-			pm.Broadcast(pushermsg.NewUserWelcomePush(
-				ip, client.UserID, user.Role, user.DisplayName,
+			pm.Broadcast(pushermsg.NewClientWelcomePush(
+				client.ID, ip, client.UserID, user.Role, user.DisplayName,
 			))
 
 			//// Notify the
-			//c.Broadcast(pushermsg.NewAboutYouPush(client.ID))
-			//
+			pm.Broadcast(pushermsg.NewClientIdPush(client.ID))
 
 			// Send over a list of all currently connected clients
 			for _, connClient := range pm.GetClients() {
-				pm.Broadcast(pushermsg.NewUserCurrentPush(
+				pm.Broadcast(pushermsg.NewUserClientPush(
 					user.UserID,
 					connClient.ID,
 					connClient.GetIP(!pm.config.Behaviour.DemoMode),
@@ -74,7 +73,7 @@ func (pm *PushManager) Run() {
 			}
 
 		case client := <-pm.removeClient:
-			pm.Broadcast(pushermsg.NewUserGoodbyePush(client.ID))
+			pm.Broadcast(pushermsg.NewClientGoodbyePush(client.ID))
 			pm.RemoveClient(client)
 
 		case message := <-pm.broadcast:

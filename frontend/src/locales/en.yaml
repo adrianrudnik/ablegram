@@ -488,6 +488,8 @@ search-query-toolbar:
 
 search-result-focus-dialog:
   header: Result focus view
+  actions:
+    suggest: Suggest to admin
 
 result-item-component:
   button:

@@ -1,3 +1,3 @@
-package push3
+package push3api
 
 type AbletonChallengeResponseToken = string

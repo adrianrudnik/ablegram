@@ -6,7 +6,7 @@ import type { TagUpdatePushMessage } from '@/websocket/messages/tag_update'
 import type { ClientWelcomePushMessage } from '@/websocket/messages/user_welcome'
 import type { ClientGoodbyePushMessage } from '@/websocket/messages/user_goodbye'
 import type { ClientIdPushMessage } from '@/websocket/messages/about_you'
-import type { UserClientPushMessage } from '@/websocket/messages/user_current'
+import type { UserClientPushMessage } from '@/websocket/messages/user_client'
 
 // TypeScript discriminator hell
 // for websocket messages, anything to satisfy the god of types.

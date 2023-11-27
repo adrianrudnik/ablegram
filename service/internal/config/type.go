@@ -6,6 +6,7 @@ type Config struct {
 	Log        LogConfig        `yaml:"log" json:"log"`
 	Behaviour  BehaviourConfig  `yaml:"behaviour" json:"behaviour"`
 	Collector  CollectorConfig  `yaml:"collector" json:"collector"`
+	Device     DeviceConfig     `yaml:"device" json:"device"`
 	Indexer    IndexerConfig    `yaml:"indexer" json:"indexer"`
 	Webservice WebserviceConfig `yaml:"webservice" json:"webservice"`
 
@@ -37,6 +38,26 @@ type CollectorConfig struct {
 	Targets map[string]CollectorTarget `yaml:"targets" json:"targets"`
 }
 
+type CollectorTarget struct {
+	ID                   string `yaml:"id" json:"id"`
+	Type                 string `yaml:"type" json:"type"`
+	Uri                  string `yaml:"uri" json:"uri"`
+	ParserPerformance    string `yaml:"parser_performance" json:"parser_performance"`
+	ParserWorkerDelay    int    `yaml:"parser_delay" json:"parser_delay"`
+	ExcludeSystemFolders bool   `yaml:"exclude_system_folders" json:"exclude_system_folders"`
+	ExcludeDotFolders    bool   `yaml:"exclude_dot_folders" json:"exclude_dot_folders"`
+}
+
+type DeviceConfig struct {
+	Targets map[string]DeviceTarget `yaml:"targets" json:"targets"`
+}
+
+type DeviceTarget struct {
+	ID   string `yaml:"id" json:"id"`
+	Type string `yaml:"type" json:"type"`
+	Uri  string `yaml:"uri" json:"uri"`
+}
+
 type IndexerConfig struct {
 	WorkerDelayInMs int `yaml:"worker_delay_in_ms" json:"worker_delay_in_ms"`
 }
@@ -46,14 +67,4 @@ type WebserviceConfig struct {
 	ChosenPort      int    `yaml:"-" json:"-"`
 	MasterPassword  string `yaml:"master_password" json:"master_password"`
 	TrustedPlatform string `yaml:"trusted_platform" json:"trusted_platform"`
-}
-
-type CollectorTarget struct {
-	ID                   string `yaml:"id" json:"id"`
-	Type                 string `yaml:"type" json:"type"`
-	Uri                  string `yaml:"uri" json:"uri"`
-	ParserPerformance    string `yaml:"parser_performance" json:"parser_performance"`
-	ParserWorkerDelay    int    `yaml:"parser_delay" json:"parser_delay"`
-	ExcludeSystemFolders bool   `yaml:"exclude_system_folders" json:"exclude_system_folders"`
-	ExcludeDotFolders    bool   `yaml:"exclude_dot_folders" json:"exclude_dot_folders"`
 }

@@ -40,6 +40,10 @@ func (o *OtpManager) CreateOtp() string {
 }
 
 func (o *OtpManager) ValidateOtp(token string) bool {
+	// Whatever happens, the OTP will be invalidated.
+	// LIFO of defers will keep the locking clean.
+	defer o.InvalidateOtp(token)
+
 	o.tokenLock.RLock()
 	defer o.tokenLock.RUnlock()
 
@@ -49,7 +53,7 @@ func (o *OtpManager) ValidateOtp(token string) bool {
 	}
 
 	if expiry.Before(time.Now()) {
-		delete(o.tokens, token)
+
 		return false
 	}
 

@@ -2,7 +2,7 @@ package webservice
 
 import (
 	"embed"
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
@@ -20,7 +20,7 @@ import (
 //go:embed .frontend/*
 var frontendFs embed.FS
 
-func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, users *access.UserList, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
+func Serve(conf *config.Config, auth *auth.Auth, otp *auth.Otp, users *auth.UserList, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -36,7 +36,7 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, users *acces
 	r.Use(gin.Recovery())
 	r.Use(LoggerMiddleware())
 	r.Use(CacheMiddleware())
-	r.Use(AccessMiddleware(auth))
+	r.Use(AuthMiddleware(auth))
 
 	r.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},

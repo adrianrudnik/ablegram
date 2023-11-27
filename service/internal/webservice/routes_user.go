@@ -1,12 +1,12 @@
 package webservice
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func registerUserRoutes(rg *gin.RouterGroup, users *access.UserList) {
+func registerUserRoutes(rg *gin.RouterGroup, users *auth.UserList) {
 	rg.GET("/users", func(c *gin.Context) {
 		if ok := isAdmin(c); !ok {
 			return

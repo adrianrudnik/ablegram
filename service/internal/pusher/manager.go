@@ -1,7 +1,7 @@
 package pusher
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/workload"
@@ -16,7 +16,7 @@ type PushManager struct {
 	clients     map[*Client]bool
 	clientsLock sync.RWMutex
 
-	users *access.UserList
+	users *auth.UserList
 
 	addClient    chan *Client
 	removeClient chan *Client
@@ -27,7 +27,7 @@ type PushManager struct {
 	triggerHistoryCleanup func()
 }
 
-func NewPushManager(conf *config.Config, ul *access.UserList, pushChan <-chan workload.PushMessage) *PushManager {
+func NewPushManager(conf *config.Config, ul *auth.UserList, pushChan <-chan workload.PushMessage) *PushManager {
 	return &PushManager{
 		config:       conf,
 		clients:      make(map[*Client]bool),

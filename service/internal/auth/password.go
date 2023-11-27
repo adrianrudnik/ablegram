@@ -1,4 +1,4 @@
-package access
+package auth
 
 import (
 	"encoding/base64"

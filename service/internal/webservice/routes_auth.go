@@ -3,20 +3,20 @@ package webservice
 import (
 	"fmt"
 	"github.com/adrianrudnik/ablegram/crypt"
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.Auth) {
+func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, authMgr *auth.Auth) {
 	// Every client needs to say hello.
 	// The service will issue a cookie that the client needs to serve on every other request.
 	rg.POST("/auth", func(c *gin.Context) {
 		// Users that we identify through a token will receive their info back and some.
 		if c.GetBool("user") {
 
-			c.JSON(200, access.User{
+			c.JSON(200, auth.User{
 				UserID:      c.MustGet("userId").(uuid.UUID),
 				DisplayName: c.GetString("userDisplayName"),
 				Role:        c.GetString("userRole"),
@@ -26,11 +26,11 @@ func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.A
 		}
 
 		// Users that we could not identify will receive a token that they need to serve on every other request.
-		token := access.NewGuestAuthToken()
+		token := auth.NewGuestAuthToken()
 
 		setAuthCookie(c, token)
 
-		c.JSON(200, access.User{
+		c.JSON(200, auth.User{
 			UserID:      token.ID,
 			DisplayName: token.DisplayName,
 			Role:        token.Role,
@@ -39,7 +39,7 @@ func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.A
 
 	// Allows a current user to set a custom display name
 	rg.PUT("/auth/display-name", func(c *gin.Context) {
-		if !isSomeone(c) {
+		if ok := !isSomeone(c); !ok {
 			return
 		}
 
@@ -55,7 +55,7 @@ func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.A
 		}
 
 		// Get the current token and update the display name
-		t := c.MustGet("userToken").(*access.AuthToken)
+		t := c.MustGet("userToken").(*auth.AuthToken)
 		t.DisplayName = input.DisplayName
 
 		setAuthCookie(c, t)
@@ -77,7 +77,7 @@ func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.A
 			return
 		}
 
-		t, err := auth.ConvertOtpToAdminToken(input.OtpToken)
+		t, err := authMgr.ConvertOtpToAdminToken(input.OtpToken)
 		if err != nil {
 			Logger.Warn().
 				Str("ip", c.ClientIP()).
@@ -125,7 +125,7 @@ func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.A
 			return
 		}
 
-		t := access.NewAdminToken()
+		t := auth.NewAdminToken()
 
 		setAuthCookie(c, t)
 
@@ -140,10 +140,10 @@ func registerAuthRoutes(rg *gin.RouterGroup, conf *config.Config, auth *access.A
 }
 
 func getCookieName() string {
-	return fmt.Sprintf("ablegram-token-v%d", access.TokenVersion)
+	return fmt.Sprintf("ablegram-token-v%d", auth.TokenVersion)
 }
 
-func setAuthCookie(c *gin.Context, token *access.AuthToken) {
+func setAuthCookie(c *gin.Context, token *auth.AuthToken) {
 	c.SetCookie(getCookieName(), token.Encrypt(), 0, "/", "", false, true)
 }
 

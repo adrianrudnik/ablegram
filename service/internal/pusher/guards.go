@@ -1,6 +1,6 @@
 package pusher
 
-import "github.com/adrianrudnik/ablegram/internal/access"
+import "github.com/adrianrudnik/ablegram/internal/auth"
 
 func (pm *PushManager) canClientReceive(msg any, client *Client) bool {
 	// Guard role routed messages
@@ -23,7 +23,7 @@ func (pm *PushManager) canClientReceive(msg any, client *Client) bool {
 }
 
 func (pm *PushManager) reduceMessageForClient(msg any, client *Client) any {
-	if v, ok := msg.(FilteredMessage); ok && pm.users.Get(client.UserID).Role == access.GuestRole {
+	if v, ok := msg.(FilteredMessage); ok && pm.users.Get(client.UserID).Role == auth.GuestRole {
 		return v.FilteredVariant()
 	} else {
 		return msg

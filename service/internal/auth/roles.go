@@ -1,4 +1,4 @@
-package access
+package auth
 
 // AdminRole is given to users that authenticate with either the OTP or the configured master password.
 const AdminRole = "admin"

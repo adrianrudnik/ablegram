@@ -1,7 +1,7 @@
 package pusher
 
 import (
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -31,7 +31,7 @@ func (pm *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
 	client.UserID = ctx.MustGet("userId").(uuid.UUID)
 
 	// Add the user to the known list
-	pm.users.Add(access.NewUser(client.UserID, ctx.GetString("userDisplayName"), ctx.GetString("userRole")))
+	pm.users.Add(auth.NewUser(client.UserID, ctx.GetString("userDisplayName"), ctx.GetString("userRole")))
 
 	pm.addClient <- client
 

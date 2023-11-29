@@ -22,6 +22,7 @@ import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
 import { fetchApi } from '@/plugins/api'
 import { useRoute, useRouter } from 'vue-router'
+import { useSessionStore } from '@/stores/session'
 
 const { t } = useI18n()
 
@@ -29,6 +30,7 @@ const errorMessage = ref<string | null>(null)
 
 const route = useRoute()
 const router = useRouter()
+const { hello } = useSessionStore()
 
 onMounted(async () => {
   try {
@@ -39,6 +41,8 @@ onMounted(async () => {
         token: route.query.token
       })
     })
+
+    await hello()
 
     await router.replace({ name: 'app' })
   } catch (e: any) {

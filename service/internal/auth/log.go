@@ -1,4 +1,4 @@
-package access
+package auth
 
 import (
 	"github.com/rs/zerolog"

@@ -1,0 +1,132 @@
+### End / destroy current session
+// @no-log
+// @no-redirect
+
+DELETE {{webservice}}/api/auth
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+### Initialize session
+// @no-log
+// @no-redirect
+
+POST {{webservice}}/api/auth
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+### Set session display name
+// @no-log
+// @no-redirect
+
+PUT {{webservice}}/api/auth/display-name
+Content-Type: application/json
+Accept: application/json
+
+{
+  "display_name": "test"
+}
+
+### Auth with password
+// @no-log
+// @no-redirect
+
+POST {{webservice}}/api/auth/password
+Content-Type: application/json
+Accept: application/json
+
+{
+  "password": "test"
+}
+
+### List all active clients
+// @no-log
+// @no-redirect
+
+GET {{webservice}}/api/clients
+Content-Type: application/json
+Accept: application/json
+
+### List all active users
+// @no-log
+// @no-redirect
+
+GET {{webservice}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+
+### Log config
+// @no-log
+// @no-redirect
+
+PUT {{webservice}}/api/config/log
+Content-Type: application/json
+Accept: application/json
+
+{
+  "level": "debug",
+  "enable_runtime_logfile": false,
+  "enable_processed_logfile": false
+}
+
+### Behaviors config
+// @no-log
+// @no-redirect
+
+PUT {{webservice}}/api/config/behaviour
+Content-Type: application/json
+Accept: application/json
+
+{
+  "autostart_webservice": true,
+  "open_browser_on_start": false,
+  "show_service_gui": false
+}
+
+### Add collector target
+// @no-log
+// @no-redirect
+
+POST {{webservice}}/api/config/collector/targets
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "test",
+  "Type": "filesystem",
+  "Uri": "/tmp",
+  "parser_performance": "high",
+  "parser_delay": 0,
+  "exclude_system_folders": true,
+  "exclude_dot_folders": true
+}
+
+### Update collector target
+// @no-log
+// @no-redirect
+
+PUT {{webservice}}/api/config/collector/targets/test
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Type": "filesystem",
+  "Uri": "/tmp",
+  "parser_performance": "default",
+  "parser_delay": 0,
+  "exclude_system_folders": true,
+  "exclude_dot_folders": true
+}
+
+### Delete collector target
+// @no-log
+// @no-redirect
+
+DELETE {{webservice}}/api/config/collector/targets/test
+Content-Type: application/json
+Accept: application/json
+

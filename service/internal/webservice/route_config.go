@@ -12,11 +12,6 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 			return
 		}
 
-		if c.GetString("role") != "admin" {
-			c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
-			return
-		}
-
 		c.JSON(http.StatusOK, conf)
 	})
 
@@ -26,9 +21,9 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 		}
 
 		type userInput struct {
-			Level                  string `json:"level"`
-			EnableRuntimeLogfile   bool   `json:"enable_runtime_logfile"`
-			EnableProcessedLogfile bool   `json:"enable_processed_logfile"`
+			Level                  string `json:"level" binding:"required"`
+			EnableRuntimeLogfile   bool   `json:"enable_runtime_logfile" binding:"boolean"`
+			EnableProcessedLogfile bool   `json:"enable_processed_logfile" binding:"boolean"`
 		}
 
 		var input userInput
@@ -69,9 +64,9 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 		}
 
 		type userInput struct {
-			AutostartWebservice bool `json:"autostart_webservice"`
-			OpenBrowserOnStart  bool `json:"open_browser_on_start"`
-			ShowServiceGui      bool `json:"show_service_gui"`
+			AutostartWebservice bool `json:"autostart_webservice" binding:"boolean"`
+			OpenBrowserOnStart  bool `json:"open_browser_on_start" binding:"boolean"`
+			ShowServiceGui      bool `json:"show_service_gui" binding:"boolean"`
 		}
 
 		var input userInput
@@ -108,13 +103,13 @@ func registerConfigRoutes(rg *gin.RouterGroup, conf *config.Config) {
 		}
 
 		type userInput struct {
-			ID                   string `json:"id"`
-			Type                 string `json:"type"`
-			Uri                  string `json:"uri"`
-			ParserPerformance    string `json:"parser_performance"`
-			ParserWorkerDelay    int    `json:"parser_delay"`
-			ExcludeSystemFolders bool   `json:"exclude_system_folders"`
-			ExcludeDotFolders    bool   `json:"exclude_dot_folders"`
+			ID                   string `json:"id" binding:"required"`
+			Type                 string `json:"type" binding:"required,oneof=filesystem"`
+			Uri                  string `json:"uri" binding:"required"`
+			ParserPerformance    string `json:"parser_performance" binding:"required,oneof=low default high"`
+			ParserWorkerDelay    int    `json:"parser_delay" binding:"gte=0"`
+			ExcludeSystemFolders bool   `json:"exclude_system_folders" binding:"boolean"`
+			ExcludeDotFolders    bool   `json:"exclude_dot_folders" binding:"boolean"`
 		}
 
 		var input userInput

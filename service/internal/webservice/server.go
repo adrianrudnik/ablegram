@@ -2,10 +2,11 @@ package webservice
 
 import (
 	"embed"
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/pusher"
+	"github.com/adrianrudnik/ablegram/internal/suggest"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/workload"
@@ -19,7 +20,7 @@ import (
 //go:embed .frontend/*
 var frontendFs embed.FS
 
-func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *indexer.Search, tc *tagger.TagCollector, pushChan chan workload.PushMessage, bindAddr string) error {
+func Serve(conf *config.Config, auth *auth.TokenManager, otp *auth.OtpManager, users *auth.UserList, indexer *indexer.Search, tc *tagger.TagCollector, suggest *suggest.List, pushChan chan workload.PushMessage, bindAddr string) error {
 	// Wrap route logging into correct format
 	// @see https://gin-gonic.com/docs/examples/define-format-for-the-log-of-routes/
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
@@ -35,7 +36,7 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	r.Use(gin.Recovery())
 	r.Use(LoggerMiddleware())
 	r.Use(CacheMiddleware())
-	r.Use(AccessMiddleware(auth))
+	r.Use(AuthMiddleware(auth))
 
 	r.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
@@ -52,10 +53,10 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	r.TrustedPlatform = conf.Webservice.TrustedPlatform
 
 	pusher.Logger = Logger.With().Str("module", "pusher").Logger()
-	pushManager := pusher.NewPushManager(conf, pushChan)
+	pushManager := pusher.NewPushManager(conf, users, pushChan)
 	go pushManager.Run()
 
-	// Mount the embeded search frontend
+	// Mount the embedded search frontend
 	frontendFS := EmbedFolder(frontendFs, ".frontend")
 
 	// Mount the Vue frontend
@@ -70,7 +71,12 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	// @see https://medium.com/@abhishekranjandev/building-a-production-grade-websocket-for-notifications-with-golang-and-gin-a-detailed-guide-5b676dcfbd5a
 	// @see https://github.com/tinkerbaj/chat-websocket-gin/blob/main/chat/chat.go
 
+	// Register the common websocket route
 	r.GET("/ws", func(c *gin.Context) {
+		if ok := isSomeone(c); !ok {
+			return
+		}
+
 		pushManager.ConnectClientWebsocket(c)
 	})
 
@@ -80,9 +86,10 @@ func Serve(conf *config.Config, auth *access.Auth, otp *access.Otp, indexer *ind
 	registerTagRoutes(api, tc)
 	registerConfigRoutes(api, conf)
 	registerOsRoutes(api, conf)
-
-	// Boot up auth and otp services
-	registerAccessRoutes(api, conf, auth)
+	registerSuggestRoutes(api, conf, suggest)
+	registerAuthRoutes(api, conf, auth)
+	registerUserRoutes(api, users)
+	registerPusherRoutes(api, pushManager)
 
 	// Register the bleve HTTP router
 	search := r.Group("/search")

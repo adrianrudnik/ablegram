@@ -3,24 +3,24 @@ import type { MetricUpdatePushMessage } from '@/websocket/messages/metric_update
 import type { ProcessingStatusPushMessage } from '@/websocket/messages/processing_status'
 import type { ForceNavigatePushMessage } from '@/websocket/messages/force_navigate'
 import type { TagUpdatePushMessage } from '@/websocket/messages/tag_update'
-import type { UserWelcomePushMessage } from '@/websocket/messages/user_welcome'
-import type { UserGoodbyePushMessage } from '@/websocket/messages/user_goodbye'
-import type { AboutYouPushMessage } from '@/websocket/messages/about_you'
-import type { UserCurrentPushMessage } from '@/websocket/messages/user_current'
+import type { ClientWelcomePushMessage } from '@/websocket/messages/user_welcome'
+import type { ClientGoodbyePushMessage } from '@/websocket/messages/user_goodbye'
+import type { ClientIdPushMessage } from '@/websocket/messages/about_you'
+import type { UserClientPushMessage } from '@/websocket/messages/user_client'
 
 // TypeScript discriminator hell
 // for websocket messages, anything to satisfy the god of types.
 
 export enum PushMessageType {
+  ClientId = 'client_id',
   FileStatus = 'file_status',
   MetricUpdate = 'metric_update',
   TagUpdate = 'tag_update',
   ProcessingStatus = 'processing_status',
   ForceNavigate = 'force_navigate',
-  UserWelcome = 'user_welcome',
-  UserGoodbye = 'user_goodbye',
-  UserCurrent = 'user_current',
-  AboutYou = 'about_you'
+  ClientWelcome = 'client_welcome',
+  ClientGoodbye = 'client_goodbye',
+  UserClient = 'user_client'
 }
 
 export type PushMessage =
@@ -29,7 +29,7 @@ export type PushMessage =
   | TagUpdatePushMessage
   | ProcessingStatusPushMessage
   | ForceNavigatePushMessage
-  | UserWelcomePushMessage
-  | UserGoodbyePushMessage
-  | UserCurrentPushMessage
-  | AboutYouPushMessage
+  | ClientWelcomePushMessage
+  | ClientGoodbyePushMessage
+  | UserClientPushMessage
+  | ClientIdPushMessage

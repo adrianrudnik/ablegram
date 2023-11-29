@@ -35,3 +35,10 @@ export async function openLocalPath(path: string) {
     body: JSON.stringify({ path })
   })
 }
+
+export async function suggestSearchResult(id: string) {
+  return await fetchApi('/api/suggestions', {
+    method: 'POST',
+    body: JSON.stringify({ id })
+  })
+}

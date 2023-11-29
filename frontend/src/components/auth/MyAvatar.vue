@@ -8,7 +8,7 @@
   <OverlayPanel ref="userPanel" class="w-full md:w-24rem">
     <div class="mb-3">
       <p class="font-semibold">
-        {{ username }} [{{ isAdmin ? t('role.admin') : t('role.guest') }}]
+        {{ displayName }} [{{ isAdmin ? t('role.admin') : t('role.guest') }}]
       </p>
       <i18n-t keypath="user-avatar.from-ip" tag="p">
         <template v-slot:ip>
@@ -33,7 +33,7 @@ import { useSessionStore } from '@/stores/session'
 import { ref } from 'vue'
 
 const { t } = useI18n()
-const { username, ip, isGuest, isAdmin } = storeToRefs(useSessionStore())
+const { displayName, ip, isGuest, isAdmin } = storeToRefs(useSessionStore())
 
 const userPanel = ref()
 

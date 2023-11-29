@@ -488,6 +488,8 @@ search-query-toolbar:
 
 search-result-focus-dialog:
   header: Result focus view
+  actions:
+    suggest: Suggest to admin
 
 result-item-component:
   button:
@@ -705,7 +707,9 @@ user-avatar:
   from-ip: Connecting from IP {ip}.
   login: Login
   logout: Logout
-  you: This is you
+  you:
+    same-client: You
+    different-client: You (different tab)
   form:
     master-password:
       title: Master password

@@ -2,13 +2,13 @@ package ui
 
 import (
 	"fmt"
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/icza/gox/osx"
 	"net/url"
 )
 
-func GenerateLocalAdminUrl(c *config.Config, otp *access.Otp) string {
+func GenerateLocalAdminUrl(c *config.Config, otp *auth.OtpManager) string {
 	port := c.Webservice.ChosenPort
 
 	if c.IsDevelopmentEnv {
@@ -19,7 +19,7 @@ func GenerateLocalAdminUrl(c *config.Config, otp *access.Otp) string {
 	return fmt.Sprintf("http://localhost:%d/auth/otp?token=%s", port, url.QueryEscape(otpToken))
 }
 
-func OpenFrontendAsAdmin(c *config.Config, otp *access.Otp) {
+func OpenFrontendAsAdmin(c *config.Config, otp *auth.OtpManager) {
 	err := osx.OpenDefault(GenerateLocalAdminUrl(c, otp))
 	if err != nil {
 		Logger.Warn().Err(err).Msg("Could not open default browser")

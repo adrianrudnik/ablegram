@@ -1,6 +1,10 @@
 <template>
   <AvatarGroup v-if="entries.length > 1">
-    <UserAvatar :user="user" v-for="user in entries.slice(0, visibleMemberCount)" :key="user.id" />
+    <ClientAvatar
+      :client="client"
+      v-for="client in entries.slice(0, visibleMemberCount)"
+      :key="client.id"
+    />
     <Avatar
       v-if="entries.length > visibleMemberCount"
       :label="'+' + (entries.length - visibleMemberCount)"
@@ -11,14 +15,14 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/stores/users'
-import UserAvatar from '@/components/auth/UserAvatar.vue'
+import { useUserClientStore } from '@/stores/users'
+import ClientAvatar from '@/components/parts/ClientAvatar.vue'
 import Avatar from 'primevue/avatar'
 import AvatarGroup from 'primevue/avatargroup'
 import { computed } from 'vue'
 import { breakpointsPrimeFlex, useBreakpoints } from '@vueuse/core'
 
-const { entries } = useUserStore()
+const { entries } = useUserClientStore()
 
 const { sm, md, lg } = useBreakpoints(breakpointsPrimeFlex)
 

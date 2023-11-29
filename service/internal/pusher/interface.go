@@ -1,11 +1,13 @@
 package pusher
 
+import "github.com/google/uuid"
+
 type RoleRoutedMessage interface {
 	GetRole() string
 }
 
 type UserRouterMessage interface {
-	GetUsers() map[string]bool
+	GetUsers() map[uuid.UUID]bool
 }
 
 type RecordMessage interface {

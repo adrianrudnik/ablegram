@@ -9,13 +9,14 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/adrianrudnik/ablegram/internal/access"
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/adrianrudnik/ablegram/internal/collector"
 	"github.com/adrianrudnik/ablegram/internal/config"
 	"github.com/adrianrudnik/ablegram/internal/indexer"
 	"github.com/adrianrudnik/ablegram/internal/parser"
 	"github.com/adrianrudnik/ablegram/internal/pushermsg"
 	"github.com/adrianrudnik/ablegram/internal/stats"
+	"github.com/adrianrudnik/ablegram/internal/suggest"
 	"github.com/adrianrudnik/ablegram/internal/tagger"
 	"github.com/adrianrudnik/ablegram/internal/ui"
 	"github.com/adrianrudnik/ablegram/internal/webservice"
@@ -98,8 +99,12 @@ func main() {
 	appTags.WirePusher(pushChan)
 
 	// Start up the auth and otp services
-	appOtp := access.NewOtp()
-	appAuth := access.NewAuth(appOtp)
+	appOtp := auth.NewOtpManager()
+	appAuth := auth.NewTokenManager(appOtp)
+	appUsers := auth.NewUserList()
+
+	// Start the suggestion service that allows guests to suggest stuff to admins
+	appSuggest := suggest.NewList()
 
 	// Kick of the webservice
 	go func() {
@@ -145,8 +150,10 @@ func main() {
 				appConfig,
 				appAuth,
 				appOtp,
+				appUsers,
 				appIndexer,
 				appTags,
+				appSuggest,
 				pushChan,
 				fmt.Sprintf(":%d", port),
 			)

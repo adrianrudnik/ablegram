@@ -5,7 +5,7 @@ import type { PushMessage } from '@/websocket/messages/global'
 import { PushMessageType } from '@/websocket/messages/global'
 import router from '@/router'
 import { createTagFromString, useTagStore } from '@/stores/tags'
-import { useUserStore } from '@/stores/users'
+import { useUserClientStore } from '@/stores/users'
 import { useSessionStore } from '@/stores/session'
 
 export function getWebsocketUrl() {
@@ -23,6 +23,7 @@ export function getWebsocketUrl() {
 export const websocket = useWebSocket(getWebsocketUrl(), {
   immediate: false,
   autoReconnect: true,
+
   async onMessage(ws, event) {
     const payload = JSON.parse(event.data) as PushMessage
 
@@ -52,17 +53,17 @@ export const websocket = useWebSocket(getWebsocketUrl(), {
         await router.push({ name: payload.target })
         break
 
-      case PushMessageType.UserCurrent:
-      case PushMessageType.UserWelcome:
-        useUserStore().update(payload)
+      case PushMessageType.UserClient:
+      case PushMessageType.ClientWelcome:
+        useUserClientStore().update(payload)
         break
 
-      case PushMessageType.UserGoodbye:
-        useUserStore().removeById(payload.id)
+      case PushMessageType.ClientGoodbye:
+        useUserClientStore().removeById(payload.id)
         break
 
-      case PushMessageType.AboutYou:
-        useSessionStore().id = payload.id
+      case PushMessageType.ClientId:
+        useSessionStore().clientId = payload.id
         break
     }
   }

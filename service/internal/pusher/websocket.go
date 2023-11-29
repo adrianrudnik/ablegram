@@ -1,6 +1,7 @@
 package pusher
 
 import (
+	"github.com/adrianrudnik/ablegram/internal/auth"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -15,25 +16,24 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (c *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
+func (pm *PushManager) ConnectClientWebsocket(ctx *gin.Context) {
 	// Generate a unique client ID and communicate it back to the client.
+	// Same user might connect multiple times (e.g. multiple tabs), so we need to distinguish them.
 	clientId := uuid.New()
 
-	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, http.Header{
-		"X-You-Are": []string{clientId.String()},
-	})
-	ctx.Header("X", clientId.String())
-
+	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
 		Logger.Error().Err(err).Msg("Failed to upgrade client to websocket")
 		return
 	}
-	client := NewPushClient(clientId, ws, c)
 
-	client.DisplayName = ctx.GetString("displayName")
-	client.Role = ctx.GetString("role")
+	client := NewClient(clientId, ctx.MustGet("userId").(uuid.UUID), ws, pm)
+	client.UserID = ctx.MustGet("userId").(uuid.UUID)
 
-	c.addClient <- client
+	// Add the user to the known list
+	pm.users.Add(auth.NewUser(client.UserID, ctx.GetString("userDisplayName"), ctx.GetString("userRole")))
+
+	pm.addClient <- client
 
 	go client.Send()
 	go client.Receive()

@@ -37,6 +37,10 @@ func newConfig() *Config {
 			Targets: make(map[string]CollectorTarget, 0),
 		},
 
+		Device: DeviceConfig{
+			Targets: make(map[string]DeviceTarget, 0),
+		},
+
 		Webservice: WebserviceConfig{
 			MasterPassword:  "",
 			TryPorts:        []int{10000, 20000, 30000, 40000, 50000, 10001},

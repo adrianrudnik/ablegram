@@ -38,6 +38,7 @@ type XmlFileRef11 struct {
 	RelativePathType XmlIntValue    `xml:"RelativePathType"`
 	RelativePath     XmlStringValue `xml:"RelativePath"`
 	Path             XmlStringValue `xml:"Path"`
+	Name             XmlStringValue `xml:"Name"`
 	OriginalFileSize XmlIntValue    `xml:"OriginalFileSize"`
 }
 
@@ -113,27 +114,54 @@ type XmlFileRef11 struct {
 </SampleRef>
 */
 
-type XmlSampleRef10Node struct {
-	SampleReference XmlSampleRef10 `xml:"SampleRef"`
+type XmlSampleRef9Node struct {
+	SampleReference XmlSampleRef9 `xml:"SampleRef"`
 }
 
-type XmlSampleRef10 struct {
-	XmlFileRef10
+type XmlSampleRef9 struct {
+	XmlFileRef9Node
 	DefaultSampleRate XmlIntValue `xml:"DefaultSampleRate"`
 	DefaultDuration   XmlIntValue `xml:"DefaultDuration"`
 }
 
-type XmlFileRef10Node struct {
-	FileReference XmlFileRef11 `xml:"FileRef"`
+type XmlFileRef9Node struct {
+	FileReference XmlFileRef9 `xml:"FileRef"`
 }
 
-type XmlFileRef10 struct {
-	HasRelativePath  XmlBooleanValue          `xml:"HasRelativePath"`
-	RelativePathType XmlIntValue              `xml:"RelativePathType"`
-	RelativePath     []XmlFileRefRelativePath `xml:"RelativePath>RelativePathElement"`
+type XmlFileRef9 struct {
+	SearchHint       XmlSearchHint9            `xml:"SearchHint"`
+	HasRelativePath  XmlBooleanValue           `xml:"HasRelativePath"`
+	RelativePathType XmlIntValue               `xml:"RelativePathType"`
+	RelativePath     []XmlFileRef9RelativePath `xml:"RelativePath>RelativePathElement"`
+	Name             XmlStringValue            `xml:"Name"`
 }
 
-type XmlFileRefRelativePath struct {
+func (x *XmlFileRef9) RelativePathFolders() []string {
+	var parts []string
+
+	for _, e := range x.RelativePath {
+		parts = append(parts, e.Folder)
+	}
+
+	return parts
+}
+
+type XmlSearchHint9 struct {
+	PathHint []XmlFileRef9RelativePath `xml:"PathHint>RelativePathElement"`
+	FileSize XmlIntValue               `xml:"FileSize"`
+}
+
+func (x *XmlSearchHint9) PathHintFolders() []string {
+	var parts []string
+
+	for _, e := range x.PathHint {
+		parts = append(parts, e.Folder)
+	}
+
+	return parts
+}
+
+type XmlFileRef9RelativePath struct {
 	Id     int64  `xml:"Id,attr"`
 	Folder string `xml:"Dir,attr"`
 }

@@ -21,11 +21,6 @@ func ParseSampleReferences(
 ) []*workload.DocumentPayload {
 	docs := make([]*workload.DocumentPayload, 0, 10)
 
-	// Skip v10 files for now, that's some workload to work through.
-	if !data.IsMinorVersion(11) {
-		return docs
-	}
-
 	xqDoc, err := xmlquery.Parse(strings.NewReader(data.Raw))
 	if err != nil {
 		return docs
@@ -33,25 +28,65 @@ func ParseSampleReferences(
 
 	// Can be very nested
 	for _, n := range xmlquery.Find(xqDoc, "//SampleRef") {
-		var sampleRef XmlSampleRef11
-		err := xml.Unmarshal([]byte(n.OutputXML(true)), &sampleRef)
-		if err != nil {
-			Logger.Warn().Err(err).Msg("Failed to parse by xpath")
-			continue
-		}
-
-		// Skip all paths that are of a relative type
-		if sampleRef.FileReference.RelativePathType.Value != 0 {
-			continue
-		}
-
 		tb := tc.NewBucket()
 		tb.Add("type:ableton-sample-reference")
 
 		doc := NewSampleReferenceDocument()
-		doc.SampleAbsPath = sampleRef.FileReference.Path.Value
-		doc.SampleFilename = filepath.Base(sampleRef.FileReference.Path.Value)
-		doc.SampleOriginalFileSize = sampleRef.FileReference.OriginalFileSize.Value
+
+		if data.IsFromMinorVersion(11) {
+			var sampleRef11 XmlSampleRef11
+
+			err := xml.Unmarshal([]byte(n.OutputXML(true)), &sampleRef11)
+			if err != nil {
+				Logger.Warn().Err(err).Msg("Failed to parse by xpath")
+				continue
+			}
+
+			// Skip all paths that are of a relative type
+			/* Past me: why?
+			if sampleRef11.FileReference.RelativePathType.Value != 0 {
+				continue
+			}
+			*/
+
+			doc.SampleAbsPath = sampleRef11.FileReference.Path.Value
+			doc.SampleFilename = filepath.Base(sampleRef11.FileReference.Path.Value)
+			doc.SampleOriginalFileSize = sampleRef11.FileReference.OriginalFileSize.Value
+
+			doc.Enrich(doc.SampleFilename)
+			doc.Enrich(strings.TrimSuffix(doc.SampleFilename, filepath.Ext(doc.SampleFilename)))
+
+			doc.SampleAbsPath = sampleRef11.FileReference.Path.Value
+			doc.SampleFilename = filepath.Base(sampleRef11.FileReference.Path.Value)
+			doc.SampleOriginalFileSize = sampleRef11.FileReference.OriginalFileSize.Value
+
+			doc.Enrich(doc.SampleFilename)
+			doc.Enrich(strings.TrimSuffix(doc.SampleFilename, filepath.Ext(doc.SampleFilename)))
+		} else {
+			var sampleRef9 XmlSampleRef9
+
+			err := xml.Unmarshal([]byte(n.OutputXML(true)), &sampleRef9)
+			if err != nil {
+				Logger.Warn().Err(err).Msg("Failed to parse by xpath")
+				continue
+			}
+
+			// Let's prefer the SearchHint in this version, it contains more valuable information
+			doc.SampleAbsPath = strings.Join(sampleRef9.FileReference.SearchHint.PathHintFolders(), "/")
+			doc.SampleFilename = filepath.Base(sampleRef9.FileReference.Name.Value)
+			doc.SampleOriginalFileSize = sampleRef9.FileReference.SearchHint.FileSize.Value
+
+			doc.Enrich(doc.SampleFilename)
+			doc.Enrich(strings.TrimSuffix(doc.SampleFilename, filepath.Ext(doc.SampleFilename)))
+
+			for _, p := range sampleRef9.FileReference.RelativePathFolders() {
+				doc.Enrich(p)
+			}
+
+			for _, p := range sampleRef9.FileReference.SearchHint.PathHintFolders() {
+				doc.Enrich(p)
+			}
+		}
 
 		doc.LoadFileReference(path, tb)
 		doc.LoadDisplayName([]string{
